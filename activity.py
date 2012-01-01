@@ -86,7 +86,7 @@ class SimplePianoActivity(activity.Activity):
         freq = 440 * math.pow(2.0, octave + (key - 12.0) / 12.0)
         logging.debug('Vales Octave: %d Key: %d Freq: %s' % (octave, key,
                 freq))
-        self.tone_generator.set_values(freq, 100)
+        self.tone_generator.set_values(freq, 1)
         self.tone_generator.start()
 
     def __key_released_cb(self, widget, octave_clicked, key_clicked, letter):
