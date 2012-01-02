@@ -45,6 +45,10 @@ class PianoKeyboard(gtk.DrawingArea):
                 gtk.gdk.BUTTON_RELEASE_MASK | gtk.gdk.POINTER_MOTION_MASK | \
                 gtk.gdk.POINTER_MOTION_HINT_MASK)
 
+    def set_labels(self, labels):
+        self._labels = labels
+        self.queue_draw()
+
     def calculate_sizes(self, width):
         self._width = width
         self._height = self._width / 2

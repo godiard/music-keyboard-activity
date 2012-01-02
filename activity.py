@@ -22,6 +22,7 @@ from gettext import gettext as _
 from sugar.activity import activity
 from sugar.graphics.toolbarbox import ToolbarBox
 from sugar.activity.widgets import ActivityToolbarButton
+from sugar.graphics.radiotoolbutton import RadioToolButton
 from sugar.activity.widgets import StopButton
 
 from draw_piano import PianoKeyboard
@@ -46,6 +47,20 @@ class SimplePianoActivity(activity.Activity):
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
 
+        toolbar_box.toolbar.insert(gtk.SeparatorToolItem(), -1)
+
+        keybord_labels = RadioToolButton()
+        keybord_labels.props.icon_name = 'q_key'
+        keybord_labels.props.group = keybord_labels
+        keybord_labels.connect('clicked', self.set_keyboard_labels_cb)
+        toolbar_box.toolbar.insert(keybord_labels, -1)
+
+        notes_labels = RadioToolButton()
+        notes_labels.props.icon_name = 'do_key'
+        notes_labels.props.group = keybord_labels
+        notes_labels.connect('clicked', self.set_notes_labels_cb)
+        toolbar_box.toolbar.insert(notes_labels, -1)
+
         separator = gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
@@ -64,14 +79,22 @@ class SimplePianoActivity(activity.Activity):
 
         notes = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL',
                         'SOL#', 'LA', 'LA#', 'SI']
-        labels_tamtam = [notes, notes, ['DO']]
+        self.notes_labels = [notes, notes, ['DO']]
 
-        piano = PianoKeyboard(octaves=2, add_c=True,
+        self.piano = PianoKeyboard(octaves=2, add_c=True,
                 labels=self.keyboard_letters)
-        piano.connect('key_pressed', self.__key_pressed_cb)
-        piano.connect('key_released', self.__key_released_cb)
-        piano.show()
-        self.set_canvas(piano)
+        self.piano.connect('key_pressed', self.__key_pressed_cb)
+        self.piano.connect('key_released', self.__key_released_cb)
+        self.piano.show()
+        self.set_canvas(self.piano)
+
+    def set_notes_labels_cb(self, widget):
+        self.piano.font_size = 14
+        self.piano.set_labels(self.notes_labels)
+
+    def set_keyboard_labels_cb(self, widget):
+        self.piano.font_size = 20
+        self.piano.set_labels(self.keyboard_letters)
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
         logging.debug('Pressed Octave: %d Key: %d Letter: %s' %
