@@ -9,21 +9,22 @@
 # http://wiki.laptop.org/images/4/4e/Tamtamhelp2.png
 #
 
-import gobject
-import gtk
-import cairo
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import cairo
 
 
-class PianoKeyboard(gtk.DrawingArea):
+class PianoKeyboard(Gtk.DrawingArea):
 
-    __gsignals__ = {'key_pressed': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([gobject.TYPE_INT, gobject.TYPE_INT,
-                            gobject.TYPE_STRING])),
-                    'key_released': (gobject.SIGNAL_RUN_FIRST,
-                          gobject.TYPE_NONE,
-                          ([gobject.TYPE_INT, gobject.TYPE_INT,
-                            gobject.TYPE_STRING]))}
+    __gsignals__ = {'key_pressed': (GObject.SignalFlags.RUN_FIRST,
+                          None,
+                          ([GObject.TYPE_INT, GObject.TYPE_INT,
+                            GObject.TYPE_STRING])),
+                    'key_released': (GObject.SignalFlags.RUN_FIRST,
+                          None,
+                          ([GObject.TYPE_INT, GObject.TYPE_INT,
+                            GObject.TYPE_STRING]))}
 
     def __init__(self, octaves=1, add_c=False, labels=None):
         self._octaves = octaves
@@ -37,13 +38,17 @@ class PianoKeyboard(gtk.DrawingArea):
         self._l_keys_areas = [0, 3]
         self._t_keys_areas = [1, 4, 5]
         self._j_keys_areas = [2, 6]
-        self.connect('expose_event', self.expose)
+
+        self.connect('size-allocate', self.__allocate_cb)
+        self.connect('draw', self.__draw_cb)
         self.connect('button_press_event', self.__button_press_cb)
         self.connect('button_release_event', self.__button_release_cb)
         self.connect('motion_notify_event', self.__motion_notify_cb)
-        self.set_events(gtk.gdk.EXPOSURE_MASK | gtk.gdk.BUTTON_PRESS_MASK | \
-                gtk.gdk.BUTTON_RELEASE_MASK | gtk.gdk.POINTER_MOTION_MASK | \
-                gtk.gdk.POINTER_MOTION_HINT_MASK)
+        self.set_events(Gdk.EventMask.EXPOSURE_MASK |
+                Gdk.EventMask.BUTTON_PRESS_MASK | \
+                Gdk.EventMask.BUTTON_RELEASE_MASK |
+                Gdk.EventMask.POINTER_MOTION_MASK | \
+                Gdk.EventMask.POINTER_MOTION_HINT_MASK)
 
     def set_labels(self, labels):
         self._labels = labels
@@ -82,11 +87,11 @@ class PianoKeyboard(gtk.DrawingArea):
         # if this is a hint, then let's get all the necessary
         # information, if not it's all we need.
         if event.is_hint:
-            x, y, state = event.window.get_pointer()
+            _todo, x, y, state = event.window.get_pointer()
         else:
             x = event.x
             y = event.y
-            state = event.state
+            state = event.get_state()
 
         key_found = self.__get_key_at_position(x, y)
         if key_found != self._pressed_key:
@@ -142,29 +147,20 @@ class PianoKeyboard(gtk.DrawingArea):
         except:
             return ""
 
-    def expose(self, widget, event):
-        rect = self.get_allocation()
+    def __allocate_cb(self, widget, rect):
         self.calculate_sizes(rect.width)
 
-        ctx = widget.window.cairo_create()
-
-        # set a clip region for the expose event
-        ctx.rectangle(event.area.x, event.area.y, event.area.width,
-                event.area.height)
-        ctx.clip()
+    def __draw_cb(self, widget, ctx):
 
         # calculate text height
-        ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
-                cairo.FONT_WEIGHT_NORMAL)
+        # TODO:
+        #ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
+        #        cairo.FONT_WEIGHT_NORMAL)
         ctx.set_font_size(self.font_size)
         x_bearing, y_bearing, width, height, x_advance, y_advance = \
                 ctx.text_extents('M')
         self._text_height = height
 
-        self.draw(ctx)
-        return False
-
-    def draw(self, ctx):
         for n in range(0, self._octaves):
             self.draw_octave(ctx, n)
         if self._add_c:
@@ -418,16 +414,16 @@ def print_key_released(widget, octave_clicked, key_clicked, letter):
 
 
 def main():
-    window = gtk.Window()
+    window = Gtk.Window()
     labels_tamtam = ['Q2W3ER5T6Y7UI', 'ZSXDCVGBHNJM', ',']
     piano = PianoKeyboard(octaves=2, add_c=True, labels=labels_tamtam)
     piano.connect('key_pressed', print_key_pressed)
     piano.connect('key_released', print_key_released)
 
     window.add(piano)
-    window.connect("destroy", gtk.main_quit)
+    window.connect("destroy", Gtk.main_quit)
     window.show_all()
-    gtk.main()
+    Gtk.main()
 
 if __name__ == "__main__":
     main()

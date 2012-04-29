@@ -14,19 +14,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import gtk
+from gi.repository import Gtk
 import logging
 
 from gettext import gettext as _
 
-from sugar.activity import activity
-from sugar.graphics.toolbarbox import ToolbarBox
-from sugar.activity.widgets import ActivityToolbarButton
-from sugar.graphics.radiotoolbutton import RadioToolButton
-from sugar.activity.widgets import StopButton
+from sugar3.activity import activity
+from sugar3.graphics.toolbarbox import ToolbarBox
+from sugar3.activity.widgets import ActivityToolbarButton
+from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.activity.widgets import StopButton
 
 from draw_piano import PianoKeyboard
-import gst
+from gi.repository import Gst
 import math
 
 
@@ -47,7 +47,7 @@ class SimplePianoActivity(activity.Activity):
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
 
-        toolbar_box.toolbar.insert(gtk.SeparatorToolItem(), -1)
+        toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
         keybord_labels = RadioToolButton()
         keybord_labels.props.icon_name = 'q_key'
@@ -61,7 +61,7 @@ class SimplePianoActivity(activity.Activity):
         notes_labels.connect('clicked', self.set_notes_labels_cb)
         toolbar_box.toolbar.insert(notes_labels, -1)
 
-        separator = gtk.SeparatorToolItem()
+        separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
         toolbar_box.toolbar.insert(separator, -1)
@@ -73,7 +73,7 @@ class SimplePianoActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show_all()
 
-        self.tone_generator = GstToneGenerator()
+        #self.tone_generator = GstToneGenerator()
 
         self.keyboard_letters = ['Q2W3ER5T6Y7UI', 'ZSXDCVGBHNJM', ',']
 
@@ -123,14 +123,14 @@ class GstToneGenerator(object):
 
     def __init__(self):
         str_pipe = '''audiotestsrc name=source !autoaudiosink'''
-        self.pipeline = gst.parse_launch(str_pipe)
+        self.pipeline = Gst.parse_launch(str_pipe)
         self.source = self.pipeline.get_by_name('source')
 
     def start(self):
-        self.pipeline.set_state(gst.STATE_PLAYING)
+        self.pipeline.set_state(Gst.STATE_PLAYING)
 
     def stop(self):
-        self.pipeline.set_state(gst.STATE_NULL)
+        self.pipeline.set_state(Gst.STATE_NULL)
 
     def set_values(self, freq, volume):
         """Change the frequency and volume values of the sound source.
