@@ -9,6 +9,7 @@
 # http://wiki.laptop.org/images/4/4e/Tamtamhelp2.png
 #
 
+import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -30,8 +31,10 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._octaves = octaves
         self._add_c = add_c
         self._labels = labels
-        self._pressed_key = None
+        self._pressed_keys = []
         self.font_size = 20
+        self._touches = {}
+        self._mouse_button_pressed = False
         super(PianoKeyboard, self).__init__()
         # info needed to check keys positions
         self._white_keys = [0, 2, 4, 5, 7, 9, 11]
@@ -41,14 +44,15 @@ class PianoKeyboard(Gtk.DrawingArea):
 
         self.connect('size-allocate', self.__allocate_cb)
         self.connect('draw', self.__draw_cb)
-        self.connect('button_press_event', self.__button_press_cb)
-        self.connect('button_release_event', self.__button_release_cb)
-        self.connect('motion_notify_event', self.__motion_notify_cb)
+        self.connect('event', self.__event_cb)
+
         self.set_events(Gdk.EventMask.EXPOSURE_MASK |
                 Gdk.EventMask.BUTTON_PRESS_MASK | \
-                Gdk.EventMask.BUTTON_RELEASE_MASK |
+                Gdk.EventMask.BUTTON_RELEASE_MASK | \
+                Gdk.EventMask.BUTTON_MOTION_MASK | \
                 Gdk.EventMask.POINTER_MOTION_MASK | \
-                Gdk.EventMask.POINTER_MOTION_HINT_MASK)
+                Gdk.EventMask.POINTER_MOTION_HINT_MASK | \
+                Gdk.EventMask.TOUCH_MASK)
 
     def set_labels(self, labels):
         self._labels = labels
@@ -64,47 +68,64 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._black_keys_height = self._height * 2 / 3
         self._octave_width = self._key_width * 7
 
-    def __button_press_cb(self, widget, event):
-        if event.button == 1:
-            x, y = event.x, event.y
-            key_found = self.__get_key_at_position(x, y)
-            if key_found is None:
-                return True
+    def __event_cb(self, widget, event):
+        if event.type in (Gdk.EventType.TOUCH_BEGIN,
+                Gdk.EventType.TOUCH_CANCEL, Gdk.EventType.TOUCH_END,
+                Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS,
+                Gdk.EventType.BUTTON_RELEASE, Gdk.EventType.MOTION_NOTIFY):
+            x = event.touch.x
+            y = event.touch.y
+            seq = str(event.touch.sequence)
+            updated_positions = False
+            if event.type in (Gdk.EventType.TOUCH_BEGIN,
+                    Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS):
+                if event.type == Gdk.EventType.TOUCH_BEGIN:
+                    # verify if there are another touch pointed to the same key
+                    # we receive a MOTION_NOTIFY event before TOUCH_BEGIN
+                    for touch in self._touches.keys():
+                        if self._touches[touch] == (x, y):
+                            del self._touches[touch]
+                self._touches[seq] = (x, y)
+                updated_positions = True
+            elif event.type == Gdk.EventType.MOTION_NOTIFY and \
+                    event.get_state()[1] & Gdk.ModifierType.BUTTON1_MASK:
+                self._touches[seq] = (x, y)
+                updated_positions = True
+            elif event.type in (Gdk.EventType.TOUCH_END,
+                                Gdk.EventType.BUTTON_RELEASE):
+                del self._touches[seq]
+                updated_positions = True
+            if updated_positions:
+                self._update_pressed_keys()
+
+    def _update_pressed_keys(self):
+
+        new_pressed_keys = []
+        for touch in self._touches.values():
+            key_found = self.__get_key_at_position(touch[0], touch[1])  # x, y
+            if key_found is not None and key_found not in new_pressed_keys:
+                new_pressed_keys.append(key_found)
+
+        # compare with the registered pressed keys, and emit events
+        for pressed_key in new_pressed_keys:
+
+            if pressed_key not in self._pressed_keys:
+                octave_pressed = pressed_key[:pressed_key.find('_')]
+                key_pressed = pressed_key[pressed_key.find('_') + 1:]
+                self.emit('key_pressed', int(octave_pressed), int(key_pressed),
+                        self.get_label(octave_pressed, key_pressed))
             else:
-                self._pressed_key = key_found
-                octave_clicked = key_found[0]
-                key_clicked = key_found[1]
-                self.emit('key_pressed', octave_clicked, key_clicked,
-                        self.get_label(octave_clicked, key_clicked))
-                self.queue_draw()
-                return True
+                del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
-    def __motion_notify_cb(self, widget, event):
-        # only continue if the button is pressed
-        if self._pressed_key is None:
-            return True
+        # the remaining keys were released
+        for key in self._pressed_keys:
+            octave_released = key[:key.find('_')]
+            key_released = key[key.find('_') + 1:]
+            self.emit('key_released', int(octave_released), int(key_released),
+                    self.get_label(octave_released, key_released))
 
-        # if this is a hint, then let's get all the necessary
-        # information, if not it's all we need.
-        if event.is_hint:
-            _todo, x, y, state = event.window.get_pointer()
-        else:
-            x = event.x
-            y = event.y
-            state = event.get_state()
-
-        key_found = self.__get_key_at_position(x, y)
-        if key_found != self._pressed_key:
-            self.emit('key_released', self._pressed_key[0],
-                self._pressed_key[1], self.get_label(*self._pressed_key))
-
-            self._pressed_key = key_found
-            if key_found is not None:
-                octave_clicked = key_found[0]
-                key_clicked = key_found[1]
-                self.emit('key_pressed', octave_clicked, key_clicked,
-                        self.get_label(octave_clicked, key_clicked))
-            self.queue_draw()
+        self._pressed_keys = new_pressed_keys
+        self.queue_draw()
 
     def __get_key_at_position(self, x, y):
         if y > self._height:
@@ -130,14 +151,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                     key_found = self._white_keys[key_area] - 1
             if key_found == -1:
                 key_found = self._white_keys[key_area]
-        return (octave_found, key_found)
-
-    def __button_release_cb(self, widget, event):
-        if self._pressed_key is not None:
-            self.emit('key_released', self._pressed_key[0],
-                    self._pressed_key[1], self.get_label(*self._pressed_key))
-            self._pressed_key = None
-            self.queue_draw()
+        return '%d_%d' % (octave_found, key_found)
 
     def get_label(self, octave, key):
         if self._labels is None:
@@ -165,8 +179,10 @@ class PianoKeyboard(Gtk.DrawingArea):
             self.draw_octave(ctx, n)
         if self._add_c:
             self.draw_last_C(ctx, n + 1)
-        if self._pressed_key is not None:
-            octave, key = self._pressed_key
+        for pressed_key in self._pressed_keys:
+            octave = int(pressed_key[:pressed_key.find('_')])
+            key = int(pressed_key[pressed_key.find('_') + 1:])
+
             if octave == -1 or (octave == self._octaves and key > 0):
                 return
             if key == 0:
