@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import Gtk
+from gi.repository import Gdk
 import logging
 
 from gettext import gettext as _
@@ -26,8 +27,16 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.activity.widgets import StopButton
 
 from draw_piano import PianoKeyboard
-from gi.repository import Gst
 import math
+
+import time
+import common.Util.Instruments
+from common.Util import InstrumentDB
+from common.Util.CSoundClient import new_csound_client
+from KeyboardStandAlone import KeyboardStandAlone
+from MiniSequencer import MiniSequencer
+from Loop import Loop
+import common.Config as Config
 
 
 class SimplePianoActivity(activity.Activity):
@@ -73,8 +82,6 @@ class SimplePianoActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show_all()
 
-        #self.tone_generator = GstToneGenerator()
-
         self.keyboard_letters = ['Q2W3ER5T6Y7UI', 'ZSXDCVGBHNJM', ',']
 
         notes = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL',
@@ -83,6 +90,50 @@ class SimplePianoActivity(activity.Activity):
 
         self.piano = PianoKeyboard(octaves=2, add_c=True,
                 labels=self.keyboard_letters)
+
+        # init csound
+        self.instrumentDB = InstrumentDB.getRef()
+        self.firstTime = False
+        self.playing = False
+        self.csnd = new_csound_client()
+        self.timeout_ms = 50
+        self.instVolume = 50
+        self.drumVolume = 0.5
+        self.instrument = 'piano'
+        self.regularity = 0.75
+        self.beat = 4
+        self.reverb = 0.1
+        self.tempo = Config.PLAYER_TEMPO
+        self.beatDuration = 60.0/self.tempo
+        self.ticksPerSecond = Config.TICKS_PER_BEAT*self.tempo/60.0
+        #self.rythmInstrument = 'drum1kit'
+        #self.csnd.load_drumkit(self.rythmInstrument)
+        self.sequencer= MiniSequencer(self.recordStateButton,
+                self.recordOverSensitivity)
+        self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
+
+        self.muteInst = False
+        self.csnd.setTempo(self.tempo)
+        self.noteList = []
+        time.sleep(0.001) # why?
+        for i in range(21):
+            self.csnd.setTrackVolume( 100, i )
+
+        for i in  range(10):
+            r = str(i+1)
+            self.csnd.load_instrument('guidice' + r)
+
+        self.volume = 100
+        self.csnd.setMasterVolume(self.volume)
+
+        self.enableKeyboard()
+        self.setInstrument(self.instrument)
+
+        self.connect('key-press-event', self.onKeyPress)
+        self.connect('key-release-event', self.onKeyRelease)
+        # finish csount init
+
+
         self.piano.connect('key_pressed', self.__key_pressed_cb)
         self.piano.connect('key_released', self.__key_released_cb)
         self.piano.show()
@@ -95,6 +146,28 @@ class SimplePianoActivity(activity.Activity):
     def set_keyboard_labels_cb(self, widget):
         self.piano.font_size = 20
         self.piano.set_labels(self.keyboard_letters)
+
+    def enableKeyboard(self):
+        self.keyboardStandAlone = KeyboardStandAlone(self.sequencer.recording,
+                self.sequencer.adjustDuration, self.csnd.loopGetTick,
+                self.sequencer.getPlayState, self.loop)
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+
+    def setInstrument(self , instrument):
+        self.instrument = instrument
+        self.keyboardStandAlone.setInstrument(instrument)
+        self.csnd.load_instrument(instrument)
+
+    def recordStateButton( self, button, state ):
+        pass
+#        if button == 1:
+#            self._recordToolbar.keyboardRecButton.set_active( state )
+#        else:
+#            self._recordToolbar.keyboardRecOverButton.set_active( state )
+
+    def recordOverSensitivity( self, state ):
+        pass
+        #self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
         logging.debug('Pressed Octave: %d Key: %d Letter: %s' %
@@ -115,28 +188,16 @@ class SimplePianoActivity(activity.Activity):
     def __key_released_cb(self, widget, octave_clicked, key_clicked, letter):
         self.tone_generator.stop()
 
+    def onKeyPress(self, widget, event):
 
-class GstToneGenerator(object):
-    """Gstreamer based tone generator.
-        from https://github.com/iamFIREcracker/py-tone-generator/
-    """
+        if event.hardware_keycode == 37:
+            if self.muteInst:
+                self.muteInst = False
+            else:
+                self.muteInst = True
 
-    def __init__(self):
-        str_pipe = '''audiotestsrc name=source !autoaudiosink'''
-        self.pipeline = Gst.parse_launch(str_pipe)
-        self.source = self.pipeline.get_by_name('source')
+        self.keyboardStandAlone.onKeyPress(widget, event,
+                math.sqrt(self.instVolume * 0.01))
 
-    def start(self):
-        self.pipeline.set_state(Gst.STATE_PLAYING)
-
-    def stop(self):
-        self.pipeline.set_state(Gst.STATE_NULL)
-
-    def set_values(self, freq, volume):
-        """Change the frequency and volume values of the sound source.
-        Keywords:
-        freq frequency value between 0 and 20k.
-        volume volume value between 0 and 1.
-        """
-        self.source.set_property('freq', max(0, min(freq, 20000)))
-        self.source.set_property('volume', max(0, min(volume, 1)))
+    def onKeyRelease(self, widget, event):
+        self.keyboardStandAlone.onKeyRelease(widget, event)
