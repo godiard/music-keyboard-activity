@@ -1,6 +1,6 @@
 [Activity]
 name = SimplePiano
-activity_version = 1
+activity_version = 3
 bundle_id = org.sugarlabs.SimplePiano
 exec = sugar-activity activity.SimplePianoActivity
 icon = activity-simplepiano
