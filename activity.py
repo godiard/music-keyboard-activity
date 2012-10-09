@@ -82,7 +82,7 @@ class SimplePianoActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show_all()
 
-        self.keyboard_letters = ['Q2W3ER5T6Y7UI', 'ZSXDCVGBHNJM', ',']
+        self.keyboard_letters = ['ZSXDCVGBHNJM', 'Q2W3ER5T6Y7U', 'I']
 
         notes = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL',
                         'SOL#', 'LA', 'LA#', 'SI']
@@ -170,23 +170,17 @@ class SimplePianoActivity(activity.Activity):
         #self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
-        logging.debug('Pressed Octave: %d Key: %d Letter: %s' %
+        logging.error('Pressed Octave: %d Key: %d Letter: %s' %
             (octave_clicked, key_clicked, letter))
-
-        if key_clicked >= 9:
-            key = key_clicked - 9
-            octave = octave_clicked + 1
-        else:
-            key = key_clicked + 3
-            octave = octave_clicked
-        freq = 440 * math.pow(2.0, octave + (key - 12.0) / 12.0)
-        logging.debug('Vales Octave: %d Key: %d Freq: %s' % (octave, key,
-                freq))
-        self.tone_generator.set_values(freq, 1)
-        self.tone_generator.start()
+        if letter in Config.LETTERS_MAP_PIANO.keys():
+            self.keyboardStandAlone.do_key_press(
+                    Config.LETTERS_MAP_PIANO[letter], None,
+                    math.sqrt(self.instVolume * 0.01))
 
     def __key_released_cb(self, widget, octave_clicked, key_clicked, letter):
-        self.tone_generator.stop()
+        if letter in Config.LETTERS_MAP_PIANO.keys():
+            self.keyboardStandAlone.do_key_release(
+                    Config.LETTERS_MAP_PIANO[letter])
 
     def onKeyPress(self, widget, event):
 

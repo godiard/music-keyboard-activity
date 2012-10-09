@@ -33,8 +33,11 @@ class KeyboardStandAlone:
     def setReverb(self , reverb):
         self.reverb = reverb
 
-    def onKeyPress(self,widget,event, volume):
+    def onKeyPress(self, widget, event, volume):
         key = event.hardware_keycode
+        self.do_key_press(key, event.state, volume)
+
+    def do_key_press(self, key, state, volume):
         if key == 50 or key == 62: #Left Shift
             self.loopSustain = True
 
@@ -100,7 +103,7 @@ class KeyboardStandAlone:
                 playkey(36,100, self.instrumentDB.instNamed[instrumentName].kit[pitch])
 
             else:
-                if event.state == Gdk.ModifierType.MOD1_MASK:
+                if state == Gdk.ModifierType.MOD1_MASK:
                     pitch += 5
 
                 instrument = self.instrumentDB.instNamed[ instrumentName ]
@@ -110,8 +113,11 @@ class KeyboardStandAlone:
                     playkey( pitch, -1, instrument)
 
 
-    def onKeyRelease(self,widget,event):
+    def onKeyRelease(self, widget, event):
         key = event.hardware_keycode
+        self.do_key_release(key)
+
+    def do_key_release(self, key):
         if key == 50 or key == 62:
             self.loopSustain = False
 

@@ -110,18 +110,18 @@ class PianoKeyboard(Gtk.DrawingArea):
         for pressed_key in new_pressed_keys:
 
             if pressed_key not in self._pressed_keys:
-                octave_pressed = pressed_key[:pressed_key.find('_')]
-                key_pressed = pressed_key[pressed_key.find('_') + 1:]
-                self.emit('key_pressed', int(octave_pressed), int(key_pressed),
+                octave_pressed = int(pressed_key[:pressed_key.find('_')])
+                key_pressed = int(pressed_key[pressed_key.find('_') + 1:])
+                self.emit('key_pressed', octave_pressed, key_pressed,
                         self.get_label(octave_pressed, key_pressed))
             else:
                 del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
         # the remaining keys were released
         for key in self._pressed_keys:
-            octave_released = key[:key.find('_')]
-            key_released = key[key.find('_') + 1:]
-            self.emit('key_released', int(octave_released), int(key_released),
+            octave_released = int(key[:key.find('_')])
+            key_released = int(key[key.find('_') + 1:])
+            self.emit('key_released', octave_released, key_released,
                     self.get_label(octave_released, key_released))
 
         self._pressed_keys = new_pressed_keys
