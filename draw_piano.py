@@ -15,6 +15,13 @@ from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import cairo
 
+# constants used to calculate the draw of black keys
+# right now is 4/5 of the white key
+# then is 2/5 and 3/5 (before was 1/3 and 2/3)
+K1 = 2.
+K2 = 3.
+D = 5.
+
 
 class PianoKeyboard(Gtk.DrawingArea):
 
@@ -65,6 +72,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         if self._add_c:
             cant_keys += 1
         self._key_width = self._width / cant_keys
+        logging.error('key_width %s', self._key_width)
         self._black_keys_height = self._height * 2 / 3
         self._octave_width = self._key_width * 7
 
@@ -141,13 +149,13 @@ class PianoKeyboard(Gtk.DrawingArea):
             key_found = -1
             if key_area in self._l_keys_areas or \
                 key_area in self._t_keys_areas:
-                if click_x > self._key_width * 2 / 3:
+                if click_x > self._key_width * K2 / D:
                     key_found = self._white_keys[key_area] + 1
             # check black key at the left
             if key_found == -1 and \
                 key_area in self._j_keys_areas or \
                 key_area in self._t_keys_areas:
-                if click_x < self._key_width * 1 / 3:
+                if click_x < self._key_width * K1 / D:
                     key_found = self._white_keys[key_area] - 1
             if key_found == -1:
                 key_found = self._white_keys[key_area]
@@ -245,7 +253,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._draw_label(ctx, x, octave_number, 0, False, highlighted)
 
     def draw_CB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * (octave_number * 7) + self._key_width * 2 / 3
+        x = self._key_width * (octave_number * 7) + self._key_width * K2 / D
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 1, True, highlighted)
 
@@ -255,7 +263,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._draw_label(ctx, x, octave_number, 2, False, highlighted)
 
     def draw_DB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width + self._key_width * 2 / 3 + \
+        x = self._key_width + self._key_width * K2 / D + \
                 self._key_width * (octave_number * 7)
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 3, True, highlighted)
@@ -271,7 +279,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._draw_label(ctx, x, octave_number, 5, False, highlighted)
 
     def draw_FB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 3 + self._key_width * 2 / 3 + \
+        x = self._key_width * 3 + self._key_width * K2 / D + \
                 self._key_width * (octave_number * 7)
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 6, True, highlighted)
@@ -282,7 +290,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._draw_label(ctx, x, octave_number, 7, False, highlighted)
 
     def draw_GB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 4 + self._key_width * 2 / 3 + \
+        x = self._key_width * 4 + self._key_width * K2 / D + \
                 self._key_width * (octave_number * 7)
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 8, True, highlighted)
@@ -293,7 +301,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._draw_label(ctx, x, octave_number, 9, False, highlighted)
 
     def draw_AB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 5 + self._key_width * 2 / 3 + \
+        x = self._key_width * 5 + self._key_width * K2 / D + \
                 self._key_width * (octave_number * 7)
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 10, True, highlighted)
@@ -316,8 +324,8 @@ class PianoKeyboard(Gtk.DrawingArea):
         if highlighted:
             fill = (1, 1, 0)
 
-        ctx.line_to(x + self._key_width * 2 / 3, 0)
-        ctx.line_to(x + self._key_width * 2 / 3, self._black_keys_height)
+        ctx.line_to(x + self._key_width * K2 / D, 0)
+        ctx.line_to(x + self._key_width * K2 / D, self._black_keys_height)
         ctx.line_to(x + self._key_width, self._black_keys_height)
         ctx.line_to(x + self._key_width, self._height)
         ctx.line_to(x, self._height)
@@ -332,14 +340,14 @@ class PianoKeyboard(Gtk.DrawingArea):
         fill = (1, 1, 1)
         if highlighted:
             fill = (1, 1, 0)
-        ctx.move_to(x + self._key_width * 1 / 3, 0)
-        ctx.line_to(x + self._key_width * 2 / 3, 0)
-        ctx.line_to(x + self._key_width * 2 / 3, self._black_keys_height)
+        ctx.move_to(x + self._key_width * K1 / D, 0)
+        ctx.line_to(x + self._key_width * K2 / D, 0)
+        ctx.line_to(x + self._key_width * K2 / D, self._black_keys_height)
         ctx.line_to(x + self._key_width, self._black_keys_height)
         ctx.line_to(x + self._key_width, self._height)
         ctx.line_to(x, self._height)
         ctx.line_to(x, self._black_keys_height)
-        ctx.line_to(x + self._key_width * 1 / 3, self._black_keys_height)
+        ctx.line_to(x + self._key_width * K1 / D, self._black_keys_height)
         ctx.close_path()
         self._fill_and_stroke(ctx, fill, stroke)
         ctx.restore()
@@ -350,12 +358,12 @@ class PianoKeyboard(Gtk.DrawingArea):
         fill = (1, 1, 1)
         if highlighted:
             fill = (1, 1, 0)
-        ctx.move_to(x + self._key_width * 1 / 3, 0)
+        ctx.move_to(x + self._key_width * K1 / D, 0)
         ctx.line_to(x + self._key_width, 0)
         ctx.line_to(x + self._key_width, self._height)
         ctx.line_to(x, self._height)
         ctx.line_to(x, self._black_keys_height)
-        ctx.line_to(x + self._key_width * 1 / 3, self._black_keys_height)
+        ctx.line_to(x + self._key_width * K1 / D, self._black_keys_height)
         ctx.close_path()
         self._fill_and_stroke(ctx, fill, stroke)
         ctx.restore()
@@ -382,8 +390,8 @@ class PianoKeyboard(Gtk.DrawingArea):
         if highlighted:
             fill = (1, 1, 0)
 
-        ctx.line_to(x + self._key_width * 2 / 3, 0)
-        ctx.line_to(x + self._key_width * 2 / 3, self._black_keys_height)
+        ctx.line_to(x + self._key_width * K1 * 2 / D, 0)
+        ctx.line_to(x + self._key_width * K1 * 2 / D, self._black_keys_height)
         ctx.line_to(x, self._black_keys_height)
         ctx.line_to(x, 0)
         ctx.close_path()
@@ -404,7 +412,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             x_bearing, y_bearing, width, height, x_advance, y_advance = \
                     ctx.text_extents(text)
             if black_key:
-                x_text = x + self._key_width * 1 / 3 - (width / 2 + x_bearing)
+                x_text = x + self._key_width * K1 / D - (width / 2 + x_bearing)
                 y_text = self._black_keys_height - (self._text_height * 2)
                 if highlighted:
                     stroke = (0, 0, 0)
