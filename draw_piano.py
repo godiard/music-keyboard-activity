@@ -34,10 +34,13 @@ class PianoKeyboard(Gtk.DrawingArea):
                           ([GObject.TYPE_INT, GObject.TYPE_INT,
                             GObject.TYPE_STRING]))}
 
-    def __init__(self, octaves=1, add_c=False, labels=None):
+    def __init__(self, octaves=1, add_c=False, labels=None, values=None):
         self._octaves = octaves
         self._add_c = add_c
         self._labels = labels
+        self._values = ['ZSXDCVGBHNJM', 'Q2W3ER5T6Y7U', 'I']
+        if values is not None:
+            self._values = values
         self._pressed_keys = []
         self.font_size = 20
         self._touches = {}
@@ -121,7 +124,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 octave_pressed = int(pressed_key[:pressed_key.find('_')])
                 key_pressed = int(pressed_key[pressed_key.find('_') + 1:])
                 self.emit('key_pressed', octave_pressed, key_pressed,
-                        self.get_label(octave_pressed, key_pressed))
+                        self.get_value(octave_pressed, key_pressed))
             else:
                 del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
@@ -130,7 +133,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             octave_released = int(key[:key.find('_')])
             key_released = int(key[key.find('_') + 1:])
             self.emit('key_released', octave_released, key_released,
-                    self.get_label(octave_released, key_released))
+                    self.get_value(octave_released, key_released))
 
         self._pressed_keys = new_pressed_keys
         self.queue_draw()
@@ -166,6 +169,12 @@ class PianoKeyboard(Gtk.DrawingArea):
             return ""
         try:
             return self._labels[octave][key]
+        except:
+            return ""
+
+    def get_value(self, octave, key):
+        try:
+            return self._values[octave][key]
         except:
             return ""
 
