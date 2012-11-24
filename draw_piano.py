@@ -18,9 +18,9 @@ from gi.repository import cairo
 # constants used to calculate the draw of black keys
 # right now is 4/5 of the white key
 # then is 2/5 and 3/5 (before was 1/3 and 2/3)
-K1 = 2.
-K2 = 3.
-D = 5.
+K1 = 3.
+K2 = 4.
+D = 7.
 
 
 class PianoKeyboard(Gtk.DrawingArea):
