@@ -70,6 +70,12 @@ class SimplePianoActivity(activity.Activity):
         notes_labels.connect('clicked', self.set_notes_labels_cb)
         toolbar_box.toolbar.insert(notes_labels, -1)
 
+        german_labels = RadioToolButton()
+        german_labels.props.icon_name = 'c_key'
+        german_labels.props.group = keybord_labels
+        german_labels.connect('clicked', self.set_german_labels_cb)
+        toolbar_box.toolbar.insert(german_labels, -1)
+
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
@@ -87,6 +93,11 @@ class SimplePianoActivity(activity.Activity):
         notes = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL',
                         'SOL#', 'LA', 'LA#', 'SI']
         self.notes_labels = [notes, notes, ['DO']]
+
+        german_notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G',
+                        'G#', 'A', 'A#', 'B']
+
+        self.german_labels = [german_notes, german_notes, ['C']]
 
         self.piano = PianoKeyboard(octaves=2, add_c=True,
                 labels=self.keyboard_letters)
@@ -146,6 +157,10 @@ class SimplePianoActivity(activity.Activity):
     def set_keyboard_labels_cb(self, widget):
         self.piano.font_size = 20
         self.piano.set_labels(self.keyboard_letters)
+
+    def set_german_labels_cb(self, widget):
+        self.piano.font_size = 20
+        self.piano.set_labels(self.german_labels)
 
     def enableKeyboard(self):
         self.keyboardStandAlone = KeyboardStandAlone(self.sequencer.recording,
