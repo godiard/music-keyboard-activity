@@ -16,6 +16,7 @@
 
 from gi.repository import Gtk
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 import logging
 
 from gettext import gettext as _
@@ -29,6 +30,7 @@ from sugar3.activity.widgets import StopButton
 
 from draw_piano import PianoKeyboard
 import math
+import os
 
 import time
 import common.Util.Instruments
@@ -149,14 +151,45 @@ class SimplePianoActivity(activity.Activity):
         self.piano.connect('key_released', self.__key_released_cb)
         vbox = Gtk.VBox()
         vbox.set_homogeneous(False)
-        label = Gtk.Label('')
+        self.load_instruments()
         vbox.pack_end(self.piano, True, True, 0)
-        vbox.pack_start(label, False, False, 0)
+        scrolled = Gtk.ScrolledWindow()
+        vbox.pack_start(scrolled, False, False, 0)
+        scrolled.add(self.instruments_iconview)
         vbox.show_all()
         self.set_canvas(vbox)
         piano_height = Gdk.Screen.width() / 2
-        label.set_size_request(-1,
+        scrolled.set_size_request(-1,
                 Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
+
+    def load_instruments(self):
+        self._instruments_store = Gtk.ListStore(str, GdkPixbuf.Pixbuf)
+        self._instruments_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        self.instruments_iconview = Gtk.IconView(self._instruments_store)
+        self.instruments_iconview.set_text_column(0)
+        self.instruments_iconview.set_pixbuf_column(1)
+
+        # load the images
+        images_path = os.path.join(activity.get_bundle_path(),
+                'instruments')
+        logging.error('Loading instrument images from %s', images_path)
+        for file_name in os.listdir(images_path):
+            image_file_name = os.path.join(images_path, file_name)
+            logging.error('Adding %s', image_file_name)
+            instrument_name = image_file_name[image_file_name.rfind('/'):]
+            pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(image_file_name,
+                    75, 75)
+            instrument_name = image_file_name[image_file_name.rfind('/') + 1:]
+            instrument_name = instrument_name[:instrument_name.find('.')]
+            self._instruments_store.append([instrument_name, pxb])
+        self.instruments_iconview.connect('selection-changed',
+                self.__instrument_iconview_activated_cb)
+
+    def __instrument_iconview_activated_cb(self, widget):
+        item = widget.get_selected_items()[0]
+        model = widget.get_model()
+        instrument_name = model[item][0]
+        self.setInstrument(instrument_name)
 
     def set_notes_labels_cb(self, widget):
         self.piano.font_size = 14
