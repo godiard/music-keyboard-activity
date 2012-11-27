@@ -24,6 +24,7 @@ from sugar3.activity import activity
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
+from sugar3.graphics import style
 from sugar3.activity.widgets import StopButton
 
 from draw_piano import PianoKeyboard
@@ -147,8 +148,16 @@ class SimplePianoActivity(activity.Activity):
 
         self.piano.connect('key_pressed', self.__key_pressed_cb)
         self.piano.connect('key_released', self.__key_released_cb)
-        self.piano.show()
-        self.set_canvas(self.piano)
+        vbox = Gtk.VBox()
+        vbox.set_homogeneous(False)
+        label = Gtk.Label('')
+        vbox.pack_end(self.piano, True, True, 0)
+        vbox.pack_start(label, False, False, 0)
+        vbox.show_all()
+        self.set_canvas(vbox)
+        piano_height = Gdk.Screen.width() / 2
+        label.set_size_request(-1,
+                Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
 
     def set_notes_labels_cb(self, widget):
         self.piano.font_size = 14

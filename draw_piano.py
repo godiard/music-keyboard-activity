@@ -78,6 +78,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         logging.error('key_width %s', self._key_width)
         self._black_keys_height = self._height * 2 / 3
         self._octave_width = self._key_width * 7
+        self.set_size_request(-1, self._height)
 
     def __event_cb(self, widget, event):
         if event.type in (Gdk.EventType.TOUCH_BEGIN,
