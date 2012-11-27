@@ -116,23 +116,23 @@ class SimplePianoActivity(activity.Activity):
         self.beat = 4
         self.reverb = 0.1
         self.tempo = Config.PLAYER_TEMPO
-        self.beatDuration = 60.0/self.tempo
-        self.ticksPerSecond = Config.TICKS_PER_BEAT*self.tempo/60.0
+        self.beatDuration = 60.0 / self.tempo
+        self.ticksPerSecond = Config.TICKS_PER_BEAT * self.tempo / 60.0
         #self.rythmInstrument = 'drum1kit'
         #self.csnd.load_drumkit(self.rythmInstrument)
-        self.sequencer= MiniSequencer(self.recordStateButton,
+        self.sequencer = MiniSequencer(self.recordStateButton,
                 self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
 
         self.muteInst = False
         self.csnd.setTempo(self.tempo)
         self.noteList = []
-        time.sleep(0.001) # why?
+        time.sleep(0.001)  # why?
         for i in range(21):
-            self.csnd.setTrackVolume( 100, i )
+            self.csnd.setTrackVolume(100, i)
 
-        for i in  range(10):
-            r = str(i+1)
+        for i in range(10):
+            r = str(i + 1)
             self.csnd.load_instrument('guidice' + r)
 
         self.volume = 100
@@ -144,7 +144,6 @@ class SimplePianoActivity(activity.Activity):
         self.connect('key-press-event', self.onKeyPress)
         self.connect('key-release-event', self.onKeyRelease)
         # finish csount init
-
 
         self.piano.connect('key_pressed', self.__key_pressed_cb)
         self.piano.connect('key_released', self.__key_released_cb)
@@ -177,19 +176,19 @@ class SimplePianoActivity(activity.Activity):
                 self.sequencer.getPlayState, self.loop)
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
-    def setInstrument(self , instrument):
+    def setInstrument(self, instrument):
         self.instrument = instrument
         self.keyboardStandAlone.setInstrument(instrument)
         self.csnd.load_instrument(instrument)
 
-    def recordStateButton( self, button, state ):
+    def recordStateButton(self, button, state):
         pass
 #        if button == 1:
 #            self._recordToolbar.keyboardRecButton.set_active( state )
 #        else:
 #            self._recordToolbar.keyboardRecOverButton.set_active( state )
 
-    def recordOverSensitivity( self, state ):
+    def recordOverSensitivity(self, state):
         pass
         #self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
