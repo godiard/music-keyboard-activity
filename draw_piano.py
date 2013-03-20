@@ -124,7 +124,10 @@ class PianoKeyboard(Gtk.DrawingArea):
             elif event.type in (Gdk.EventType.TOUCH_END,
                                 Gdk.EventType.BUTTON_RELEASE):
                 del self._touches[seq]
-                updated_positions = True
+                # execute the update pressed keys with a delay,
+                # because motion events can came after the button release
+                # and all the state is confused
+                GObject.timeout_add(10, self._update_pressed_keys, old_touches)
             if updated_positions:
                 self._update_pressed_keys(old_touches)
 
@@ -165,7 +168,6 @@ class PianoKeyboard(Gtk.DrawingArea):
         min_x = self._width
         max_x = 0
         for touch in uniq_touches:
-            logging.error('TOUCH %s %s', touch.__class__, touch)
             min_x_touch, max_x_touch = \
                     self.get_damaged_range(int(touch[0]), int(touch[1]))
             if min_x_touch < min_x:
