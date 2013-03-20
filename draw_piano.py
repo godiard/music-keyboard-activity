@@ -13,7 +13,7 @@ import logging
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
-from gi.repository import cairo
+import cairo
 
 # constants used to calculate the draw of black keys
 # right now is 4/5 of the white key
@@ -43,7 +43,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         if values is not None:
             self._values = values
         self._pressed_keys = []
-        self.font_size = 20
+        self.font_size = 25
         self._touches = {}
         self._mouse_button_pressed = False
         super(PianoKeyboard, self).__init__()
@@ -259,8 +259,8 @@ class PianoKeyboard(Gtk.DrawingArea):
 
         # calculate text height
         # TODO:
-        #ctx.select_font_face("Sans", cairo.FONT_SLANT_NORMAL,
-        #        cairo.FONT_WEIGHT_NORMAL)
+        ctx.select_font_face('sans-serif', cairo.FONT_SLANT_NORMAL,
+                cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size(self.font_size)
         x_bearing, y_bearing, width, height, x_advance, y_advance = \
                 ctx.text_extents('M')

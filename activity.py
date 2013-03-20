@@ -192,15 +192,15 @@ class SimplePianoActivity(activity.Activity):
         self.setInstrument(instrument_name)
 
     def set_notes_labels_cb(self, widget):
-        self.piano.font_size = 14
+        self.piano.font_size = 16
         self.piano.set_labels(self.notes_labels)
 
     def set_keyboard_labels_cb(self, widget):
-        self.piano.font_size = 20
+        self.piano.font_size = 25
         self.piano.set_labels(self.keyboard_letters)
 
     def set_german_labels_cb(self, widget):
-        self.piano.font_size = 20
+        self.piano.font_size = 25
         self.piano.set_labels(self.german_labels)
 
     def enableKeyboard(self):
