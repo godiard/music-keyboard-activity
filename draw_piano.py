@@ -21,6 +21,7 @@ from gi.repository import cairo
 K1 = 3.
 K2 = 4.
 D = 7.
+BLACK_KEY_WIDTH = 1 - K2 / D + K1 / D
 
 
 class PianoKeyboard(Gtk.DrawingArea):
@@ -103,6 +104,9 @@ class PianoKeyboard(Gtk.DrawingArea):
             y = event.touch.y
             seq = str(event.touch.sequence)
             updated_positions = False
+            # save a copy of the old touches
+            old_touches = []
+            old_touches.extend(self._touches.values())
             if event.type in (Gdk.EventType.TOUCH_BEGIN,
                     Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS):
                 if event.type == Gdk.EventType.TOUCH_BEGIN:
@@ -122,10 +126,9 @@ class PianoKeyboard(Gtk.DrawingArea):
                 del self._touches[seq]
                 updated_positions = True
             if updated_positions:
-                self._update_pressed_keys()
+                self._update_pressed_keys(old_touches)
 
-    def _update_pressed_keys(self):
-
+    def _update_pressed_keys(self, old_touches):
         new_pressed_keys = []
         for touch in self._touches.values():
             key_found = self.__get_key_at_position(touch[0], touch[1])  # x, y
@@ -151,7 +154,26 @@ class PianoKeyboard(Gtk.DrawingArea):
                     self.get_value(octave_released, key_released))
 
         self._pressed_keys = new_pressed_keys
-        self.queue_draw()
+
+        # calculate the damaged area
+        # create a list with the old and new touches uniqified
+        uniq_touches = []
+        uniq_touches.extend(self._touches.values())
+        for old_touch in old_touches:
+            if old_touch not in uniq_touches:
+                uniq_touches.append(old_touch)
+        min_x = self._width
+        max_x = 0
+        for touch in uniq_touches:
+            logging.error('TOUCH %s %s', touch.__class__, touch)
+            min_x_touch, max_x_touch = \
+                    self.get_damaged_range(int(touch[0]), int(touch[1]))
+            if min_x_touch < min_x:
+                min_x = min_x_touch
+            if max_x_touch > max_x:
+                max_x = max_x_touch
+
+        self.queue_draw_area(min_x, 0, max_x - min_x, self._height)
 
     def __get_key_at_position(self, x, y):
         if y > self._height:
@@ -178,6 +200,41 @@ class PianoKeyboard(Gtk.DrawingArea):
             if key_found == -1:
                 key_found = self._white_keys[key_area]
         return '%d_%d' % (octave_found, key_found)
+
+    def get_damaged_range(self, x, y):
+        """
+        Based on the x position, calculate what is the min & max X
+        that need be redraw. Y is ignored due to most of the keys
+        need redraw all the height
+        """
+        octave_found = int(x / self._octave_width)
+        key_area = int((x % self._octave_width) / self._key_width)
+        click_x = int(x % self._key_width)
+        if y > self._black_keys_height or \
+                (self._add_c and x > self._width - self._key_width):
+            x_min = x - click_x
+            x_max = x_min + self._key_width
+        else:
+            # check black key at the right
+            key_found = -1
+            if key_area in self._l_keys_areas or \
+                    key_area in self._t_keys_areas:
+                if click_x > self._key_width * K2 / D:
+                    x_min = x - click_x + self._key_width * K2 / D
+                    x_max = x_min + self._key_width * BLACK_KEY_WIDTH
+                    key_found = 1
+            # check black key at the left
+            if key_found == -1 and \
+                    key_area in self._j_keys_areas or \
+                    key_area in self._t_keys_areas:
+                if click_x < self._key_width * K1 / D:
+                    x_max = x - click_x + self._key_width * K1 / D
+                    x_min = x_max - self._key_width * BLACK_KEY_WIDTH
+                    key_found = 1
+            if key_found == -1:
+                x_min = x - click_x
+                x_max = x_min + self._key_width
+        return x_min, x_max
 
     def get_label(self, octave, key):
         if self._labels is None:
