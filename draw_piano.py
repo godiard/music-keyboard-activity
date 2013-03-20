@@ -78,6 +78,20 @@ class PianoKeyboard(Gtk.DrawingArea):
         logging.error('key_width %s', self._key_width)
         self._black_keys_height = self._height * 2 / 3
         self._octave_width = self._key_width * 7
+
+        self._x_start = {'C': 0,
+                'CB': self._key_width * K2 / D,
+                'D': self._key_width,
+                'DB': self._key_width + self._key_width * K2 / D,
+                'E': self._key_width * 2,
+                'F': self._key_width * 3,
+                'FB': self._key_width * 3 + self._key_width * K2 / D,
+                'G': self._key_width * 4,
+                'GB': self._key_width * 4 + self._key_width * K2 / D,
+                'A': self._key_width * 5,
+                'AB': self._key_width * 5 + self._key_width * K2 / D,
+                'B': self._key_width * 6}
+
         self.set_size_request(-1, self._height)
 
     def __event_cb(self, widget, event):
@@ -263,61 +277,57 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._draw_label(ctx, x, octave_number, 0, False, highlighted)
 
     def draw_CB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * (octave_number * 7) + self._key_width * K2 / D
+        x = self._key_width * (octave_number * 7) + self._x_start['CB']
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 1, True, highlighted)
 
     def draw_D(self, ctx, octave_number, highlighted=False):
-        x = self._key_width + self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['D']
         self.draw_key_T(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 2, False, highlighted)
 
     def draw_DB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width + self._key_width * K2 / D + \
-                self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['DB']
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 3, True, highlighted)
 
     def draw_E(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 2 + self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['E']
         self.draw_key_J(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 4, False, highlighted)
 
     def draw_F(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 3 + self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['F']
         self.draw_key_L(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 5, False, highlighted)
 
     def draw_FB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 3 + self._key_width * K2 / D + \
-                self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['FB']
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 6, True, highlighted)
 
     def draw_G(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 4 + self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['G']
         self.draw_key_T(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 7, False, highlighted)
 
     def draw_GB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 4 + self._key_width * K2 / D + \
-                self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['GB']
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 8, True, highlighted)
 
     def draw_A(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 5 + self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['A']
         self.draw_key_T(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 9, False, highlighted)
 
     def draw_AB(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 5 + self._key_width * K2 / D + \
-                self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['AB']
         self.draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 10, True, highlighted)
 
     def draw_B(self, ctx, octave_number, highlighted=False):
-        x = self._key_width * 6 + self._key_width * (octave_number * 7)
+        x = self._key_width * (octave_number * 7) + self._x_start['B']
         self.draw_key_J(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 11, False, highlighted)
 
