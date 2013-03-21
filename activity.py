@@ -28,7 +28,7 @@ from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics import style
 from sugar3.activity.widgets import StopButton
 
-from draw_piano import PianoKeyboard
+from draw_piano import PianoKeyboard, LETTERS_TO_KEY_CODES
 import math
 import os
 
@@ -228,15 +228,15 @@ class SimplePianoActivity(activity.Activity):
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
         logging.error('Pressed Octave: %d Key: %d Letter: %s' %
             (octave_clicked, key_clicked, letter))
-        if letter in Config.LETTERS_MAP_PIANO.keys():
+        if letter in LETTERS_TO_KEY_CODES.keys():
             self.keyboardStandAlone.do_key_press(
-                    Config.LETTERS_MAP_PIANO[letter], None,
+                    LETTERS_TO_KEY_CODES[letter], None,
                     math.sqrt(self.instVolume * 0.01))
 
     def __key_released_cb(self, widget, octave_clicked, key_clicked, letter):
-        if letter in Config.LETTERS_MAP_PIANO.keys():
+        if letter in LETTERS_TO_KEY_CODES.keys():
             self.keyboardStandAlone.do_key_release(
-                    Config.LETTERS_MAP_PIANO[letter])
+                    LETTERS_TO_KEY_CODES[letter])
 
     def onKeyPress(self, widget, event):
 
@@ -245,9 +245,10 @@ class SimplePianoActivity(activity.Activity):
                 self.muteInst = False
             else:
                 self.muteInst = True
-
+        self.piano.physical_key_changed(event.hardware_keycode, True)
         self.keyboardStandAlone.onKeyPress(widget, event,
                 math.sqrt(self.instVolume * 0.01))
 
     def onKeyRelease(self, widget, event):
         self.keyboardStandAlone.onKeyRelease(widget, event)
+        self.piano.physical_key_changed(event.hardware_keycode, False)
