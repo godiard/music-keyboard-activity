@@ -94,7 +94,7 @@ class SimplePianoActivity(activity.Activity):
         self.keyboard_letters = ['ZSXDCVGBHNJM', 'Q2W3ER5T6Y7U', 'I']
 
         notes = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL',
-                        'SOL#', 'LA', 'LA#', 'SI']
+                 'SOL#', 'LA', 'LA#', 'SI']
         self.notes_labels = [notes, notes, ['DO']]
 
         german_notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G',
@@ -103,7 +103,7 @@ class SimplePianoActivity(activity.Activity):
         self.german_labels = [german_notes, german_notes, ['C']]
 
         self.piano = PianoKeyboard(octaves=2, add_c=True,
-                labels=self.keyboard_letters)
+                                   labels=self.keyboard_letters)
 
         # init csound
         self.instrumentDB = InstrumentDB.getRef()
@@ -123,7 +123,7 @@ class SimplePianoActivity(activity.Activity):
         #self.rythmInstrument = 'drum1kit'
         #self.csnd.load_drumkit(self.rythmInstrument)
         self.sequencer = MiniSequencer(self.recordStateButton,
-                self.recordOverSensitivity)
+                                       self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
 
         self.muteInst = False
@@ -159,8 +159,8 @@ class SimplePianoActivity(activity.Activity):
         vbox.show_all()
         self.set_canvas(vbox)
         piano_height = Gdk.Screen.width() / 2
-        scrolled.set_size_request(-1,
-                Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
+        scrolled.set_size_request(
+            -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
 
     def load_instruments(self):
         self._instruments_store = Gtk.ListStore(str, GdkPixbuf.Pixbuf)
@@ -171,19 +171,19 @@ class SimplePianoActivity(activity.Activity):
 
         # load the images
         images_path = os.path.join(activity.get_bundle_path(),
-                'instruments')
+                                   'instruments')
         logging.error('Loading instrument images from %s', images_path)
         for file_name in os.listdir(images_path):
             image_file_name = os.path.join(images_path, file_name)
             logging.error('Adding %s', image_file_name)
             instrument_name = image_file_name[image_file_name.rfind('/'):]
-            pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(image_file_name,
-                    75, 75)
+            pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                image_file_name, 75, 75)
             instrument_name = image_file_name[image_file_name.rfind('/') + 1:]
             instrument_name = instrument_name[:instrument_name.find('.')]
             self._instruments_store.append([instrument_name, pxb])
-        self.instruments_iconview.connect('selection-changed',
-                self.__instrument_iconview_activated_cb)
+        self.instruments_iconview.connect(
+            'selection-changed', self.__instrument_iconview_activated_cb)
 
     def __instrument_iconview_activated_cb(self, widget):
         item = widget.get_selected_items()[0]
@@ -204,9 +204,9 @@ class SimplePianoActivity(activity.Activity):
         self.piano.set_labels(self.german_labels)
 
     def enableKeyboard(self):
-        self.keyboardStandAlone = KeyboardStandAlone(self.sequencer.recording,
-                self.sequencer.adjustDuration, self.csnd.loopGetTick,
-                self.sequencer.getPlayState, self.loop)
+        self.keyboardStandAlone = KeyboardStandAlone(
+            self.sequencer.recording, self.sequencer.adjustDuration,
+            self.csnd.loopGetTick, self.sequencer.getPlayState, self.loop)
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
     def setInstrument(self, instrument):
@@ -226,17 +226,18 @@ class SimplePianoActivity(activity.Activity):
         #self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
-        logging.error('Pressed Octave: %d Key: %d Letter: %s' %
+        logging.error(
+            'Pressed Octave: %d Key: %d Letter: %s' %
             (octave_clicked, key_clicked, letter))
         if letter in LETTERS_TO_KEY_CODES.keys():
             self.keyboardStandAlone.do_key_press(
-                    LETTERS_TO_KEY_CODES[letter], None,
-                    math.sqrt(self.instVolume * 0.01))
+                LETTERS_TO_KEY_CODES[letter], None,
+                math.sqrt(self.instVolume * 0.01))
 
     def __key_released_cb(self, widget, octave_clicked, key_clicked, letter):
         if letter in LETTERS_TO_KEY_CODES.keys():
             self.keyboardStandAlone.do_key_release(
-                    LETTERS_TO_KEY_CODES[letter])
+                LETTERS_TO_KEY_CODES[letter])
 
     def onKeyPress(self, widget, event):
 
@@ -246,8 +247,8 @@ class SimplePianoActivity(activity.Activity):
             else:
                 self.muteInst = True
         self.piano.physical_key_changed(event.hardware_keycode, True)
-        self.keyboardStandAlone.onKeyPress(widget, event,
-                math.sqrt(self.instVolume * 0.01))
+        self.keyboardStandAlone.onKeyPress(
+            widget, event, math.sqrt(self.instVolume * 0.01))
 
     def onKeyRelease(self, widget, event):
         self.keyboardStandAlone.onKeyRelease(widget, event)

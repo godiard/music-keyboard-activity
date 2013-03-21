@@ -24,10 +24,11 @@ D = 7.
 BLACK_KEY_WIDTH = 1 - K2 / D + K1 / D
 
 
-LETTERS_TO_KEY_CODES = {'Q': 24, 'W': 25, 'E': 26, 'R': 27, 'T': 28, 'Y': 29,
-        'U': 30, 'I': 31, '2': 11, '3': 12, '5': 14, '6': 15, '7': 16,
-        'S': 39, 'D': 40, 'G': 42, 'H': 43, 'J': 44, 'L': 46, 'Z': 52,
-        'X': 53, 'C': 54, 'V': 55, 'B': 56, 'N': 57, 'M': 58, ',': 59}
+LETTERS_TO_KEY_CODES = {
+    'Q': 24, 'W': 25, 'E': 26, 'R': 27, 'T': 28, 'Y': 29,
+    'U': 30, 'I': 31, '2': 11, '3': 12, '5': 14, '6': 15, '7': 16,
+    'S': 39, 'D': 40, 'G': 42, 'H': 43, 'J': 44, 'L': 46, 'Z': 52,
+    'X': 53, 'C': 54, 'V': 55, 'B': 56, 'N': 57, 'M': 58, ',': 59}
 
 
 KEY_CODES_TO_LETTERS = {}
@@ -37,14 +38,12 @@ for key in LETTERS_TO_KEY_CODES.keys():
 
 class PianoKeyboard(Gtk.DrawingArea):
 
-    __gsignals__ = {'key_pressed': (GObject.SignalFlags.RUN_FIRST,
-                          None,
-                          ([GObject.TYPE_INT, GObject.TYPE_INT,
-                            GObject.TYPE_STRING])),
-                    'key_released': (GObject.SignalFlags.RUN_FIRST,
-                          None,
-                          ([GObject.TYPE_INT, GObject.TYPE_INT,
-                            GObject.TYPE_STRING]))}
+    __gsignals__ = {'key_pressed': (GObject.SignalFlags.RUN_FIRST, None,
+                    ([GObject.TYPE_INT, GObject.TYPE_INT,
+                    GObject.TYPE_STRING])),
+                    'key_released': (GObject.SignalFlags.RUN_FIRST, None,
+                    ([GObject.TYPE_INT, GObject.TYPE_INT,
+                    GObject.TYPE_STRING]))}
 
     def __init__(self, octaves=1, add_c=False, labels=None, values=None):
         self._octaves = octaves
@@ -68,13 +67,13 @@ class PianoKeyboard(Gtk.DrawingArea):
         self.connect('draw', self.__draw_cb)
         self.connect('event', self.__event_cb)
 
-        self.set_events(Gdk.EventMask.EXPOSURE_MASK |
-                Gdk.EventMask.BUTTON_PRESS_MASK | \
-                Gdk.EventMask.BUTTON_RELEASE_MASK | \
-                Gdk.EventMask.BUTTON_MOTION_MASK | \
-                Gdk.EventMask.POINTER_MOTION_MASK | \
-                Gdk.EventMask.POINTER_MOTION_HINT_MASK | \
-                Gdk.EventMask.TOUCH_MASK)
+        self.set_events(
+            Gdk.EventMask.EXPOSURE_MASK | Gdk.EventMask.BUTTON_PRESS_MASK |
+            Gdk.EventMask.BUTTON_RELEASE_MASK |
+            Gdk.EventMask.BUTTON_MOTION_MASK |
+            Gdk.EventMask.POINTER_MOTION_MASK |
+            Gdk.EventMask.POINTER_MOTION_HINT_MASK |
+            Gdk.EventMask.TOUCH_MASK)
 
     def set_labels(self, labels):
         self._labels = labels
@@ -92,23 +91,25 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._octave_width = self._key_width * 7
 
         # this array have the x position where starts every key
-        self._x_start = [0,
-                self._key_width * K2 / D,
-                self._key_width,
-                self._key_width + self._key_width * K2 / D,
-                self._key_width * 2,
-                self._key_width * 3,
-                self._key_width * 3 + self._key_width * K2 / D,
-                self._key_width * 4,
-                self._key_width * 4 + self._key_width * K2 / D,
-                self._key_width * 5,
-                self._key_width * 5 + self._key_width * K2 / D,
-                self._key_width * 6]
+        self._x_start = [
+            0,
+            self._key_width * K2 / D,
+            self._key_width,
+            self._key_width + self._key_width * K2 / D,
+            self._key_width * 2,
+            self._key_width * 3,
+            self._key_width * 3 + self._key_width * K2 / D,
+            self._key_width * 4,
+            self._key_width * 4 + self._key_width * K2 / D,
+            self._key_width * 5,
+            self._key_width * 5 + self._key_width * K2 / D,
+            self._key_width * 6]
 
         self.set_size_request(-1, self._height)
 
     def __event_cb(self, widget, event):
-        if event.type in (Gdk.EventType.TOUCH_BEGIN,
+        if event.type in (
+                Gdk.EventType.TOUCH_BEGIN,
                 Gdk.EventType.TOUCH_CANCEL, Gdk.EventType.TOUCH_END,
                 Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS,
                 Gdk.EventType.BUTTON_RELEASE, Gdk.EventType.MOTION_NOTIFY):
@@ -119,7 +120,8 @@ class PianoKeyboard(Gtk.DrawingArea):
             # save a copy of the old touches
             old_touches = []
             old_touches.extend(self._touches.values())
-            if event.type in (Gdk.EventType.TOUCH_BEGIN,
+            if event.type in (
+                    Gdk.EventType.TOUCH_BEGIN,
                     Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS):
                 if event.type == Gdk.EventType.TOUCH_BEGIN:
                     # verify if there are another touch pointed to the same key
@@ -133,8 +135,8 @@ class PianoKeyboard(Gtk.DrawingArea):
                     event.get_state()[1] & Gdk.ModifierType.BUTTON1_MASK:
                 self._touches[seq] = (x, y)
                 updated_positions = True
-            elif event.type in (Gdk.EventType.TOUCH_END,
-                                Gdk.EventType.BUTTON_RELEASE):
+            elif event.type in (
+                    Gdk.EventType.TOUCH_END, Gdk.EventType.BUTTON_RELEASE):
                 del self._touches[seq]
                 # execute the update pressed keys with a delay,
                 # because motion events can came after the button release
@@ -157,7 +159,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 octave_pressed = int(pressed_key[:pressed_key.find('_')])
                 key_pressed = int(pressed_key[pressed_key.find('_') + 1:])
                 self.emit('key_pressed', octave_pressed, key_pressed,
-                        self.get_value(octave_pressed, key_pressed))
+                          self.get_value(octave_pressed, key_pressed))
             else:
                 del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
@@ -166,7 +168,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             octave_released = int(key[:key.find('_')])
             key_released = int(key[key.find('_') + 1:])
             self.emit('key_released', octave_released, key_released,
-                    self.get_value(octave_released, key_released))
+                      self.get_value(octave_released, key_released))
 
         self._pressed_keys = new_pressed_keys
         logging.error(self._pressed_keys)
@@ -180,8 +182,8 @@ class PianoKeyboard(Gtk.DrawingArea):
         min_x = self._width
         max_x = 0
         for touch in uniq_touches:
-            min_x_touch, max_x_touch = \
-                    self.get_damaged_range(int(touch[0]), int(touch[1]))
+            min_x_touch, max_x_touch = self.get_damaged_range(int(touch[0]),
+                                                              int(touch[1]))
             if min_x_touch < min_x:
                 min_x = min_x_touch
             if max_x_touch > max_x:
@@ -231,19 +233,19 @@ class PianoKeyboard(Gtk.DrawingArea):
         key_area = int((x % self._octave_width) / self._key_width)
         click_x = int(x % self._key_width)
         if y > self._black_keys_height or \
-            (self._add_c and x > self._width - self._key_width):
+                (self._add_c and x > self._width - self._key_width):
             key_found = self._white_keys[key_area]
         else:
             # check black key at the right
             key_found = -1
             if key_area in self._l_keys_areas or \
-                key_area in self._t_keys_areas:
+                    key_area in self._t_keys_areas:
                 if click_x > self._key_width * K2 / D:
                     key_found = self._white_keys[key_area] + 1
             # check black key at the left
             if key_found == -1 and \
-                key_area in self._j_keys_areas or \
-                key_area in self._t_keys_areas:
+                    key_area in self._j_keys_areas or \
+                    key_area in self._t_keys_areas:
                 if click_x < self._key_width * K1 / D:
                     key_found = self._white_keys[key_area] - 1
             if key_found == -1:
@@ -307,10 +309,9 @@ class PianoKeyboard(Gtk.DrawingArea):
         # calculate text height
         # TODO:
         ctx.select_font_face('sans-serif', cairo.FONT_SLANT_NORMAL,
-                cairo.FONT_WEIGHT_BOLD)
+                             cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size(self.font_size)
-        x_bearing, y_bearing, width, height, x_advance, y_advance = \
-                ctx.text_extents('M')
+        _xbear, _ybear, width, height, _xadv, _yadv = ctx.text_extents('M')
         self._text_height = height
 
         for n in range(0, self._octaves):
@@ -531,21 +532,20 @@ class PianoKeyboard(Gtk.DrawingArea):
         ctx.stroke()
 
     def _draw_label(self, ctx, x, octave_number, position, black_key,
-                highlighted):
+                    highlighted):
         #print "Dibujando ",text
         if self._labels is not None:
             text = self._labels[octave_number][position]
-            x_bearing, y_bearing, width, height, x_advance, y_advance = \
-                    ctx.text_extents(text)
+            x_bea, _ybea, width, height, _xadv, _yadv = ctx.text_extents(text)
             if black_key:
-                x_text = x + self._key_width * K1 / D - (width / 2 + x_bearing)
+                x_text = x + self._key_width * K1 / D - (width / 2 + x_bea)
                 y_text = self._black_keys_height - (self._text_height * 2)
                 if highlighted:
                     stroke = (0, 0, 0)
                 else:
                     stroke = (1, 1, 1)
             else:
-                x_text = x + self._key_width / 2 - (width / 2 + x_bearing)
+                x_text = x + self._key_width / 2 - (width / 2 + x_bea)
                 y_text = self._height - (self._text_height * 2)
                 stroke = (0, 0, 0)
             ctx.set_source_rgb(*stroke)
@@ -555,12 +555,12 @@ class PianoKeyboard(Gtk.DrawingArea):
 
 def print_key_pressed(widget, octave_clicked, key_clicked, letter):
     print 'Pressed Octave: %d Key: %d Letter: %s' % (octave_clicked,
-        key_clicked, letter)
+                                                     key_clicked, letter)
 
 
 def print_key_released(widget, octave_clicked, key_clicked, letter):
     print 'Released Octave: %d Key: %d Letter: %s' % (octave_clicked,
-        key_clicked, letter)
+                                                      key_clicked, letter)
 
 
 def main():
