@@ -163,10 +163,10 @@ class SimplePianoActivity(activity.Activity):
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
 
     def load_instruments(self):
-        self._instruments_store = Gtk.ListStore(str, GdkPixbuf.Pixbuf)
+        self._instruments_store = Gtk.ListStore(str, GdkPixbuf.Pixbuf, str)
         self._instruments_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
         self.instruments_iconview = Gtk.IconView(self._instruments_store)
-        self.instruments_iconview.set_text_column(0)
+        self.instruments_iconview.set_text_column(2)
         self.instruments_iconview.set_pixbuf_column(1)
 
         # load the images
@@ -176,12 +176,15 @@ class SimplePianoActivity(activity.Activity):
         for file_name in os.listdir(images_path):
             image_file_name = os.path.join(images_path, file_name)
             logging.error('Adding %s', image_file_name)
-            instrument_name = image_file_name[image_file_name.rfind('/'):]
             pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(
                 image_file_name, 75, 75)
+            #instrument_name = image_file_name[image_file_name.rfind('/'):]
             instrument_name = image_file_name[image_file_name.rfind('/') + 1:]
             instrument_name = instrument_name[:instrument_name.find('.')]
-            self._instruments_store.append([instrument_name, pxb])
+            instrument_desc = \
+                self.instrumentDB.instNamed[instrument_name].nameTooltip
+            self._instruments_store.append([instrument_name, pxb,
+                instrument_desc])
         self.instruments_iconview.connect(
             'selection-changed', self.__instrument_iconview_activated_cb)
 
