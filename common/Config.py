@@ -260,13 +260,6 @@ MAXIMUM_AMPLITUDE = 1
 DEFAULT_GRID = 3
 DEFAULT_GRID_DIV2 = DEFAULT_GRID / 2.0
 
-
-####################
-## ToolTips
-####################
-from Tooltips import Tooltips
-
-
 ####################
 ## KeyMapping
 ####################
