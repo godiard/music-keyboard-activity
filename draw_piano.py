@@ -79,7 +79,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._labels = labels
         self.queue_draw()
 
-    def calculate_sizes(self, width):
+    def _calculate_sizes(self, width):
         self._width = width
         self._height = self._width / 2
         cant_keys = 7 * self._octaves
@@ -148,7 +148,7 @@ class PianoKeyboard(Gtk.DrawingArea):
     def _update_pressed_keys(self, old_touches):
         new_pressed_keys = []
         for touch in self._touches.values():
-            key_found = self.__get_key_at_position(touch[0], touch[1])  # x, y
+            key_found = self._get_key_at_position(touch[0], touch[1])  # x, y
             if key_found is not None and key_found not in new_pressed_keys:
                 new_pressed_keys.append(key_found)
 
@@ -159,7 +159,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 octave_pressed = int(pressed_key[:pressed_key.find('_')])
                 key_pressed = int(pressed_key[pressed_key.find('_') + 1:])
                 self.emit('key_pressed', octave_pressed, key_pressed,
-                          self.get_value(octave_pressed, key_pressed))
+                          self._get_value(octave_pressed, key_pressed))
             else:
                 del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
@@ -168,7 +168,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             octave_released = int(key[:key.find('_')])
             key_released = int(key[key.find('_') + 1:])
             self.emit('key_released', octave_released, key_released,
-                      self.get_value(octave_released, key_released))
+                      self._get_value(octave_released, key_released))
 
         self._pressed_keys = new_pressed_keys
         logging.error(self._pressed_keys)
@@ -182,8 +182,8 @@ class PianoKeyboard(Gtk.DrawingArea):
         min_x = self._width
         max_x = 0
         for touch in uniq_touches:
-            min_x_touch, max_x_touch = self.get_damaged_range(int(touch[0]),
-                                                              int(touch[1]))
+            min_x_touch, max_x_touch = self._get_damaged_range(int(touch[0]),
+                                                               int(touch[1]))
             if min_x_touch < min_x:
                 min_x = min_x_touch
             if max_x_touch > max_x:
@@ -226,7 +226,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         x = self._key_width * (octave_number * 7) + self._x_start[key_number]
         self.queue_draw_area(x, 0, self._key_width, self._height)
 
-    def __get_key_at_position(self, x, y):
+    def _get_key_at_position(self, x, y):
         if y > self._height:
             return None
         octave_found = int(x / self._octave_width)
@@ -252,7 +252,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 key_found = self._white_keys[key_area]
         return '%d_%d' % (octave_found, key_found)
 
-    def get_damaged_range(self, x, y):
+    def _get_damaged_range(self, x, y):
         """
         Based on the x position, calculate what is the min & max X
         that need be redraw. Y is ignored due to most of the keys
@@ -287,22 +287,14 @@ class PianoKeyboard(Gtk.DrawingArea):
                 x_max = x_min + self._key_width
         return x_min, x_max
 
-    def get_label(self, octave, key):
-        if self._labels is None:
-            return ""
-        try:
-            return self._labels[octave][key]
-        except:
-            return ""
-
-    def get_value(self, octave, key):
+    def _get_value(self, octave, key):
         try:
             return self._values[octave][key]
         except:
             return ""
 
     def __allocate_cb(self, widget, rect):
-        self.calculate_sizes(rect.width)
+        self._calculate_sizes(rect.width)
 
     def __draw_cb(self, widget, ctx):
 
@@ -315,9 +307,9 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._text_height = height
 
         for n in range(0, self._octaves):
-            self.draw_octave(ctx, n)
+            self._draw_octave(ctx, n)
         if self._add_c:
-            self.draw_last_C(ctx, n + 1)
+            self._draw_last_C(ctx, n + 1)
         for pressed_key in self._pressed_keys:
             octave = int(pressed_key[:pressed_key.find('_')])
             key = int(pressed_key[pressed_key.find('_') + 1:])
@@ -326,45 +318,45 @@ class PianoKeyboard(Gtk.DrawingArea):
                 return
             if key == 0:
                 if octave < self._octaves:
-                    self.draw_C(ctx, octave, True)
+                    self._draw_C(ctx, octave, True)
                 else:
-                    self.draw_last_C(ctx, octave, True)
+                    self._draw_last_C(ctx, octave, True)
             elif key == 1:
-                self.draw_CB(ctx, octave, True)
+                self._draw_CB(ctx, octave, True)
             elif key == 2:
-                self.draw_D(ctx, octave, True)
+                self._draw_D(ctx, octave, True)
             elif key == 3:
-                self.draw_DB(ctx, octave, True)
+                self._draw_DB(ctx, octave, True)
             elif key == 4:
-                self.draw_E(ctx, octave, True)
+                self._draw_E(ctx, octave, True)
             elif key == 5:
-                self.draw_F(ctx, octave, True)
+                self._draw_F(ctx, octave, True)
             elif key == 6:
-                self.draw_FB(ctx, octave, True)
+                self._draw_FB(ctx, octave, True)
             elif key == 7:
-                self.draw_G(ctx, octave, True)
+                self._draw_G(ctx, octave, True)
             elif key == 8:
-                self.draw_GB(ctx, octave, True)
+                self._draw_GB(ctx, octave, True)
             elif key == 9:
-                self.draw_A(ctx, octave, True)
+                self._draw_A(ctx, octave, True)
             elif key == 10:
-                self.draw_AB(ctx, octave, True)
+                self._draw_AB(ctx, octave, True)
             elif key == 11:
-                self.draw_B(ctx, octave, True)
+                self._draw_B(ctx, octave, True)
 
-    def draw_octave(self, ctx, octave_number):
-        self.draw_C(ctx, octave_number)
-        self.draw_CB(ctx, octave_number)
-        self.draw_D(ctx, octave_number)
-        self.draw_DB(ctx, octave_number)
-        self.draw_E(ctx, octave_number)
-        self.draw_F(ctx, octave_number)
-        self.draw_FB(ctx, octave_number)
-        self.draw_G(ctx, octave_number)
-        self.draw_GB(ctx, octave_number)
-        self.draw_A(ctx, octave_number)
-        self.draw_AB(ctx, octave_number)
-        self.draw_B(ctx, octave_number)
+    def _draw_octave(self, ctx, octave_number):
+        self._draw_C(ctx, octave_number)
+        self._draw_CB(ctx, octave_number)
+        self._draw_D(ctx, octave_number)
+        self._draw_DB(ctx, octave_number)
+        self._draw_E(ctx, octave_number)
+        self._draw_F(ctx, octave_number)
+        self._draw_FB(ctx, octave_number)
+        self._draw_G(ctx, octave_number)
+        self._draw_GB(ctx, octave_number)
+        self._draw_A(ctx, octave_number)
+        self._draw_AB(ctx, octave_number)
+        self._draw_B(ctx, octave_number)
 
         """
         Draw 5 types of keys: L keys, T keys, J keys and black keys,
@@ -378,72 +370,72 @@ class PianoKeyboard(Gtk.DrawingArea):
         +----+------+----+---+
         """
 
-    def draw_C(self, ctx, octave_number, highlighted=False):
+    def _draw_C(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7)
-        self.draw_key_L(ctx, x, highlighted)
+        self._draw_key_L(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 0, False, highlighted)
 
-    def draw_CB(self, ctx, octave_number, highlighted=False):
+    def _draw_CB(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[1]
-        self.draw_black(ctx, x, highlighted)
+        self._draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 1, True, highlighted)
 
-    def draw_D(self, ctx, octave_number, highlighted=False):
+    def _draw_D(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[2]
-        self.draw_key_T(ctx, x, highlighted)
+        self._draw_key_T(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 2, False, highlighted)
 
-    def draw_DB(self, ctx, octave_number, highlighted=False):
+    def _draw_DB(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[3]
-        self.draw_black(ctx, x, highlighted)
+        self._draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 3, True, highlighted)
 
-    def draw_E(self, ctx, octave_number, highlighted=False):
+    def _draw_E(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[4]
-        self.draw_key_J(ctx, x, highlighted)
+        self._draw_key_J(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 4, False, highlighted)
 
-    def draw_F(self, ctx, octave_number, highlighted=False):
+    def _draw_F(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[5]
-        self.draw_key_L(ctx, x, highlighted)
+        self._draw_key_L(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 5, False, highlighted)
 
-    def draw_FB(self, ctx, octave_number, highlighted=False):
+    def _draw_FB(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[6]
-        self.draw_black(ctx, x, highlighted)
+        self._draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 6, True, highlighted)
 
-    def draw_G(self, ctx, octave_number, highlighted=False):
+    def _draw_G(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[7]
-        self.draw_key_T(ctx, x, highlighted)
+        self._draw_key_T(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 7, False, highlighted)
 
-    def draw_GB(self, ctx, octave_number, highlighted=False):
+    def _draw_GB(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[8]
-        self.draw_black(ctx, x, highlighted)
+        self._draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 8, True, highlighted)
 
-    def draw_A(self, ctx, octave_number, highlighted=False):
+    def _draw_A(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[9]
-        self.draw_key_T(ctx, x, highlighted)
+        self._draw_key_T(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 9, False, highlighted)
 
-    def draw_AB(self, ctx, octave_number, highlighted=False):
+    def _draw_AB(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[10]
-        self.draw_black(ctx, x, highlighted)
+        self._draw_black(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 10, True, highlighted)
 
-    def draw_B(self, ctx, octave_number, highlighted=False):
+    def _draw_B(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7) + self._x_start[11]
-        self.draw_key_J(ctx, x, highlighted)
+        self._draw_key_J(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 11, False, highlighted)
 
-    def draw_last_C(self, ctx, octave_number, highlighted=False):
+    def _draw_last_C(self, ctx, octave_number, highlighted=False):
         x = self._key_width * (octave_number * 7)
-        self.draw_key_simple(ctx, x, highlighted)
+        self._draw_key_simple(ctx, x, highlighted)
         self._draw_label(ctx, x, octave_number, 0, False, highlighted)
 
-    def draw_key_L(self, ctx, x, highlighted):
+    def _draw_key_L(self, ctx, x, highlighted):
         ctx.save()
         ctx.move_to(x, 0)
         stroke = (0, 0, 0)
@@ -461,7 +453,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._fill_and_stroke(ctx, fill, stroke)
         ctx.restore()
 
-    def draw_key_T(self, ctx, x, highlighted):
+    def _draw_key_T(self, ctx, x, highlighted):
         ctx.save()
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
@@ -479,7 +471,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._fill_and_stroke(ctx, fill, stroke)
         ctx.restore()
 
-    def draw_key_J(self, ctx, x, highlighted):
+    def _draw_key_J(self, ctx, x, highlighted):
         ctx.save()
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
@@ -495,7 +487,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._fill_and_stroke(ctx, fill, stroke)
         ctx.restore()
 
-    def draw_key_simple(self, ctx, x, highlighted):
+    def _draw_key_simple(self, ctx, x, highlighted):
         ctx.save()
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
@@ -509,7 +501,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._fill_and_stroke(ctx, fill, stroke)
         ctx.restore()
 
-    def draw_black(self, ctx, x, highlighted):
+    def _draw_black(self, ctx, x, highlighted):
         ctx.save()
         ctx.move_to(x, 0)
         stroke = (0, 0, 0)
