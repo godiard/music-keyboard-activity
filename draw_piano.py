@@ -86,7 +86,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         if self._add_c:
             cant_keys += 1
         self._key_width = self._width / cant_keys
-        logging.error('key_width %s', self._key_width)
+        logging.debug('key_width %s', self._key_width)
         self._black_keys_height = self._height * 2 / 3
         self._octave_width = self._key_width * 7
 
@@ -171,7 +171,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                       self._get_value(octave_released, key_released))
 
         self._pressed_keys = new_pressed_keys
-        logging.error(self._pressed_keys)
+        logging.debug(self._pressed_keys)
         # calculate the damaged area
         # create a list with the old and new touches uniqified
         uniq_touches = []

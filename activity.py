@@ -241,7 +241,7 @@ class SimplePianoActivity(activity.Activity):
         #self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
-        logging.error(
+        logging.debug(
             'Pressed Octave: %d Key: %d Letter: %s' %
             (octave_clicked, key_clicked, letter))
         if letter in LETTERS_TO_KEY_CODES.keys():
