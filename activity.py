@@ -196,7 +196,7 @@ class SimplePianoActivity(activity.Activity):
             instrument_desc = \
                 self.instrumentDB.instNamed[instrument_name].nameTooltip
             self._instruments_store.append([instrument_name, pxb,
-                instrument_desc])
+                                           instrument_desc])
         self.instruments_iconview.connect(
             'selection-changed', self.__instrument_iconview_activated_cb)
 
