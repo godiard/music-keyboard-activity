@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from gi.repository import Gtk
+from gi.repository import GLib
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 import logging
@@ -153,14 +154,25 @@ class SimplePianoActivity(activity.Activity):
         vbox.set_homogeneous(False)
         self.load_instruments()
         vbox.pack_end(self.piano, True, True, 0)
-        scrolled = Gtk.ScrolledWindow()
-        vbox.pack_start(scrolled, False, False, 0)
-        scrolled.add(self.instruments_iconview)
+        self.scrolled = Gtk.ScrolledWindow()
+        vbox.pack_start(self.scrolled, False, False, 0)
+        self.scrolled.add(self.instruments_iconview)
         vbox.show_all()
         self.set_canvas(vbox)
         piano_height = Gdk.Screen.width() / 2
-        scrolled.set_size_request(
+        self.scrolled.set_size_request(
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
+        self.connect('size-allocate', self.__allocate_cb)
+
+    def __allocate_cb(self, widget, rect):
+        GLib.idle_add(self.resize, rect.width, rect.height)
+        return False
+
+    def resize(self, width, height):
+        piano_height = width / 2
+        self.scrolled.set_size_request(
+            -1, height - piano_height - style.GRID_CELL_SIZE)
+        return False
 
     def load_instruments(self):
         self._instruments_store = Gtk.ListStore(str, GdkPixbuf.Pixbuf, str)
