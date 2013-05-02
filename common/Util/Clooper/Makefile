@@ -15,15 +15,16 @@ LIB_NAME = $(CSOUND_ARCH)_$(CSOUND_VERSION)
 CXXFLAGS = $(shell python-config --cflags) \
 		   -Wall -Werror -fPIC -O2 -finline 
 LDFLAGS+=  $(python-config --libs) \
-		   -lasound -lcsound
+		   -lcsound
 
 all : aclient.so
 	rm -rf $(LIB_NAME)
 	mkdir $(LIB_NAME)
+	strip aclient.so
 	mv aclient.so $(LIB_NAME)/
 	touch $(LIB_NAME)/__init__.py
 
-aclient.so : aclient.cpp audio.cpp
+aclient.so : aclient.cpp
 	g++ $(CXXFLAGS) -shared -o $@ $< $(LDFLAGS)
 
 clean :

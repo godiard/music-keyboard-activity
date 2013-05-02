@@ -12,20 +12,8 @@
 #include <cmath>
 
 #include <csound/csound.h>
-#include <alsa/asoundlib.h>
 
-static double pytime(const struct timeval * tv)
-{
-    struct timeval t;
-    if (!tv)
-    {
-        tv = &t;
-        gettimeofday(&t, NULL);
-    }
-    return (double) tv->tv_sec + (double) tv->tv_usec / 1000000.0;
-}
 #include "log.cpp"
-#include "audio.cpp"
 
 
 int VERBOSE = 3;
@@ -510,52 +498,31 @@ struct TamTamSound
     MYFLT tick_total;
 
     /** the upsampling ratio from csound */
-    unsigned int csound_ksmps;
-    snd_pcm_uframes_t csound_frame_rate;
-    snd_pcm_uframes_t csound_period_size;
-    snd_pcm_uframes_t period0;
-    unsigned int period_per_buffer; //should be 2
-    int up_ratio;  //if the hardware only supports a small integer multiple of our effective samplerate, do a real-time conversion
+    int csound_frame_rate;
+    long csound_period_size;
 
     log_t * ll;
-    SystemStuff * sys_stuff;
 
-    TamTamSound(log_t * ll, char * orc, snd_pcm_uframes_t period0, unsigned int ppb, int ksmps, int framerate )
+    TamTamSound(log_t * ll, char * orc, int framerate )
         : ThreadID(NULL), PERF_STATUS(STOP), csound(NULL),
         music(),
         ticks_per_period(0.0),
         tick_adjustment(0.0), 
         tick_total(0.0),
-        csound_ksmps(ksmps),                    //must agree with the orchestra file
         csound_frame_rate(framerate),           //must agree with the orchestra file
-        period0(period0),
-        period_per_buffer(ppb),
-        up_ratio(1),
-        ll( ll ),
-        sys_stuff(NULL)
+        ll( ll )
     {
-        sys_stuff = new SystemStuff(ll);
-        if (0 > sys_stuff->open(csound_frame_rate, 4, period0, period_per_buffer))
-        {
-            return;
-        }
-        sys_stuff->close(0);
-        up_ratio = sys_stuff->rate / csound_frame_rate;
-        csound_period_size = (sys_stuff->period_size % up_ratio == 0)
-                  ? sys_stuff->period_size / up_ratio
-                  : csound_ksmps * 4;
-
         csound = csoundCreate(NULL);
-        int argc=3;
+        int argc=4;
         const char  **argv = (const char**)malloc(argc*sizeof(char*));
         argv[0] = "csound";
         argv[1] = "-m0";
-        argv[2] = orc;
+        argv[2] = "-+rtaudio=alsa";
+        argv[3] = orc;
 
         ll->printf(1,  "loading csound orchestra file %s\n", orc);
         //csoundInitialize(&argc, &argv, 0);
         csoundPreCompile(csound);
-        csoundSetHostImplementedAudioIO(csound, 1, csound_period_size);
         int result = csoundCompile(csound, argc, (char**)argv);
         if (result)
         {
@@ -563,6 +530,8 @@ struct TamTamSound
             ll->printf( "ERROR: csoundCompile of orchestra %s failed with code %i\n", orc, result);
         }
         free(argv);
+        csound_period_size = csoundGetOutputBufferSize(csound);
+        csound_period_size /= 2; /* channels */
         setTickDuration(0.05);
     }
     ~TamTamSound()
@@ -574,7 +543,6 @@ struct TamTamSound
             csoundDestroy(csound);
         }
         ll->printf(2, "TamTamSound destroyed\n");
-        if (sys_stuff) delete sys_stuff;
         delete ll;
     }
     bool good()
@@ -586,76 +554,10 @@ struct TamTamSound
     {
         assert(csound);
 
-        const int nchannels = 2;
-        int nloops = 0;
-        long int csound_nsamples = csoundGetOutputBufferSize(csound);
-        long int csound_nframes = csound_nsamples / nchannels;
-
-        ll->printf(2, "INFO: nsamples = %li nframes = %li\n", csound_nsamples, csound_nframes);
-
-        if (0 > sys_stuff->open(csound_frame_rate, 4, period0, period_per_buffer))
-        {
-            ll->printf( "ERROR: failed to open alsa device, thread abort\n");
-            return 1;
-        }
-                 
-        assert(up_ratio == (signed)(sys_stuff->rate / csound_frame_rate));
-
-        bool do_upsample = (signed)sys_stuff->period_size != csound_nframes;
-        short *upbuf = new short[ sys_stuff->period_size * nchannels ];
-        int cbuf_pos = csound_nframes; // trigger a call to csoundPerformBuffer immediately
-        float *cbuf = NULL;
-        int up_pos = 0;
-        int ratio_pos = 0;
-
         tick_total = 0.0f;
-
         while (PERF_STATUS == CONTINUE)
         {
-            if ( do_upsample ) //fill one period of audio buffer data by 0 or more calls to csound
-            {
-                up_pos = 0;
-                int messed = 0;
-                short cursample[2]={0,0};
-                while(!messed)
-                {
-                    if (cbuf_pos == csound_nframes)
-                    {
-                        cbuf_pos = 0;
-                        if (csoundPerformBuffer(csound)) { messed = 1;break;}
-                        cbuf = csoundGetOutputBuffer(csound);
-			cursample[0] = (signed short int) (cbuf[cbuf_pos*2+0] * (1<<15));
-			cursample[1] = (signed short int) (cbuf[cbuf_pos*2+1] * (1<<15));
-
-                    }
-                    upbuf[2*up_pos+0] = cursample[0];
-                    upbuf[2*up_pos+1] = cursample[1];
-                    if (++ratio_pos == up_ratio)
-                    {
-                        ratio_pos = 0;
-                        ++cbuf_pos;
-			cursample[0] = (signed short int) (cbuf[cbuf_pos*2+0] * (1<<15));
-			cursample[1] = (signed short int) (cbuf[cbuf_pos*2+1] * (1<<15));
-                    }
-
-                    if (++up_pos == (signed)sys_stuff->period_size) break;
-                }
-                if (messed || (up_pos != (signed)sys_stuff->period_size)) break;
-
-                if (0 > sys_stuff->writebuf(sys_stuff->period_size, upbuf)) break;
-            }
-            else               //fill one period of audio directly from csound
-            {
-                if (csoundPerformBuffer(csound)) break;
-                cbuf = csoundGetOutputBuffer(csound);
-                for (int i = 0; i < csound_nframes * nchannels; ++i)
-                {
-                    cbuf[i] *= (float) ((1<<15)-100.0f);
-                    upbuf[i] = (signed short int) cbuf[i];
-                }
-                if (0 > sys_stuff->writebuf(csound_nframes,upbuf)) break;
-            }
-
+            if (csoundPerformBuffer(csound)) break;
             if (tick_adjustment > - ticks_per_period)
             {
                 MYFLT tick_inc = ticks_per_period + tick_adjustment;
@@ -667,11 +569,8 @@ struct TamTamSound
             {
                 tick_adjustment += ticks_per_period;
             }
-            ++nloops;
         }
 
-        sys_stuff->close(1);
-        delete [] upbuf;
         ll->printf(2, "INFO: performance thread returning 0\n");
         return 0;
     }
@@ -820,8 +719,8 @@ DECL(sc_initialize) //(char * csd)
 {
     char * str;
     char * log_file;
-    int period, ppb, ksmps, framerate;
-    if (!PyArg_ParseTuple(args, "ssiiiii", &str, &log_file, &period, &ppb, &VERBOSE, &ksmps, &framerate ))
+    int framerate;
+    if (!PyArg_ParseTuple(args, "ssii", &str, &log_file, &VERBOSE, &framerate ))
     {
         return NULL;
     }
@@ -840,7 +739,7 @@ DECL(sc_initialize) //(char * csd)
         fprintf(stderr, "Logging disabled on purpose\n");
     }
     g_log = new log_t(_debug, VERBOSE);
-    g_tt = new TamTamSound(g_log, str, period, ppb, ksmps, framerate);
+    g_tt = new TamTamSound(g_log, str, framerate);
     g_music = & g_tt->music;
     atexit(&cleanup);
     if (g_tt->good()) 

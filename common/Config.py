@@ -55,12 +55,7 @@ for i in (INSTANCE_DIR, DATA_DIR, SNDS_INFO_DIR, TMP_DIR):
 PLUGIN_DEBUG = os.getenv("CSOUND_LOGFILE", "")
 PLUGIN_VERBOSE = DEBUG
 PLUGIN_UNIVORC = join(FILES_DIR, "tamtamorc.csd")
-PLUGIN_KSMPS = 64
 PLUGIN_RATE = 16000
-
-## PLUGIN ALSA PARAMETERS:
-PLUGIN_PERIOD = 256  # 512
-PLUGIN_NPERIODS = 2
 
 try:
     from sugar3.graphics.toolbarbox import ToolbarBox, ToolbarButton
