@@ -74,6 +74,12 @@ class SimplePianoActivity(activity.Activity):
         notes_labels.connect('clicked', self.set_notes_labels_cb)
         toolbar_box.toolbar.insert(notes_labels, -1)
 
+        ti_notes_labels = RadioToolButton()
+        ti_notes_labels.props.icon_name = 'ti_key'
+        ti_notes_labels.props.group = keybord_labels
+        ti_notes_labels.connect('clicked', self.set_ti_notes_labels_cb)
+        toolbar_box.toolbar.insert(ti_notes_labels, -1)
+
         german_labels = RadioToolButton()
         german_labels.props.icon_name = 'c_key'
         german_labels.props.group = keybord_labels
@@ -98,6 +104,12 @@ class SimplePianoActivity(activity.Activity):
                  ['FA#', 'SOLb'], 'SOL',
                  ['SOL#', 'LAb'], 'LA', ['LA#', 'SIb'], 'SI']
         self.notes_labels = [notes, notes, ['DO']]
+
+        # some countries use TI instead of SI
+        ti_notes = ['DO', ['DO#', 'REb'], 'RE', ['RE#', 'MIb'], 'MI', 'FA',
+                 ['FA#', 'SOLb'], 'SOL',
+                 ['SOL#', 'LAb'], 'LA', ['LA#', 'TIb'], 'TI']
+        self.ti_notes_labels = [ti_notes, ti_notes, ['DO']]
 
         german_notes = ['C', ['C#', 'Db'], 'D', ['D#', 'Eb'], 'E', 'F',
                         ['F#', 'Gb'], 'G',
@@ -211,6 +223,10 @@ class SimplePianoActivity(activity.Activity):
     def set_notes_labels_cb(self, widget):
         self.piano.font_size = 16
         self.piano.set_labels(self.notes_labels)
+
+    def set_ti_notes_labels_cb(self, widget):
+        self.piano.font_size = 16
+        self.piano.set_labels(self.ti_notes_labels)
 
     def set_keyboard_labels_cb(self, widget):
         self.piano.font_size = 25
