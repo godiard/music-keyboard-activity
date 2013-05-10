@@ -304,7 +304,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                              cairo.FONT_WEIGHT_BOLD)
         ctx.set_font_size(self.font_size)
         _xbear, _ybear, width, height, _xadv, _yadv = ctx.text_extents('M')
-        self._text_height = height
+        self._text_height = height + 5  # add a little separation
 
         for n in range(0, self._octaves):
             self._draw_octave(ctx, n)
@@ -528,21 +528,36 @@ class PianoKeyboard(Gtk.DrawingArea):
         #print "Dibujando ",text
         if self._labels is not None:
             text = self._labels[octave_number][position]
-            x_bea, _ybea, width, height, _xadv, _yadv = ctx.text_extents(text)
-            if black_key:
-                x_text = x + self._key_width * K1 / D - (width / 2 + x_bea)
-                y_text = self._black_keys_height - (self._text_height * 2)
-                if highlighted:
-                    stroke = (0, 0, 0)
-                else:
-                    stroke = (1, 1, 1)
+            # to enable use more than one label in the key, for the black keys
+            # and not need change all the whit key labels
+            # we allow the use of str or arrays of str
+            if isinstance(text, basestring):
+                # put the text in a array
+                labels = [text]
             else:
-                x_text = x + self._key_width / 2 - (width / 2 + x_bea)
-                y_text = self._height - (self._text_height * 2)
-                stroke = (0, 0, 0)
-            ctx.set_source_rgb(*stroke)
-            ctx.move_to(x_text, y_text)
-            ctx.show_text(text)
+                labels = text
+            i = 0
+            for label in labels:
+                x_bea, _ybea, width, height, _xadv, _yadv = \
+                    ctx.text_extents(label)
+                y_pos = len(labels) - i
+                if black_key:
+                    x_text = x + self._key_width * K1 / D - (width / 2 + x_bea)
+                    y_text = self._black_keys_height - \
+                        (self._text_height * y_pos + 1)
+                    if highlighted:
+                        stroke = (0, 0, 0)
+                    else:
+                        stroke = (1, 1, 1)
+                else:
+                    x_text = x + self._key_width / 2 - (width / 2 + x_bea)
+                    y_text = self._height - \
+                        (self._text_height * y_pos + 1)
+                    stroke = (0, 0, 0)
+                ctx.set_source_rgb(*stroke)
+                ctx.move_to(x_text, y_text)
+                ctx.show_text(label)
+                i = i + 1
 
 
 def print_key_pressed(widget, octave_clicked, key_clicked, letter):

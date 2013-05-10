@@ -94,12 +94,14 @@ class SimplePianoActivity(activity.Activity):
 
         self.keyboard_letters = ['ZSXDCVGBHNJM', 'Q2W3ER5T6Y7U', 'I']
 
-        notes = ['DO', 'DO#', 'RE', 'RE#', 'MI', 'FA', 'FA#', 'SOL',
-                 'SOL#', 'LA', 'LA#', 'SI']
+        notes = ['DO', ['DO#', 'REb'], 'RE', ['RE#', 'MIb'], 'MI', 'FA',
+                 ['FA#', 'SOLb'], 'SOL',
+                 ['SOL#', 'LAb'], 'LA', ['LA#', 'SIb'], 'SI']
         self.notes_labels = [notes, notes, ['DO']]
 
-        german_notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G',
-                        'G#', 'A', 'A#', 'B']
+        german_notes = ['C', ['C#', 'Db'], 'D', ['D#', 'Eb'], 'E', 'F',
+                        ['F#', 'Gb'], 'G',
+                        ['G#', 'Ab'], 'A', ['A#', 'Bb'], 'B']
 
         self.german_labels = [german_notes, german_notes, ['C']]
 
