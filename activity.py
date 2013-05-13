@@ -113,8 +113,8 @@ class SimplePianoActivity(activity.Activity):
 
         # some countries use TI instead of SI
         ti_notes = ['DO', ['DO#', 'REb'], 'RE', ['RE#', 'MIb'], 'MI', 'FA',
-                 ['FA#', 'SOLb'], 'SOL',
-                 ['SOL#', 'LAb'], 'LA', ['LA#', 'TIb'], 'TI']
+                    ['FA#', 'SOLb'], 'SOL',
+                    ['SOL#', 'LAb'], 'LA', ['LA#', 'TIb'], 'TI']
         self.ti_notes_labels = [ti_notes, ti_notes, ['DO']]
 
         german_notes = ['C', ['C#', 'Db'], 'D', ['D#', 'Eb'], 'E', 'F',
