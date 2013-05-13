@@ -86,6 +86,12 @@ class SimplePianoActivity(activity.Activity):
         german_labels.connect('clicked', self.set_german_labels_cb)
         toolbar_box.toolbar.insert(german_labels, -1)
 
+        no_labels = RadioToolButton()
+        no_labels.props.icon_name = 'edit-clear'
+        no_labels.props.group = keybord_labels
+        no_labels.connect('clicked', self.set_keyboard_no_labels_cb)
+        toolbar_box.toolbar.insert(no_labels, -1)
+
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
         separator.set_expand(True)
@@ -235,6 +241,10 @@ class SimplePianoActivity(activity.Activity):
     def set_german_labels_cb(self, widget):
         self.piano.font_size = 25
         self.piano.set_labels(self.german_labels)
+
+    def set_keyboard_no_labels_cb(self, widget):
+        self.piano.font_size = 25
+        self.piano.set_labels(None)
 
     def enableKeyboard(self):
         self.keyboardStandAlone = KeyboardStandAlone(
