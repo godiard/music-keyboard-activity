@@ -59,7 +59,7 @@ xout aout
 endop
 
 opcode synthGrain, a, aaiiii
-aindex, atrans, ifreq, iphase itable, itabdur xin
+aindex, atrans, ifreq, iphase, itable, itabdur xin
 apha phasor ifreq, iphase
 aenv tab apha, 42, 1
 atrig = int(1-aenv)
