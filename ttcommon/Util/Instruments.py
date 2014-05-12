@@ -1,9 +1,9 @@
 import os
 from gettext import gettext as _
 
-import common.Config as Config
-from common.Config import imagefile
-import common.Util.InstrumentDB as InstrumentDB
+import ttcommon.Config as Config
+from ttcommon.Config import imagefile
+import ttcommon.Util.InstrumentDB as InstrumentDB
 
 LOW = Config.LOW
 MID = Config.MID

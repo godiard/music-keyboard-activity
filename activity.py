@@ -34,13 +34,13 @@ import math
 import os
 
 import time
-import common.Util.Instruments
-from common.Util import InstrumentDB
-from common.Util.CSoundClient import new_csound_client
+import ttcommon.Util.Instruments
+from ttcommon.Util import InstrumentDB
+from ttcommon.Util.CSoundClient import new_csound_client
 from KeyboardStandAlone import KeyboardStandAlone
 from MiniSequencer import MiniSequencer
 from Loop import Loop
-import common.Config as Config
+import ttcommon.Config as Config
 
 
 class SimplePianoActivity(activity.Activity):

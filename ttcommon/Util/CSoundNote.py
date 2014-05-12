@@ -1,5 +1,5 @@
-import common.Config as Config
-import common.Util.InstrumentDB as InstrumentDB
+import ttcommon.Config as Config
+import ttcommon.Util.InstrumentDB as InstrumentDB
 
 class CSoundNote :
     def __init__( self,

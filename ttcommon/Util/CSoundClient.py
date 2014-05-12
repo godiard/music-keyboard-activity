@@ -7,12 +7,12 @@ import time
 import array
 from math import sqrt
 
-from common.Util.Clooper import *
-import common.Config as Config
+from ttcommon.Util.Clooper import *
+import ttcommon.Config as Config
 
-from common.Generation.GenerationConstants import GenerationConstants
-from common.Util import NoteDB
-import common.Util.InstrumentDB as InstrumentDB
+from ttcommon.Generation.GenerationConstants import GenerationConstants
+from ttcommon.Util import NoteDB
+import ttcommon.Util.InstrumentDB as InstrumentDB
 
 loadedInstruments = []
 

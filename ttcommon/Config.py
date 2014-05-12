@@ -43,7 +43,7 @@ logging.debug('INFO: loaded TAMTAM_ROOT=%s' % TAM_TAM_ROOT)
 
 DATA_DIR = join(get_activity_root(), 'data')
 SNDS_INFO_DIR = join(get_activity_root(), 'data', 'snds_info')
-FILES_DIR = join(TAM_TAM_ROOT, "common", "Resources")
+FILES_DIR = join(TAM_TAM_ROOT, "ttcommon", "Resources")
 SOUNDS_DIR = join(FILES_DIR, "Sounds", "")
 IMAGE_ROOT = join(FILES_DIR, "Images", "")
 

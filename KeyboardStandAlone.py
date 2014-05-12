@@ -1,11 +1,11 @@
 from gi.repository import Gdk
 
-import common.Config as Config
-from common.Generation.GenerationConstants import GenerationConstants
-from common.Util.NoteDB  import Note
-from common.Util.CSoundNote import CSoundNote
-from common.Util.CSoundClient import new_csound_client
-from common.Util import InstrumentDB
+import ttcommon.Config as Config
+from ttcommon.Generation.GenerationConstants import GenerationConstants
+from ttcommon.Util.NoteDB  import Note
+from ttcommon.Util.CSoundNote import CSoundNote
+from ttcommon.Util.CSoundClient import new_csound_client
+from ttcommon.Util import InstrumentDB
 
 KEY_MAP_PIANO = Config.KEY_MAP_PIANO
 

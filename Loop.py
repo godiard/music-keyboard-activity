@@ -1,13 +1,13 @@
-import common.Config as Config
+import ttcommon.Config as Config
 import random
 import lps
-from  common.Generation.Drunk import *
-from common.Util.CSoundNote import CSoundNote
-from common.Util.CSoundClient import new_csound_client
-from common.Util.NoteDB import Note
-from common.Util.NoteDB import PARAMETER
-from common.Generation.GenerationConstants import GenerationConstants
-from common.Util import InstrumentDB
+from ttcommon.Generation.Drunk import *
+from ttcommon.Util.CSoundNote import CSoundNote
+from ttcommon.Util.CSoundClient import new_csound_client
+from ttcommon.Util.NoteDB import Note
+from ttcommon.Util.NoteDB import PARAMETER
+from ttcommon.Generation.GenerationConstants import GenerationConstants
+from ttcommon.Util import InstrumentDB
 
 class Loop:
     def __init__( self, beat, volume ):

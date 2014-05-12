@@ -1,10 +1,10 @@
 from gi.repository import GObject
 import time
-import common.Config as Config
-from common.Util.CSoundNote import CSoundNote
-from common.Util.CSoundClient import new_csound_client
-from common.Util.NoteDB import Note
-from common.Util.NoteDB import PARAMETER
+import ttcommon.Config as Config
+from ttcommon.Util.CSoundNote import CSoundNote
+from ttcommon.Util.CSoundClient import new_csound_client
+from ttcommon.Util.NoteDB import Note
+from ttcommon.Util.NoteDB import PARAMETER
 
 class MiniSequencer:
     def __init__( self, recordButtonState, recordOverSensitivity ):

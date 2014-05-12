@@ -1,5 +1,5 @@
-import common.Util.InstrumentDB as InstrumentDB
-import common.Config as Config
+import ttcommon.Util.InstrumentDB as InstrumentDB
+import ttcommon.Config as Config
 
 class PARAMETER:
     PAGE_BEATS, \

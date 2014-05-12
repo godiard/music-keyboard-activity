@@ -73,7 +73,7 @@ class InstrumentDB:
 
     # add an instrument to the DB by reading from an instrument definition file
     def addInstrument( self, path ):
-        from common.Util.CSoundClient import new_csound_client
+        from ttcommon.Util.CSoundClient import new_csound_client
         csnd = new_csound_client()
         i = Instrument(len(self.inst))
         self.inst += [ i ]
