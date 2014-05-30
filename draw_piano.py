@@ -79,9 +79,9 @@ class PianoKeyboard(Gtk.DrawingArea):
         self._labels = labels
         self.queue_draw()
 
-    def _calculate_sizes(self, width):
+    def _calculate_sizes(self, width, height):
         self._width = width
-        self._height = self._width / 2
+        self._height = height
         cant_keys = 7 * self._octaves
         if self._add_c:
             cant_keys += 1
@@ -294,7 +294,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             return ""
 
     def __allocate_cb(self, widget, rect):
-        self._calculate_sizes(rect.width)
+        self._calculate_sizes(rect.width, rect.height)
 
     def __draw_cb(self, widget, ctx):
 
