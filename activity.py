@@ -26,6 +26,8 @@ from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.palette import Palette
 
+from ttcommon.Util.CSoundClient import new_csound_client
+
 from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
 
@@ -43,6 +45,8 @@ from sugar3.activity.widgets import StopButton
 from draw_piano import PianoKeyboard, LETTERS_TO_KEY_CODES
 import math
 import os
+from ttcommon.Util.NoteDB import Note
+from RythmGenerator import *
 
 import time
 import ttcommon.Util.Instruments
@@ -222,7 +226,8 @@ class SimplePianoActivity(activity.Activity):
         # we do not have collaboration features
         # make the share option insensitive
         self.max_participants = 1
-
+        self.csnd = new_csound_client()
+        self.rythmInstrument = 'drum1kick'
         # toolbar with the new toolbar redesign
         toolbar_box = ToolbarBox()
 
@@ -309,7 +314,6 @@ class SimplePianoActivity(activity.Activity):
         self.instrumentDB = InstrumentDB.getRef()
         self.firstTime = False
         self.playing = False
-        self.csnd = new_csound_client()
         self.timeout_ms = 50
         self.instVolume = 50
         self.drumVolume = 0.5
@@ -357,6 +361,41 @@ class SimplePianoActivity(activity.Activity):
         self.set_canvas(vbox)
         piano_height = Gdk.Screen.width() / 2
         self.connect('size-allocate', self.__allocate_cb)
+
+        self.csnd.load_drumkit(self.rythmInstrument)
+        self.csnd.setTempo(self.tempo)
+        self.drumVolume = 0.5
+        self.volume = 100
+        self.csnd.setMasterVolume(self.volume)
+        
+        def flatten(ll):
+            rval = []
+            for l in ll:
+                rval += l
+            return rval
+
+        noteOnsets = []
+        notePitchs = []
+
+        self.beat = 4
+        self.reverb = 0.1
+        self.tempo = Config.PLAYER_TEMPO
+
+        i = 0
+        self.noteList= []
+        self.csnd.loopClear()
+        for x in flatten( generator(self.rythmInstrument, self.beat, 0.8, self.regularity, self.reverb) ):
+            x.amplitude = x.amplitude * self.drumVolume
+            noteOnsets.append(x.onset)
+            notePitchs.append(x.pitch)
+            n = Note(0, x.trackId, i, x)
+            self.noteList.append( (x.onset, n) )
+            i = i + 1
+            self.csnd.loopPlay(n,1)                    #add as active
+        self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
+        self.drumFillin.unavailable( noteOnsets, notePitchs )
+        self.recordOverSensitivity( False )
+        self.csnd.loopStart()
 
     def __allocate_cb(self, widget, rect):
         GLib.idle_add(self.resize, rect.width, rect.height)
