@@ -324,8 +324,8 @@ class SimplePianoActivity(activity.Activity):
         self.tempo = Config.PLAYER_TEMPO
         self.beatDuration = 60.0 / self.tempo
         self.ticksPerSecond = Config.TICKS_PER_BEAT * self.tempo / 60.0
-        #self.rythmInstrument = 'drum1kit'
-        #self.csnd.load_drumkit(self.rythmInstrument)
+        self.rythmInstrument = 'drum1kit'
+        self.csnd.load_drumkit(self.rythmInstrument)
         self.sequencer = MiniSequencer(self.recordStateButton,
                                        self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
