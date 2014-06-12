@@ -393,8 +393,6 @@ class SimplePianoActivity(activity.Activity):
             i = i + 1
             self.csnd.loopPlay(n,1)                    #add as active
         self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
-        self.drumFillin.unavailable( noteOnsets, notePitchs )
-        self.recordOverSensitivity( False )
         self.csnd.loopStart()
 
     def __allocate_cb(self, widget, rect):
