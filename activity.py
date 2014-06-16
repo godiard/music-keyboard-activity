@@ -59,11 +59,7 @@ import ttcommon.Config as Config
 
 
 def set_palette_list(instrument_list):
-    _menu_item = PaletteMenuItem(text_label=instrument_list[0]['instrument_desc'])
-    img = Gtk.Image()
-    img.set_from_pixbuf(instrument_list[0]['pxb'])
-    _menu_item.set_image(img)
-    img.show()
+    _menu_item = PaletteMenuItem(text_label=instrument_list[0]['instrument_desc'], file_name=instrument_list[0]['file_name'])
 
     req2 = _menu_item.get_preferred_size()[1]
     menuitem_width = req2.width
@@ -89,12 +85,9 @@ def set_palette_list(instrument_list):
     xo_color = XoColor('white')
 
     for item in instrument_list:
-        menu_item = PaletteMenuItem(text_label=item['instrument_desc'])
+        menu_item = PaletteMenuItem(text_label=item['instrument_desc'], file_name=item['file_name'])
         menu_item.set_size_request(style.GRID_CELL_SIZE * 3, -1)
-        img = Gtk.Image()
-        img.set_from_pixbuf(item['pxb'])
-        menu_item.set_image(img)
-        img.show()
+
 
         menu_item.connect('button-release-event', item['callback'], item)
 
@@ -347,6 +340,7 @@ class SimplePianoActivity(activity.Activity):
         self.enableKeyboard()
         self.setInstrument(self.instrument)
 
+
         self.connect('key-press-event', self.onKeyPress)
         self.connect('key-release-event', self.onKeyRelease)
         # finish csount init
@@ -420,11 +414,14 @@ class SimplePianoActivity(activity.Activity):
             instrument_name = instrument_name[:instrument_name.find('.')]
             instrument_desc = \
                 self.instrumentDB.instNamed[instrument_name].nameTooltip
+            # set the default icon
+            if (instrument_name == 'piano'):
+                self._what_search_button.set_widget_icon(file_name=os.path.join(images_path, file_name))
 
             self._instruments_store.append({"instrument_name": instrument_name,
                                             "pxb": pxb,
                                             "instrument_desc": instrument_desc,
-                                            "file_name": file_name,
+                                            "file_name": os.path.join(images_path, file_name),
                                             "callback": self.__instrument_iconview_activated_cb})
 
         self._what_widget_contents = set_palette_list(self._instruments_store)
@@ -433,6 +430,7 @@ class SimplePianoActivity(activity.Activity):
 
     def __instrument_iconview_activated_cb(self, widget, event, item):
         logging.error("Instrument Activated Callback");
+        self._what_search_button.set_widget_icon(file_name=item['file_name'])
         self.setInstrument(item['instrument_name'])
 
     def set_notes_labels_cb(self, widget):
