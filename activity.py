@@ -21,7 +21,10 @@ from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Pango
 import logging
+from Fillin import Fillin
 
+from sugar3.graphics.toolbutton import ToolButton
+from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.palette import Palette
@@ -57,6 +60,113 @@ from MiniSequencer import MiniSequencer
 from Loop import Loop
 import ttcommon.Config as Config
 
+PLAYER_TEMPO = 100
+PLAYER_TEMPO_LOWER = 30
+PLAYER_TEMPO_UPPER = 160
+
+class IntensitySelector(Gtk.ToolItem):
+
+    __gsignals__ = {
+        'changed': (GObject.SignalFlags.RUN_LAST, None, ([])), }
+
+    def __init__(self, value_range, default_value):
+
+        Gtk.ToolItem.__init__(self)
+
+        self._values = value_range
+
+        # theme the buttons, can be removed if add the style to the sugar css
+        # these are the same values used in gtk-widgets.css.em
+        if style.zoom(100) == 100:
+            subcell_size = 15
+            default_padding = 6
+        else:
+            subcell_size = 11
+            default_padding = 4
+
+        hbox = Gtk.HBox()
+        vbox = Gtk.VBox()
+        self.add(vbox)
+        # add a vbox to set the padding up and down
+        vbox.pack_start(hbox, True, True, default_padding)
+        
+        self._size_down = ToolButton('go-previous-paired')
+        self._size_down.set_can_focus(False)
+        self._size_down.connect('clicked', self.__value_changed_cb, False)
+        hbox.pack_start(self._size_down, False, False, 5)
+
+        # TODO: default?
+        self._default_value = default_value
+        self._value = self._default_value
+
+        self._size_label = Gtk.Label(str(self._value))
+        hbox.pack_start(self._size_label, False, False, 10)
+
+        self._size_up = ToolButton('go-next-paired')
+        self._size_up.set_can_focus(False)
+        self._size_up.connect('clicked', self.__value_changed_cb, True)
+        hbox.pack_start(self._size_up, False, False, 5)
+
+        radius = 2 * subcell_size
+        theme_up = "GtkButton {border-radius:0px %dpx %dpx 0px;}" % (radius,
+                                                                     radius)
+        css_provider_up = Gtk.CssProvider()
+        css_provider_up.load_from_data(theme_up)
+
+        style_context = self._size_up.get_style_context()
+        style_context.add_provider(css_provider_up,
+                                   Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+        theme_down = "GtkButton {border-radius: %dpx 0px 0px %dpx;}" % (radius,
+                                                                        radius)
+        css_provider_down = Gtk.CssProvider()
+        css_provider_down.load_from_data(theme_down)
+        style_context = self._size_down.get_style_context()
+        style_context.add_provider(css_provider_down,
+                                   Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+        self.show_all()
+
+    def __value_changed_cb(self, button, increase):
+        if self._value in self._values:
+            i = self._values.index(self._value)
+            if increase:
+                if i < len(self._values) - 1:
+                    i += 1
+            else:
+                if i > 0:
+                    i -= 1
+        else:
+            i = self._values.index(self._default_size)
+
+        self._value = self._values[i]
+        self._size_label.set_text(str(self._value))
+        self._size_down.set_sensitive(i != 0)
+        self._size_up.set_sensitive(i < len(self._values) - 1)
+        self.emit('changed')
+
+    def set_value(self, val):
+        if val not in self._values:
+            # assure the val assigned is in the range
+            # if not, assign one close.
+            for v in self._values:
+                if v > val: 
+                    val = v
+                    break
+            if val > self._values[-1]:
+                size = self._values[-1]
+
+        self._value = size
+        self._size_label.set_text(str(self._value))
+
+        # update the buttons states
+        i = self._values.index(self._value)
+        self._size_down.set_sensitive(i != 0)
+        self._size_up.set_sensitive(i < len(self._value) - 1)
+        self.emit('changed')
+
+    def get_value(self):
+        return self._value
 
 def set_palette_list(instrument_list):
     _menu_item = PaletteMenuItem(text_label=instrument_list[0]['instrument_desc'], file_name=instrument_list[0]['file_name'])
@@ -223,9 +333,27 @@ class SimplePianoActivity(activity.Activity):
         self.rythmInstrument = 'drum1kick'
         # toolbar with the new toolbar redesign
         toolbar_box = ToolbarBox()
-
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
+        self.beats_pm_button = IntensitySelector(range(2, 13), 4)
+        self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO)
+        
+        beats_toolbar = ToolbarBox() 
+        beats_toolbar.toolbar.insert(self.beats_pm_button,    -1);
+        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1);
+        beats_toolbar.toolbar.insert(self.tempo_button, -1);        
+
+        beats_toolbar_button = ToolbarButton(icon_name='view-source',
+                                             page=beats_toolbar)
+        beats_toolbar_button.show()
+
+        toolbar_box.toolbar.insert(beats_toolbar_button, 1)
+
+        self.beats_pm_button.show()
+        self.beats_pm_button.connect('changed', self.beatSliderChange, True)
+        self.tempo_button.connect('changed', self.tempoSliderChange, True)
+        self.tempo_button.show()
+
 
         toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
@@ -306,7 +434,7 @@ class SimplePianoActivity(activity.Activity):
         # init csound
         self.instrumentDB = InstrumentDB.getRef()
         self.firstTime = False
-        self.playing = False
+        self.playing = True
         self.timeout_ms = 50
         self.instVolume = 50
         self.drumVolume = 0.5
@@ -314,7 +442,7 @@ class SimplePianoActivity(activity.Activity):
         self.regularity = 0.75
         self.beat = 4
         self.reverb = 0.1
-        self.tempo = Config.PLAYER_TEMPO
+        self.tempo = PLAYER_TEMPO
         self.beatDuration = 60.0 / self.tempo
         self.ticksPerSecond = Config.TICKS_PER_BEAT * self.tempo / 60.0
         self.rythmInstrument = 'drum1kit'
@@ -322,6 +450,8 @@ class SimplePianoActivity(activity.Activity):
         self.sequencer = MiniSequencer(self.recordStateButton,
                                        self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
+
+        self.drumFillin = Fillin( self.beat, self.tempo, self.rythmInstrument, self.reverb, self.drumVolume )
 
         self.muteInst = False
         self.csnd.setTempo(self.tempo)
@@ -371,10 +501,6 @@ class SimplePianoActivity(activity.Activity):
         noteOnsets = []
         notePitchs = []
 
-        self.beat = 4
-        self.reverb = 0.1
-        self.tempo = Config.PLAYER_TEMPO
-
         i = 0
         self.noteList= []
         self.csnd.loopClear()
@@ -387,8 +513,8 @@ class SimplePianoActivity(activity.Activity):
             i = i + 1
             self.csnd.loopPlay(n,1)                    #add as active
         self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
+        self.drumFillin.unavailable( noteOnsets, notePitchs )
         self.csnd.loopStart()
-
     def __allocate_cb(self, widget, rect):
         GLib.idle_add(self.resize, rect.width, rect.height)
         return False
@@ -449,6 +575,77 @@ class SimplePianoActivity(activity.Activity):
         self.piano.font_size = 25
         self.piano.set_labels(self.german_labels)
 
+    def beatSliderChange(self, widget, event):
+        self.beat = int(self.beats_pm_button.get_value())
+        self.sequencer.beat = self.beat
+        self.loop.beat = self.beat
+        self.drumFillin.setBeats( self.beat )
+        self.beatPickup = False
+        self.regenerate()
+        self.beatPickup = True
+
+    def regenerate(self):
+        def flatten(ll):
+            rval = []
+            for l in ll:
+                rval += l
+            return rval
+        if self.beatPickup:
+            self.pickupNewBeat()
+        noteOnsets = []
+        notePitchs = []
+        i = 0
+        self.noteList= []
+        self.csnd.loopClear()
+        for x in flatten( generator(self.rythmInstrument, self.beat, 0.8, self.regularity, self.reverb) ):
+            x.amplitude = x.amplitude * self.drumVolume
+            noteOnsets.append(x.onset)
+            notePitchs.append(x.pitch)
+            n = Note(0, x.trackId, i, x)
+            self.noteList.append( (x.onset, n) )
+            i = i + 1
+            self.csnd.loopPlay(n,1)                    #add as active
+        self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
+        self.drumFillin.unavailable( noteOnsets, notePitchs )
+        self.recordOverSensitivity( False )
+        if self.playing:
+            self.csnd.loopStart()
+
+    def tempoSliderChange(self, widget, event):
+        self._updateTempo(self.tempo_button.get_value())
+
+    def _updateTempo( self, val ):
+        self.tempo = val
+        self.beatDuration = 60.0/self.tempo
+        self.ticksPerSecond = Config.TICKS_PER_BEAT*self.tempo/60.0
+        self.csnd.setTempo(self.tempo)
+        self.sequencer.tempo = self.tempo
+        self.drumFillin.setTempo(self.tempo)
+
+    """
+    def handleBalanceSlider(self, adj):
+        self.instVolume = int(adj.get_value())
+        self.drumVolume = sqrt( (100-self.instVolume)*0.01 )
+        self.adjustDrumVolume()
+        self.drumFillin.setVolume(self.drumVolume)
+        instrumentVolume = sqrt( self.instVolume*0.01 )
+        self.loop.adjustLoopVolume(instrumentVolume)
+        self.sequencer.adjustSequencerVolume(instrumentVolume)
+        img = int(self.scale(self.instVolume,100,0,0,4.9))
+        self._playToolbar.balanceSliderImgLeft.set_from_file(
+                imagefile('dru' + str(img) + '.png'))
+        img2 = int(self.scale(self.instVolume,0,100,0,4.9))
+        self._playToolbar.balanceSliderImgRight.set_from_file(
+                imagefile('instr' + str(img2) + '.png'))
+
+    def handleReverbSlider(self, adj):
+        self.reverb = adj.get_value()
+        self.drumFillin.setReverb( self.reverb )
+        img = int(self.scale(self.reverb,0,1,0,4))
+        self._playToolbar.reverbSliderImgRight.set_from_file(
+                imagefile('reverb' + str(img) + '.png'))
+        self.keyboardStandAlone.setReverb(self.reverb)
+    """
     def set_keyboard_no_labels_cb(self, widget):
         self.piano.font_size = 25
         self.piano.set_labels(None)
