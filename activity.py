@@ -24,7 +24,6 @@ import logging
 import cairo
 
 from Fillin import Fillin
-from common.Util.ThemeWidgets import ImageToggleButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toolbarbox import ToolbarButton
 from sugar3.graphics.icon import Icon
@@ -60,10 +59,11 @@ from ttcommon.Util.CSoundClient import new_csound_client
 from KeyboardStandAlone import KeyboardStandAlone
 from MiniSequencer import MiniSequencer
 from Loop import Loop
+from ttcommon.Config import imagefile
 import ttcommon.Config as Config
 
+<<<<<<< HEAD
 alette.props.invoker._position_hint = WidgetInvoker.AT_CURSOR
-
 
 class ImageToggleButton(Gtk.ToggleButton):
 
@@ -72,7 +72,6 @@ class ImageToggleButton(Gtk.ToggleButton):
         mainImg_path = imagefile(mainImg_path)
         altImg_path = imagefile(altImg_path)
         enterImg_path = imagefile(enterImg_path)
-
         Gtk.ToggleButton.__init__(self)
         self.alloc = None
         self.within = False
@@ -211,13 +210,6 @@ class ImageToggleButton(Gtk.ToggleButton):
             else:
                 self.curImage = "alt"
             self.queue_draw()
-
-    def set_palette(self, palette):
-        self._palette = palette
-        self._palette.props.invoker = WidgetInvoker(self)
-        self._palette.props.invoker._position_hint = WidgetInvoker.AT_CURSOR
-
-
 
 PLAYER_TEMPO = 100
 PLAYER_TEMPO_LOWER = 30
@@ -484,7 +476,8 @@ class SimplePianoActivity(activity.Activity):
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
         self._what_list = []
-
+        self.firstTime = False
+        self.playing = False
         # we do not have collaboration features
         # make the share option insensitive
         self.max_participants = 1
@@ -496,12 +489,19 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(activity_button, 0)
         self.beats_pm_button = IntensitySelector(range(2, 13), 4)
         self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO)
+
+        self.playButtonWrapper = Gtk.ToolItem();
         
         self.playButton = ImageToggleButton('miniplay.png', 'stop.png')
         self.playButton.set_tooltip_text(_('Play / Stop'))
-
+        self.playButton.connect('clicked',self.handlePlayButton)
+        self.playButtonWrapper.add(self.playButton);
+        self.playButtonWrapper.show();
+        self.playButton.show();
         beats_toolbar = ToolbarBox() 
-        beats_toolbar.toolbar.insert(self.playButton, -1);
+
+        beats_toolbar.toolbar.insert(self.playButtonWrapper, -1);
+
         beats_toolbar.toolbar.insert(self.beats_pm_button,    -1);
         beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1);
         beats_toolbar.toolbar.insert(self.tempo_button, -1);        
@@ -595,8 +595,6 @@ class SimplePianoActivity(activity.Activity):
 
         # init csound
         self.instrumentDB = InstrumentDB.getRef()
-        self.firstTime = False
-        self.playing = True
         self.timeout_ms = 50
         self.instVolume = 50
         self.drumVolume = 0.5
@@ -653,7 +651,8 @@ class SimplePianoActivity(activity.Activity):
         self.drumVolume = 0.5
         self.volume = 100
         self.csnd.setMasterVolume(self.volume)
-        
+        self.beatPickup = False
+
         def flatten(ll):
             rval = []
             for l in ll:
@@ -676,7 +675,8 @@ class SimplePianoActivity(activity.Activity):
             self.csnd.loopPlay(n,1)                    #add as active
         self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
         self.drumFillin.unavailable( noteOnsets, notePitchs )
-        self.csnd.loopStart()
+        if self.playing:
+            self.csnd.loopStart()
     def __allocate_cb(self, widget, rect):
         GLib.idle_add(self.resize, rect.width, rect.height)
         return False
@@ -783,6 +783,21 @@ class SimplePianoActivity(activity.Activity):
         self.csnd.setTempo(self.tempo)
         self.sequencer.tempo = self.tempo
         self.drumFillin.setTempo(self.tempo)
+
+    def handlePlayButton( self, val ):
+        if not self.playing:
+            if not self.firstTime:
+                self.regenerate()
+                self.firstTime = True
+            self.drumFillin.play()
+            self.csnd.loopSetTick(0)
+            self.csnd.loopStart()
+            self.playing = True
+        else:
+            self.drumFillin.stop()
+            self.sequencer.stopPlayback()
+            self.csnd.loopPause()
+            self.playing = False
 
     """
     def handleBalanceSlider(self, adj):
