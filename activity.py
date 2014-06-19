@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+from __future__ import division
 
 from gi.repository import Gtk
 from gi.repository import GLib
@@ -61,9 +62,7 @@ from MiniSequencer import MiniSequencer
 from Loop import Loop
 from ttcommon.Config import imagefile
 import ttcommon.Config as Config
-
-<<<<<<< HEAD
-alette.props.invoker._position_hint = WidgetInvoker.AT_CURSOR
+from math import log
 
 class ImageToggleButton(Gtk.ToggleButton):
 
@@ -288,7 +287,7 @@ class IntensitySelector(Gtk.ToolItem):
                 if i > 0:
                     i -= 1
         else:
-            i = self._values.index(self._default_size)
+            i = self._values.index(self._default_value)
 
         self._value = self._values[i]
         self._size_label.set_text(str(self._value))
@@ -318,6 +317,37 @@ class IntensitySelector(Gtk.ToolItem):
 
     def get_value(self):
         return self._value
+
+
+
+def xfrange(start, stop, step):
+
+    old_start = start #backup this value
+
+    digits = int(round(log(10000, 10)))+1 #get number of digits
+    magnitude = 10**digits
+    stop = int(magnitude * stop) #convert from 
+    step = int(magnitude * step) #0.1 to 10 (e.g.)
+
+    if start == 0:
+        start = 10**(digits-1)
+    else:
+        start = 10**(digits)*start
+
+    data = []   #create array
+
+    #calc number of iterations
+    end_loop = int((stop-start)//step)
+    if old_start == 0:
+        end_loop += 1
+
+    acc = start
+
+    for i in xrange(0, end_loop):
+        data.append(acc/magnitude)
+        acc += step
+
+    return data
 
 def set_palette_list(instrument_list):
     _menu_item = PaletteMenuItem(text_label=instrument_list[0]['instrument_desc'], file_name=instrument_list[0]['file_name'])
@@ -478,6 +508,8 @@ class SimplePianoActivity(activity.Activity):
         self._what_list = []
         self.firstTime = False
         self.playing = False
+        self.regularity = 0.75
+
         # we do not have collaboration features
         # make the share option insensitive
         self.max_participants = 1
@@ -489,6 +521,9 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(activity_button, 0)
         self.beats_pm_button = IntensitySelector(range(2, 13), 4)
         self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO)
+
+        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity)
+
 
         self.playButtonWrapper = Gtk.ToolItem();
         
@@ -502,8 +537,8 @@ class SimplePianoActivity(activity.Activity):
 
         beats_toolbar.toolbar.insert(self.playButtonWrapper, -1);
 
+        beats_toolbar.toolbar.insert(self.complexity_button, -1);
         beats_toolbar.toolbar.insert(self.beats_pm_button,    -1);
-        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1);
         beats_toolbar.toolbar.insert(self.tempo_button, -1);        
 
         beats_toolbar_button = ToolbarButton(icon_name='view-source',
@@ -515,7 +550,9 @@ class SimplePianoActivity(activity.Activity):
         self.beats_pm_button.show()
         self.beats_pm_button.connect('changed', self.beatSliderChange, True)
         self.tempo_button.connect('changed', self.tempoSliderChange, True)
+        self.complexity_button.connect('changed', self.handleComplexityChange, True)
         self.tempo_button.show()
+        self.complexity_button.show()
 
         toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
@@ -599,7 +636,6 @@ class SimplePianoActivity(activity.Activity):
         self.instVolume = 50
         self.drumVolume = 0.5
         self.instrument = 'piano'
-        self.regularity = 0.75
         self.beat = 4
         self.reverb = 0.1
         self.tempo = PLAYER_TEMPO
@@ -798,6 +834,12 @@ class SimplePianoActivity(activity.Activity):
             self.sequencer.stopPlayback()
             self.csnd.loopPause()
             self.playing = False
+
+    def handleComplexityChange(self, widget, event):
+        self.regularity = self.complexity_button.get_value()
+        self.beatPickup = False
+        self.regenerate()
+        self.beatPickup = True
 
     """
     def handleBalanceSlider(self, adj):
