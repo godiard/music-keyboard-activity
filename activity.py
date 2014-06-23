@@ -575,7 +575,7 @@ class SimplePianoActivity(activity.Activity):
 
         beats_toolbar.toolbar.insert(self.tempo_button, -1);        
 
-        beats_toolbar_button = ToolbarButton(icon_name='view-source',
+        beats_toolbar_button = ToolbarButton(icon_name='toolbar-drums',
                                              page=beats_toolbar)
         beats_toolbar_button.show()
 
