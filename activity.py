@@ -537,8 +537,31 @@ class SimplePianoActivity(activity.Activity):
 
         beats_toolbar.toolbar.insert(self.playButtonWrapper, -1);
 
+        complexity_label_cont = Gtk.ToolItem()
+        complexity_label = Gtk.Label(_(" Beat Complexity"))
+        complexity_label_cont.add(complexity_label)
+        beats_toolbar.toolbar.insert(complexity_label_cont, -1);
+        complexity_label.show()
+        complexity_label_cont.show()
+
         beats_toolbar.toolbar.insert(self.complexity_button, -1);
+        
+        complexity_label_cont = Gtk.ToolItem()
+        complexity_label = Gtk.Label(_("Beats per bar"))
+        complexity_label_cont.add(complexity_label)
+        beats_toolbar.toolbar.insert(complexity_label_cont, -1);
+        complexity_label.show()
+        complexity_label_cont.show()
+
         beats_toolbar.toolbar.insert(self.beats_pm_button,    -1);
+
+        complexity_label_cont = Gtk.ToolItem()
+        complexity_label = Gtk.Label(_("Tempo"))
+        complexity_label_cont.add(complexity_label)
+        beats_toolbar.toolbar.insert(complexity_label_cont, -1);
+        complexity_label.show()
+        complexity_label_cont.show()
+
         beats_toolbar.toolbar.insert(self.tempo_button, -1);        
 
         beats_toolbar_button = ToolbarButton(icon_name='view-source',
