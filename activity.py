@@ -219,7 +219,7 @@ class IntensitySelector(Gtk.ToolItem):
     __gsignals__ = {
         'changed': (GObject.SignalFlags.RUN_LAST, None, ([])), }
 
-    def __init__(self, value_range, default_value):
+    def __init__(self, value_range, default_value, default_image):
 
         Gtk.ToolItem.__init__(self)
 
@@ -249,8 +249,10 @@ class IntensitySelector(Gtk.ToolItem):
         self._default_value = default_value
         self._value = self._default_value
 
-        self._size_label = Gtk.Label(str(self._value))
-        hbox.pack_start(self._size_label, False, False, 10)
+        self._intensityImage = Gtk.Image()
+        self._intensityImage.set_from_file(default_image)
+
+        hbox.pack_start(self._intensityImage, False, False, 10)
 
         self._size_up = ToolButton('go-next-paired')
         self._size_up.set_can_focus(False)
@@ -290,7 +292,6 @@ class IntensitySelector(Gtk.ToolItem):
             i = self._values.index(self._default_value)
 
         self._value = self._values[i]
-        self._size_label.set_text(str(self._value))
         self._size_down.set_sensitive(i != 0)
         self._size_up.set_sensitive(i < len(self._values) - 1)
         self.emit('changed')
@@ -314,6 +315,9 @@ class IntensitySelector(Gtk.ToolItem):
         self._size_down.set_sensitive(i != 0)
         self._size_up.set_sensitive(i < len(self._value) - 1)
         self.emit('changed')
+
+    def set_image(self, image):
+    	self._intensityImage.set_from_file(image)
 
     def get_value(self):
         return self._value
@@ -530,10 +534,10 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box = ToolbarBox()
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
-        self.beats_pm_button = IntensitySelector(range(2, 13), 4)
-        self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO)
+        self.beats_pm_button = IntensitySelector(range(2, 13), 4, imagefile('beat3.png'))
+        self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO, imagefile('tempo5.png'))
 
-        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity)
+        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity, imagefile('complex6.png'))
 
 
         self.playButtonWrapper = Gtk.ToolItem();
@@ -547,32 +551,10 @@ class SimplePianoActivity(activity.Activity):
         beats_toolbar = ToolbarBox() 
 
         beats_toolbar.toolbar.insert(self.playButtonWrapper, -1);
-
-        complexity_label_cont = Gtk.ToolItem()
-        complexity_label = Gtk.Label(_(" Beat Complexity"))
-        complexity_label_cont.add(complexity_label)
-        beats_toolbar.toolbar.insert(complexity_label_cont, -1);
-        complexity_label.show()
-        complexity_label_cont.show()
-
+        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1);
         beats_toolbar.toolbar.insert(self.complexity_button, -1);
-        
-        complexity_label_cont = Gtk.ToolItem()
-        complexity_label = Gtk.Label(_("Beats per bar"))
-        complexity_label_cont.add(complexity_label)
-        beats_toolbar.toolbar.insert(complexity_label_cont, -1);
-        complexity_label.show()
-        complexity_label_cont.show()
 
         beats_toolbar.toolbar.insert(self.beats_pm_button,    -1);
-
-        complexity_label_cont = Gtk.ToolItem()
-        complexity_label = Gtk.Label(_("Tempo"))
-        complexity_label_cont.add(complexity_label)
-        beats_toolbar.toolbar.insert(complexity_label_cont, -1);
-        complexity_label.show()
-        complexity_label_cont.show()
-
         beats_toolbar.toolbar.insert(self.tempo_button, -1);        
 
         beats_toolbar_button = ToolbarButton(icon_name='toolbar-drums',
@@ -581,11 +563,14 @@ class SimplePianoActivity(activity.Activity):
 
         toolbar_box.toolbar.insert(beats_toolbar_button, 1)
 
+        self.beats_pm_button.set_tooltip_text(_("Beats per bar"))
         self.beats_pm_button.show()
         self.beats_pm_button.connect('changed', self.beatSliderChange, True)
         self.tempo_button.connect('changed', self.tempoSliderChange, True)
         self.complexity_button.connect('changed', self.handleComplexityChange, True)
+        self.complexity_button.set_tooltip_text(_("Beat complexity"))
         self.tempo_button.show()
+        self.tempo_button.set_tooltip_text(_('Tempo'))
         self.complexity_button.show()
 
         toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
@@ -825,6 +810,9 @@ class SimplePianoActivity(activity.Activity):
         self.sequencer.beat = self.beat
         self.loop.beat = self.beat
         self.drumFillin.setBeats( self.beat )
+        img = int(self.scale(self.beat, 2, 12, 1, 11))
+        print imagefile('beat' + str(img) + '.png')
+        self.beats_pm_button.set_image(imagefile('beat' + str(img) + '.png'))
         self.beatPickup = False
         self.regenerate()
         self.beatPickup = True
@@ -858,6 +846,9 @@ class SimplePianoActivity(activity.Activity):
 
     def tempoSliderChange(self, widget, event):
         self._updateTempo(self.tempo_button.get_value())
+        img = int(self.scale( self.tempo, PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER, 1, 9 ))
+        self.tempo_button.set_image(imagefile('tempo' + str(img) + '.png'))
+
 
     def _updateTempo( self, val ):
         self.tempo = val
@@ -882,8 +873,31 @@ class SimplePianoActivity(activity.Activity):
             self.csnd.loopPause()
             self.playing = False
 
+    def scale(self, input,input_min,input_max,output_min,output_max):
+        range_input = input_max - input_min
+        range_output = output_max - output_min
+        result = (input - input_min) * range_output / range_input + output_min
+
+        if (input_min > input_max and output_min > output_max) or (output_min > output_max and input_min < input_max):
+            if result > output_min:
+                return output_min
+            elif result < output_max:
+                return output_max
+            else:
+                return result
+
+        if (input_min < input_max and output_min < output_max) or (output_min < output_max and input_min > input_max):
+            if result > output_max:
+                return output_max
+            elif result < output_min:
+                return output_min
+            else:
+                return result
+
     def handleComplexityChange(self, widget, event):
         self.regularity = self.complexity_button.get_value()
+        img = int(self.complexity_button.get_value() * 7)+1
+        self.complexity_button.set_image(imagefile('complex' + str(img) + '.png'))
         self.beatPickup = False
         self.regenerate()
         self.beatPickup = True
