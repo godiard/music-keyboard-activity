@@ -40,10 +40,10 @@ class PianoKeyboard(Gtk.DrawingArea):
 
     __gsignals__ = {'key_pressed': (GObject.SignalFlags.RUN_FIRST, None,
                     ([GObject.TYPE_INT, GObject.TYPE_INT,
-                    GObject.TYPE_STRING])),
+                      GObject.TYPE_STRING])),
                     'key_released': (GObject.SignalFlags.RUN_FIRST, None,
-                    ([GObject.TYPE_INT, GObject.TYPE_INT,
-                    GObject.TYPE_STRING]))}
+                                     ([GObject.TYPE_INT, GObject.TYPE_INT,
+                                       GObject.TYPE_STRING]))}
 
     def __init__(self, octaves=1, add_c=False, labels=None, values=None):
         self._octaves = octaves
@@ -525,7 +525,6 @@ class PianoKeyboard(Gtk.DrawingArea):
 
     def _draw_label(self, ctx, x, octave_number, position, black_key,
                     highlighted):
-        #print "Dibujando ",text
         if self._labels is not None:
             text = self._labels[octave_number][position]
             # to enable use more than one label in the key, for the black keys
