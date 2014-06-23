@@ -321,7 +321,6 @@ class IntensitySelector(Gtk.ToolItem):
 
 
 def xfrange(start, stop, step):
-
     old_start = start #backup this value
 
     digits = int(round(log(10000, 10)))+1 #get number of digits
@@ -352,14 +351,22 @@ def xfrange(start, stop, step):
 def set_palette_list(instrument_list):
     _menu_item = PaletteMenuItem(text_label=instrument_list[0]['instrument_desc'], file_name=instrument_list[0]['file_name'])
 
+MAX_PALETTE_WIDTH = 5
+
+
+def set_palette_list(instrument_list):
+    text_label = instrument_list[0]['instrument_desc']
+    file_name = instrument_list[0]['file_name']
+    _menu_item = PaletteMenuItem(text_label=text_label,
+                                 file_name=file_name)
     req2 = _menu_item.get_preferred_size()[1]
     menuitem_width = req2.width
     menuitem_height = req2.height
 
-    palette_width = Gdk.Screen.width() - style.GRID_CELL_SIZE
+    palette_width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 3
     palette_height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 3
 
-    nx = int(palette_width / menuitem_width)
+    nx = min(int(palette_width / menuitem_width), MAX_PALETTE_WIDTH)
     ny = min(int(palette_height / menuitem_height), len(instrument_list) + 1)
     if ny >= len(instrument_list):
         nx = 1
@@ -375,14 +382,15 @@ def set_palette_list(instrument_list):
     y = 0
     xo_color = XoColor('white')
 
-    for item in instrument_list:
-        menu_item = PaletteMenuItem(text_label=item['instrument_desc'], file_name=item['file_name'])
+    for item in sorted(instrument_list,
+    cmp=lambda x,y: cmp(x['instrument_desc'], y['instrument_desc'])):
+        menu_item = PaletteMenuItem(text_label=item['instrument_desc'],
+                                    file_name=item['file_name'])
+
         menu_item.set_size_request(style.GRID_CELL_SIZE * 3, -1)
-
-
         menu_item.connect('button-release-event', item['callback'], item)
 
-        #menu_item.connect('button-release-event', lambda x: x, item)
+        # menu_item.connect('button-release-event', lambda x: x, item)
         grid.attach(menu_item, x, y, 1, 1)
         x += 1
         if x == nx:
@@ -402,6 +410,7 @@ def set_palette_list(instrument_list):
         return scrolled_window
     else:
         return grid
+
 
 class FilterToolItem(Gtk.ToolButton):
     __gsignals__ = {
@@ -452,8 +461,10 @@ class FilterToolItem(Gtk.ToolButton):
         # FIXME: Ellipsis is not working on these labels.
         if label is None:
             label = self._label
+        """
         if len(label) > 10:
             label = label[0:7] + '...' + label[-7:]
+        """
         self._label_widget.set_markup(label)
         self._label = label
 
@@ -610,12 +621,14 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(no_labels, -1)
         self._what_widget = Gtk.ToolItem()
         self._what_search_button = FilterToolItem(
-			'view-type', _('Anything'), self._what_widget)
+            'view-type', _('Piano'), self._what_widget)
         self._what_widget.show()
+        separator = Gtk.SeparatorToolItem()
+        toolbar_box.toolbar.insert(separator, -1)
         toolbar_box.toolbar.insert(self._what_search_button, -1)
         self._what_search_button.show()
+        self._what_search_button.set_is_important(True)
         self._what_widget_contents = None
-
 
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -626,7 +639,7 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(stop_button, -1)
         stop_button.show()
 
-        #toolbar_box.insert()
+        # toolbar_box.insert()
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show_all()
@@ -664,8 +677,10 @@ class SimplePianoActivity(activity.Activity):
         self.tempo = PLAYER_TEMPO
         self.beatDuration = 60.0 / self.tempo
         self.ticksPerSecond = Config.TICKS_PER_BEAT * self.tempo / 60.0
+
         self.rythmInstrument = 'drum1kit'
         self.csnd.load_drumkit(self.rythmInstrument)
+
         self.sequencer = MiniSequencer(self.recordStateButton,
                                        self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
@@ -756,7 +771,7 @@ class SimplePianoActivity(activity.Activity):
             logging.error('Adding %s', image_file_name)
             pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(
                 image_file_name, 75, 75)
-            #instrument_name = image_file_name[image_file_name.rfind('/'):]
+            # instrument_name = image_file_name[image_file_name.rfind('/'):]
             instrument_name = image_file_name[image_file_name.rfind('/') + 1:]
             instrument_name = instrument_name[:instrument_name.find('.')]
             instrument_desc = \
@@ -765,20 +780,29 @@ class SimplePianoActivity(activity.Activity):
             if (instrument_name == 'piano'):
                 self._what_search_button.set_widget_icon(file_name=os.path.join(images_path, file_name))
 
-            self._instruments_store.append({"instrument_name": instrument_name,
-                                            "pxb": pxb,
-                                            "instrument_desc": instrument_desc,
-                                            "file_name": os.path.join(images_path, file_name),
-                                            "callback": self.__instrument_iconview_activated_cb})
+            file_path = os.path.join(images_path, file_name)
+
+            # set the default icon
+            if (instrument_name == 'piano'):
+                self._what_search_button.set_widget_icon(
+                    file_name=file_path)
+
+            self._instruments_store.append(
+                {"instrument_name": instrument_name,
+                 "pxb": pxb,
+                 "instrument_desc": instrument_desc,
+                 "file_name": file_path,
+                 "callback": self.__instrument_iconview_activated_cb})
 
         self._what_widget_contents = set_palette_list(self._instruments_store)
         self._what_widget.add(self._what_widget_contents)
         self._what_widget_contents.show()
 
     def __instrument_iconview_activated_cb(self, widget, event, item):
-        logging.error("Instrument Activated Callback");
-        self._what_search_button.set_widget_icon(file_name=item['file_name'])
         self.setInstrument(item['instrument_name'])
+        self._what_search_button.set_widget_icon(file_name=item['file_name'])
+        self._what_search_button.set_widget_label(
+            label=item['instrument_desc'])
 
     def set_notes_labels_cb(self, widget):
         self.piano.font_size = 16
@@ -913,7 +937,7 @@ class SimplePianoActivity(activity.Activity):
 
     def recordOverSensitivity(self, state):
         pass
-        #self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
+        # self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
         logging.debug(
