@@ -228,6 +228,7 @@ class SimplePianoActivity(activity.Activity):
 
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, 0)
+        toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
 
         toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
