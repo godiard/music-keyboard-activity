@@ -59,6 +59,7 @@ import math
 import os
 from ttcommon.Util.NoteDB import Note
 from RythmGenerator import *
+import ttcommon.Util.NoteDB as NoteDB
 
 import time
 import ttcommon.Util.Instruments
@@ -70,6 +71,8 @@ from Loop import Loop
 from ttcommon.Config import imagefile
 import ttcommon.Config as Config
 from math import log
+
+DRUMCOUNT = 6
 
 class ImageToggleButton(Gtk.ToggleButton):
 
@@ -359,168 +362,6 @@ def xfrange(start, stop, step):
 
     return data
 
-def set_palette_list(instrument_list):
-    _menu_item = PaletteMenuItem(text_label=instrument_list[0]['instrument_desc'], file_name=instrument_list[0]['file_name'])
-
-MAX_PALETTE_WIDTH = 5
-
-
-def set_palette_list(instrument_list):
-    text_label = instrument_list[0]['instrument_desc']
-    file_name = instrument_list[0]['file_name']
-    _menu_item = PaletteMenuItem(text_label=text_label,
-                                 file_name=file_name)
-    req2 = _menu_item.get_preferred_size()[1]
-    menuitem_width = req2.width
-    menuitem_height = req2.height
-
-    palette_width = Gdk.Screen.width() - style.GRID_CELL_SIZE * 3
-    palette_height = Gdk.Screen.height() - style.GRID_CELL_SIZE * 3
-
-    nx = min(int(palette_width / menuitem_width), MAX_PALETTE_WIDTH)
-    ny = min(int(palette_height / menuitem_height), len(instrument_list) + 1)
-    if ny >= len(instrument_list):
-        nx = 1
-        ny = len(instrument_list)
-
-    grid = Gtk.Grid()
-    grid.set_row_spacing(style.DEFAULT_PADDING)
-    grid.set_column_spacing(0)
-    grid.set_border_width(0)
-    grid.show()
-
-    x = 0
-    y = 0
-    xo_color = XoColor('white')
-
-    for item in sorted(instrument_list,
-    cmp=lambda x,y: cmp(x['instrument_desc'], y['instrument_desc'])):
-        menu_item = PaletteMenuItem(text_label=item['instrument_desc'],
-                                    file_name=item['file_name'])
-
-        menu_item.set_size_request(style.GRID_CELL_SIZE * 3, -1)
-        menu_item.connect('button-release-event', item['callback'], item)
-
-        # menu_item.connect('button-release-event', lambda x: x, item)
-        grid.attach(menu_item, x, y, 1, 1)
-        x += 1
-        if x == nx:
-            x = 0
-            y += 1
-
-        menu_item.show()
-
-    if palette_height < (y * menuitem_height + style.GRID_CELL_SIZE):
-        # if the grid is bigger than the palette, put in a scrolledwindow
-        scrolled_window = Gtk.ScrolledWindow()
-        scrolled_window.set_policy(Gtk.PolicyType.NEVER,
-                                   Gtk.PolicyType.AUTOMATIC)
-        scrolled_window.set_size_request(nx * menuitem_width,
-                                         (ny + 1) * menuitem_height)
-        scrolled_window.add_with_viewport(grid)
-        return scrolled_window
-    else:
-        return grid
-
-
-class FilterToolItem(Gtk.ToolButton):
-    __gsignals__ = {
-        'changed': (GObject.SignalFlags.RUN_LAST, None, ([])), }
-
-    def __init__(self, default_icon, default_label, palette_content):
-        self._palette_invoker = ToolInvoker()
-        Gtk.ToolButton.__init__(self)
-        self._label = default_label
-
-        self.set_is_important(False)
-        self.set_size_request(style.GRID_CELL_SIZE, -1)
-
-        self._label_widget = Gtk.Label()
-        self._label_widget.set_alignment(0.0, 0.5)
-        self._label_widget.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
-        self._label_widget.set_max_width_chars(10)
-        self._label_widget.set_use_markup(True)
-        self._label_widget.set_markup(default_label)
-        self.set_label_widget(self._label_widget)
-        self._label_widget.show()
-
-        self.set_widget_icon(icon_name=default_icon)
-
-        self._hide_tooltip_on_click = True
-        self._palette_invoker.attach_tool(self)
-        self._palette_invoker.props.toggle_palette = True
-        self._palette_invoker.props.lock_palette = True
-
-        self.palette = Palette(_('Select Instrument'))
-        self.palette.set_invoker(self._palette_invoker)
-
-        self.props.palette.set_content(palette_content)
-
-    def set_widget_icon(self, icon_name=None, file_name=None):
-        if file_name is not None:
-            icon = Icon(file=file_name,
-                        icon_size=style.SMALL_ICON_SIZE,
-                        xo_color=XoColor('white'))
-        else:
-            icon = Icon(icon_name=icon_name,
-                        icon_size=style.SMALL_ICON_SIZE,
-                        xo_color=XoColor('white'))
-        self.set_icon_widget(icon)
-        icon.show()
-
-    def set_widget_label(self, label=None):
-        # FIXME: Ellipsis is not working on these labels.
-        if label is None:
-            label = self._label
-        """
-        if len(label) > 10:
-            label = label[0:7] + '...' + label[-7:]
-        """
-        self._label_widget.set_markup(label)
-        self._label = label
-
-    def __destroy_cb(self, icon):
-        if self._palette_invoker is not None:
-            self._palette_invoker.detach()
-
-    def create_palette(self):
-        return None
-
-    def get_palette(self):
-        return self._palette_invoker.palette
-
-    def set_palette(self, palette):
-        self._palette_invoker.palette = palette
-
-    palette = GObject.property(
-        type=object, setter=set_palette, getter=get_palette)
-
-    def get_palette_invoker(self):
-        return self._palette_invoker
-
-    def set_palette_invoker(self, palette_invoker):
-        self._palette_invoker.detach()
-        self._palette_invoker = palette_invoker
-
-    palette_invoker = GObject.property(
-        type=object, setter=set_palette_invoker, getter=get_palette_invoker)
-
-    def do_draw(self, cr):
-        if self.palette and self.palette.is_up():
-            allocation = self.get_allocation()
-            # draw a black background, has been done by the engine before
-            cr.set_source_rgb(0, 0, 0)
-            cr.rectangle(0, 0, allocation.width, allocation.height)
-            cr.paint()
-
-        Gtk.ToolButton.do_draw(self, cr)
-
-        if self.palette and self.palette.is_up():
-            invoker = self.palette.props.invoker
-            invoker.draw_rectangle(cr, self.palette)
-
-        return False
-
 MAX_PALETTE_WIDTH = 5
 
 
@@ -585,7 +426,7 @@ class FilterToolItem(Gtk.ToolButton):
     __gsignals__ = {
         'changed': (GObject.SignalFlags.RUN_LAST, None, ([])), }
 
-    def __init__(self, default_icon, default_label, palette_content):
+    def __init__(self, tagline, default_icon, default_label, palette_content):
         self._palette_invoker = ToolInvoker()
         Gtk.ToolButton.__init__(self)
         self._label = default_label
@@ -609,7 +450,7 @@ class FilterToolItem(Gtk.ToolButton):
         self._palette_invoker.props.toggle_palette = True
         self._palette_invoker.props.lock_palette = True
 
-        self.palette = Palette(_('Select Instrument'))
+        self.palette = Palette(_(tagline))
         self.palette.set_invoker(self._palette_invoker)
 
         self.props.palette.set_content(palette_content)
@@ -687,6 +528,7 @@ class SimplePianoActivity(activity.Activity):
         activity.Activity.__init__(self, handle)
         self._what_list = []
         self.regularity = 0.75
+        self._drums_store = []
 
         # we do not have collaboration features
         # make the share option insensitive
@@ -713,6 +555,18 @@ class SimplePianoActivity(activity.Activity):
         beats_toolbar = ToolbarBox() 
 
         beats_toolbar.toolbar.insert(self.playButtonWrapper, -1);
+
+        self._what_drum_widget = Gtk.ToolItem()
+        self._what_drum_search_button = FilterToolItem(
+            _('Select Drum'), 'view-type', _('Jazz / Rock Kit'), self._what_drum_widget)
+        self._what_drum_search_button.set_widget_icon(file_name=imagefile("drum1kit.png"))
+
+        self._what_drum_widget.show()
+        separator = Gtk.SeparatorToolItem()
+        beats_toolbar.toolbar.insert(self._what_drum_search_button, -1)
+        self._what_drum_search_button.show()
+        self._what_drum_search_button.set_is_important(True)
+
         beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1);
         beats_toolbar.toolbar.insert(self.complexity_button, -1);
 
@@ -768,8 +622,9 @@ class SimplePianoActivity(activity.Activity):
         no_labels.props.group = keybord_labels
         no_labels.connect('clicked', self.set_keyboard_no_labels_cb)
         toolbar_box.toolbar.insert(no_labels, -1)
+        
         self._what_widget = Gtk.ToolItem()
-        self._what_search_button = FilterToolItem(
+        self._what_search_button = FilterToolItem(_('Select Instrument'),
             'view-type', _('Piano'), self._what_widget)
         self._what_widget.show()
         separator = Gtk.SeparatorToolItem()
@@ -778,6 +633,7 @@ class SimplePianoActivity(activity.Activity):
         self._what_search_button.show()
         self._what_search_button.set_is_important(True)
         self._what_widget_contents = None
+        self._what_drum_widget_contents = None
 
         separator = Gtk.SeparatorToolItem()
         separator.props.draw = False
@@ -921,8 +777,6 @@ class SimplePianoActivity(activity.Activity):
     def resize(self, width, height):
         logging.error('activity.py resize......')
         piano_height = width / 2
-        self._event_box.set_size_request(
-            -1, height - piano_height - style.GRID_CELL_SIZE)
         return False
 
     def load_instruments(self):
@@ -960,6 +814,32 @@ class SimplePianoActivity(activity.Activity):
         self._what_widget_contents = set_palette_list(self._instruments_store)
         self._what_widget.add(self._what_widget_contents)
         self._what_widget_contents.show()
+
+        for drum_number in range(0, DRUMCOUNT):
+            drum_name = 'drum%dkit' % (drum_number + 1)
+            self._drums_store.append({
+                    "instrument_name": drum_name,
+                    "file_name": imagefile(drum_name + '.png'),
+                    "instrument_desc": self.instrumentDB.instNamed[drum_name].nameTooltip,
+                    "callback": self.__drum_iconview_activated_cb
+                })
+
+        self._what_drum_widget_contents = set_palette_list(self._drums_store)
+        self._what_drum_widget.add(self._what_drum_widget_contents)
+        self._what_drum_widget_contents.show()
+
+    def __drum_iconview_activated_cb(self , widget , event, item):
+        #data is drum1kit, drum2kit, or drum3kit
+        #print 'HANDLE: Generate Button'
+        data = item['instrument_name']
+        self.rythmInstrument = data
+        self.csnd.load_drumkit(data)
+        instrumentId = self.instrumentDB.instNamed[data].instrumentId
+        for (o,n) in self.noteList :
+            self.csnd.loopUpdate(n, NoteDB.PARAMETER.INSTRUMENT, instrumentId, -1)
+        self.drumFillin.setInstrument( self.rythmInstrument )
+        self._what_drum_search_button.set_widget_label(label=item['instrument_desc'])
+        self._what_drum_search_button.set_widget_icon(file_name=item['file_name'])
 
     def __instrument_iconview_activated_cb(self, widget, event, item):
         self.setInstrument(item['instrument_name'])
