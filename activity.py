@@ -887,8 +887,6 @@ class SimplePianoActivity(activity.Activity):
             for l in ll:
                 rval += l
             return rval
-        if self.beatPickup:
-            self.pickupNewBeat()
         noteOnsets = []
         notePitchs = []
         i = 0
