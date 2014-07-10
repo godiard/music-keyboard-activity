@@ -552,7 +552,7 @@ class SimplePianoActivity(activity.Activity):
         self.beats_pm_button = IntensitySelector(range(2, 13), 4, imagefile('beat3.svg'))
         self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO, imagefile('tempo5.png'))
 
-        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity, imagefile('complex6.png'))
+        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity, imagefile('complex6.svg'))
 
 
         self.playButtonWrapper = Gtk.ToolItem();
@@ -959,7 +959,7 @@ class SimplePianoActivity(activity.Activity):
     def handleComplexityChange(self, widget, event):
         self.regularity = self.complexity_button.get_value()
         img = int(self.complexity_button.get_value() * 7)+1
-        self.complexity_button.set_image(imagefile('complex' + str(img) + '.png'))
+        self.complexity_button.set_image(imagefile('complex' + str(img) + '.svg'))
         self.beatPickup = False
         self.regenerate()
         self.beatPickup = True
