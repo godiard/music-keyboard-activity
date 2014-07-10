@@ -549,7 +549,7 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(activity_button, 0)
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
 
-        self.beats_pm_button = IntensitySelector(range(2, 13), 4, imagefile('beat3.png'))
+        self.beats_pm_button = IntensitySelector(range(2, 13), 4, imagefile('beat3.svg'))
         self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO, imagefile('tempo5.png'))
 
         self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity, imagefile('complex6.png'))
@@ -875,8 +875,8 @@ class SimplePianoActivity(activity.Activity):
         self.loop.beat = self.beat
         self.drumFillin.setBeats( self.beat )
         img = int(self.scale(self.beat, 2, 12, 1, 11))
-        print imagefile('beat' + str(img) + '.png')
-        self.beats_pm_button.set_image(imagefile('beat' + str(img) + '.png'))
+        print imagefile('beat' + str(img) + '.svg')
+        self.beats_pm_button.set_image(imagefile('beat' + str(img) + '.svg'))
         self.beatPickup = False
         self.regenerate()
         self.beatPickup = True
