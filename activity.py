@@ -265,6 +265,8 @@ class IntensitySelector(Gtk.ToolItem):
         vbox.pack_start(hbox, True, True, default_padding)
 
         self._size_down = ToolButton('go-previous-paired')
+        self._palette_invoker.attach_tool(self._size_down)
+
         self._size_down.set_can_focus(False)
         self._size_down.connect('clicked', self.__value_changed_cb, False)
         hbox.pack_start(self._size_down, False, False, 5)
@@ -273,12 +275,20 @@ class IntensitySelector(Gtk.ToolItem):
         self._default_value = default_value
         self._value = self._default_value
 
+        self.image_wrapper = Gtk.ToolItem()
         self._intensityImage = Gtk.Image()
+        self.image_wrapper.add(self._intensityImage)
+        self.image_wrapper.show()
         self._intensityImage.set_from_file(default_image)
+        self._intensityImage.show()
+        self._palette_invoker.attach_tool(self.image_wrapper)
 
-        hbox.pack_start(self._intensityImage, False, False, 10)
+        hbox.pack_start(self.image_wrapper, False, False, 10)
 
         self._size_up = ToolButton('go-next-paired')
+
+        self._palette_invoker.attach_tool(self._size_up)
+
         self._size_up.set_can_focus(False)
         self._size_up.connect('clicked', self.__value_changed_cb, True)
         hbox.pack_start(self._size_up, False, False, 5)
@@ -392,13 +402,6 @@ class IntensitySelector(Gtk.ToolItem):
         type=object, setter=set_palette_invoker, getter=get_palette_invoker)
 
     def do_draw(self, cr):
-        if self.palette and self.palette.is_up():
-            allocation = self.get_allocation()
-            # draw a black background, has been done by the engine before
-            cr.set_source_rgb(0, 0, 0)
-            cr.rectangle(0, 0, allocation.width, allocation.height)
-            cr.paint()
-
         Gtk.ToolButton.do_draw(self, cr)
 
         if self.palette and self.palette.is_up():
