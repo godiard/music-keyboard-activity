@@ -243,8 +243,11 @@ class IntensitySelector(Gtk.ToolItem):
     def __init__(self, value_range, default_value, default_image):
 
         Gtk.ToolItem.__init__(self)
+        self._palette_invoker = ToolInvoker()
 
+        self.palette = None
         self._values = value_range
+        self._palette_invoker.attach_tool(self)
 
         # theme the buttons, can be removed if add the style to the sugar css
         # these are the same values used in gtk-widgets.css.em
@@ -300,6 +303,10 @@ class IntensitySelector(Gtk.ToolItem):
 
         self.show_all()
 
+    def __destroy_cb(self, **args):
+        if self._palette_invoker is not None:
+            self._palette_invoker.detach()
+
     def __value_changed_cb(self, button, increase):
         if self._value in self._values:
             i = self._values.index(self._value)
@@ -336,6 +343,73 @@ class IntensitySelector(Gtk.ToolItem):
         self._size_down.set_sensitive(i != 0)
         self._size_up.set_sensitive(i < len(self._value) - 1)
         self.emit('changed')
+    
+    def set_tooltip(self, tooltip):
+        """ Set a simple palette with just a single label.
+        """
+        if self.palette is None or self._tooltip is None:
+            self.palette = Palette(tooltip)
+        elif self.palette is not None:
+            self.palette.set_primary_text(tooltip)
+
+        self._tooltip = tooltip
+        print "Set Tooltip: ", self.palette
+
+    def get_hide_tooltip_on_click(self):
+        return self._hide_tooltip_on_click
+
+    def set_hide_tooltip_on_click(self, hide_tooltip_on_click):
+        if self._hide_tooltip_on_click != hide_tooltip_on_click:
+            self._hide_tooltip_on_click = hide_tooltip_on_click
+
+    hide_tooltip_on_click = GObject.property(
+        type=bool, default=True, getter=get_hide_tooltip_on_click,
+        setter=set_hide_tooltip_on_click)
+
+    def get_tooltip(self):
+        return self._tooltip
+
+    def create_palette(self):
+        return None
+
+    def get_palette(self):
+        return self._palette_invoker.palette
+
+    def set_palette(self, palette):
+        self._palette_invoker.palette = palette
+
+    palette = GObject.property(
+        type=object, setter=set_palette, getter=get_palette)
+
+    def get_palette_invoker(self):
+        return self._palette_invoker
+
+    def set_palette_invoker(self, palette_invoker):
+        self._palette_invoker.detach()
+        self._palette_invoker = palette_invoker
+
+    palette_invoker = GObject.property(
+        type=object, setter=set_palette_invoker, getter=get_palette_invoker)
+
+    def do_draw(self, cr):
+        if self.palette and self.palette.is_up():
+            allocation = self.get_allocation()
+            # draw a black background, has been done by the engine before
+            cr.set_source_rgb(0, 0, 0)
+            cr.rectangle(0, 0, allocation.width, allocation.height)
+            cr.paint()
+
+        Gtk.ToolButton.do_draw(self, cr)
+
+        if self.palette and self.palette.is_up():
+            invoker = self.palette.props.invoker
+            invoker.draw_rectangle(cr, self.palette)
+
+        return False
+    
+    def do_clicked(self):
+        if self._hide_tooltip_on_click and self.palette:
+            self.palette.popdown(True)
 
     def set_image(self, image):
         self._intensityImage.set_from_file(image)
@@ -558,7 +632,7 @@ class SimplePianoActivity(activity.Activity):
         self.beats_pm_button = IntensitySelector(range(2, 13),
                                                  4,
                                                  imagefile('beat3.svg'))
-        self.tempo_button =
+        self.tempo_button = \
         IntensitySelector(range(PLAYER_TEMPO_LOWER,
                                 PLAYER_TEMPO_UPPER + 1),
                           PLAYER_TEMPO, imagefile('tempo5.png'))
@@ -601,16 +675,16 @@ class SimplePianoActivity(activity.Activity):
 
         toolbar_box.toolbar.insert(beats_toolbar_button, 1)
 
-        self.beats_pm_button.props.tooltip = _("Beats per bar")
+        self.beats_pm_button.set_tooltip(_("Beats per bar"))
         self.beats_pm_button.show()
         self.beats_pm_button.connect('changed', self.beatSliderChange, True)
         self.tempo_button.connect('changed', self.tempoSliderChange, True)
         self.complexity_button.connect('changed',
                                        self.handleComplexityChange,
                                        True)
-        self.complexity_button.props.tooltip = _("Beat complexity")
+        self.complexity_button.set_tooltip(_("Beat complexity"))
         self.tempo_button.show()
-        self.tempo_button.props.tooltip = _('Tempo')
+        self.tempo_button.set_tooltip(_('Tempo'))
         self.complexity_button.show()
 
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
@@ -968,9 +1042,9 @@ class SimplePianoActivity(activity.Activity):
         range_output = output_max - output_min
         result = (input - input_min) * range_output / range_input + output_min
 
-        if (input_min > input_max and
-            output_min > output_max) or
-        (output_min > output_max and
+        if (input_min > input_max and \
+            output_min > output_max) or \
+        (output_min > output_max and \
          input_min < input_max):
             if result > output_min:
                 return output_min
@@ -979,9 +1053,9 @@ class SimplePianoActivity(activity.Activity):
             else:
                 return result
 
-        if (input_min < input_max and
-            output_min < output_max) or
-        (output_min < output_max and
+        if (input_min < input_max and \
+            output_min < output_max) or \
+        (output_min < output_max and \
          input_min > input_max):
             if result > output_max:
                 return output_max
