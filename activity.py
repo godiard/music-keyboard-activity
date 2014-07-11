@@ -81,10 +81,11 @@ from math import log
 
 DRUMCOUNT = 6
 
+
 class ImageToggleButton(Gtk.ToggleButton):
 
     def __init__(self, mainImg_path, altImg_path, enterImg_path=None,
-            backgroundFill=None):
+                 backgroundFill=None):
         mainImg_path = imagefile(mainImg_path)
         altImg_path = imagefile(altImg_path)
         enterImg_path = imagefile(enterImg_path)
@@ -117,7 +118,7 @@ class ImageToggleButton(Gtk.ToggleButton):
         prepareImage("main", mainImg_path)
         prepareImage("alt", altImg_path)
 
-        if enterImg_path != None:
+        if enterImg_path is not None:
             prepareImage("enter", enterImg_path)
         else:
             self.image["enter"] = self.image["main"]
@@ -142,13 +143,13 @@ class ImageToggleButton(Gtk.ToggleButton):
         if self.is_png:
             img_surface = self.image[self.curImage]
             cr.translate((alloc.width - img_surface.get_width()) / 2,
-                    (alloc.height - img_surface.get_height()) / 2)
+                         (alloc.height - img_surface.get_height()) / 2)
             cr.set_source_surface(img_surface, 0, 0)
             cr.paint()
         else:
             pxb = self.image[self.curImage]
             cr.translate((alloc.width - pxb.get_width()) / 2,
-                    (alloc.height - pxb.get_height()) / 2)
+                         (alloc.height - pxb.get_height()) / 2)
             Gdk.cairo_set_source_pixbuf(cr, pxb, 0, 0)
             cr.paint()
         cr.restore()
@@ -161,21 +162,23 @@ class ImageToggleButton(Gtk.ToggleButton):
             updateEnter = False
 
         if True:
-            if self.backgroundFill == None:
+            if self.backgroundFill is None:
                 self.image[name] = pix
             else:
                 self.image[name] = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                        pix.get_width(), pix.get_height())
+                                                      pix.get_width(),
+                                                      pix.get_height())
                 cxt = cairo.Context(self.image[name])
-                #colormap = self.get_colormap()
-                #self.gc.foreground = \
+                # colormap = self.get_colormap()
+                # self.gc.foreground = \
                 #    colormap.alloc_color( self.backgroundFill, True, True )
                 cxt.rectangle(0, 0, pix.get_width(), pix.get_height())
                 cxt.fill()
                 cxt.set_source_pixbuf(pix, 0, 0)
         else:
             self.image[name] = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                    pix.get_width(), pix.get_height())
+                                                  pix.get_width(),
+                                                  pix.get_height())
             cxt = cairo.Context(self.image[name])
             cxt.set_source_pixbuf(pix, 0, 0)
         self.iwidth[name] = pix.get_width()
@@ -231,6 +234,7 @@ PLAYER_TEMPO = 100
 PLAYER_TEMPO_LOWER = 30
 PLAYER_TEMPO_UPPER = 160
 
+
 class IntensitySelector(Gtk.ToolItem):
 
     __gsignals__ = {
@@ -256,7 +260,7 @@ class IntensitySelector(Gtk.ToolItem):
         self.add(vbox)
         # add a vbox to set the padding up and down
         vbox.pack_start(hbox, True, True, default_padding)
-        
+
         self._size_down = ToolButton('go-previous-paired')
         self._size_down.set_can_focus(False)
         self._size_down.connect('clicked', self.__value_changed_cb, False)
@@ -318,7 +322,7 @@ class IntensitySelector(Gtk.ToolItem):
             # assure the val assigned is in the range
             # if not, assign one close.
             for v in self._values:
-                if v > val: 
+                if v > val:
                     val = v
                     break
             if val > self._values[-1]:
@@ -334,30 +338,29 @@ class IntensitySelector(Gtk.ToolItem):
         self.emit('changed')
 
     def set_image(self, image):
-    	self._intensityImage.set_from_file(image)
+        self._intensityImage.set_from_file(image)
 
     def get_value(self):
         return self._value
 
 
-
 def xfrange(start, stop, step):
 
-    old_start = start #backup this value
+    old_start = start  # backup this value
 
-    digits = int(round(log(10000, 10)))+1 #get number of digits
+    digits = int(round(log(10000, 10)))+1  # get number of digits
     magnitude = 10**digits
-    stop = int(magnitude * stop) #convert from 
-    step = int(magnitude * step) #0.1 to 10 (e.g.)
+    stop = int(magnitude * stop)  # convert from
+    step = int(magnitude * step)  # 0.1 to 10 (e.g.)
 
     if start == 0:
         start = 10**(digits-1)
     else:
         start = 10**(digits)*start
 
-    data = []   #create array
+    data = []  # create array
 
-    #calc number of iterations
+    # calc number of iterations
     end_loop = int((stop-start)//step)
     if old_start == 0:
         end_loop += 1
@@ -369,6 +372,7 @@ def xfrange(start, stop, step):
         acc += step
 
     return data
+
 
 class FilterToolItem(Gtk.ToolButton):
     __gsignals__ = {
@@ -470,6 +474,7 @@ class FilterToolItem(Gtk.ToolButton):
 
 MAX_PALETTE_WIDTH = 5
 
+
 def set_palette_list(instrument_list):
     text_label = instrument_list[0]['instrument_desc']
     file_name = instrument_list[0]['file_name']
@@ -526,6 +531,7 @@ def set_palette_list(instrument_list):
     else:
         return grid
 
+
 class SimplePianoActivity(activity.Activity):
     """SimplePianoActivity class as specified in activity.info"""
 
@@ -549,28 +555,34 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(activity_button, 0)
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
 
-        self.beats_pm_button = IntensitySelector(range(2, 13), 4, imagefile('beat3.svg'))
-        self.tempo_button = IntensitySelector(range(PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER + 1), PLAYER_TEMPO, imagefile('tempo5.png'))
+        self.beats_pm_button = IntensitySelector(range(2, 13),
+                                                 4,
+                                                 imagefile('beat3.svg'))
+        self.tempo_button =
+        IntensitySelector(range(PLAYER_TEMPO_LOWER,
+                                PLAYER_TEMPO_UPPER + 1),
+                          PLAYER_TEMPO, imagefile('tempo5.png'))
 
-        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01), self.regularity, imagefile('complex6.svg'))
+        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01),
+                                                   self.regularity,
+                                                   imagefile('complex6.svg'))
 
-
-        self.playButtonWrapper = Gtk.ToolItem();
-        
+        self.playButtonWrapper = Gtk.ToolItem()
         self.playButton = ImageToggleButton('miniplay.png', 'stop.png')
         self.playButton.set_tooltip_text(_('Play / Stop'))
-        self.playButton.connect('clicked',self.handlePlayButton)
-        self.playButtonWrapper.add(self.playButton);
-        self.playButtonWrapper.show();
-        self.playButton.show();
-        beats_toolbar = ToolbarBox() 
-
-        beats_toolbar.toolbar.insert(self.playButtonWrapper, -1);
+        self.playButton.connect('clicked', self.handlePlayButton)
+        self.playButtonWrapper.add(self.playButton)
+        self.playButtonWrapper.show()
+        self.playButton.show()
+        beats_toolbar = ToolbarBox()
+        beats_toolbar.toolbar.insert(self.playButtonWrapper, -1)
 
         self._what_drum_widget = Gtk.ToolItem()
         self._what_drum_search_button = FilterToolItem(
-            _('Select Drum'), 'view-type', _('Jazz / Rock Kit'), self._what_drum_widget)
-        self._what_drum_search_button.set_widget_icon(file_name=imagefile("drum1kit.svg"))
+            _('Select Drum'), 'view-type', _('Jazz / Rock Kit'),
+            self._what_drum_widget)
+        self._what_drum_search_button.set_widget_icon(
+            file_name=imagefile("drum1kit.svg"))
 
         self._what_drum_widget.show()
         separator = Gtk.SeparatorToolItem()
@@ -578,11 +590,10 @@ class SimplePianoActivity(activity.Activity):
         self._what_drum_search_button.show()
         self._what_drum_search_button.set_is_important(True)
 
-        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1);
-        beats_toolbar.toolbar.insert(self.complexity_button, -1);
-
-        beats_toolbar.toolbar.insert(self.beats_pm_button,    -1);
-        beats_toolbar.toolbar.insert(self.tempo_button, -1);        
+        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1)
+        beats_toolbar.toolbar.insert(self.complexity_button, -1)
+        beats_toolbar.toolbar.insert(self.beats_pm_button, -1)
+        beats_toolbar.toolbar.insert(self.tempo_button, -1)
 
         beats_toolbar_button = ToolbarButton(icon_name='toolbar-drums',
                                              page=beats_toolbar)
@@ -590,14 +601,16 @@ class SimplePianoActivity(activity.Activity):
 
         toolbar_box.toolbar.insert(beats_toolbar_button, 1)
 
-        self.beats_pm_button.set_tooltip_text(_("Beats per bar"))
+        self.beats_pm_button.props.tooltip = _("Beats per bar")
         self.beats_pm_button.show()
         self.beats_pm_button.connect('changed', self.beatSliderChange, True)
         self.tempo_button.connect('changed', self.tempoSliderChange, True)
-        self.complexity_button.connect('changed', self.handleComplexityChange, True)
-        self.complexity_button.set_tooltip_text(_("Beat complexity"))
+        self.complexity_button.connect('changed',
+                                       self.handleComplexityChange,
+                                       True)
+        self.complexity_button.props.tooltip = _("Beat complexity")
         self.tempo_button.show()
-        self.tempo_button.set_tooltip_text(_('Tempo'))
+        self.tempo_button.props.tooltip = _('Tempo')
         self.complexity_button.show()
 
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
@@ -635,7 +648,9 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(no_labels, -1)
         self._what_widget = Gtk.ToolItem()
         self._what_search_button = FilterToolItem(_('Select Instrument'),
-            'view-type', _('Piano'), self._what_widget)
+                                                  'view-type',
+                                                  _('Piano'),
+                                                  self._what_widget)
         self._what_widget.show()
         separator = Gtk.SeparatorToolItem()
         toolbar_box.toolbar.insert(separator, -1)
@@ -700,7 +715,11 @@ class SimplePianoActivity(activity.Activity):
                                        self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
 
-        self.drumFillin = Fillin( self.beat, self.tempo, self.rythmInstrument, self.reverb, self.drumVolume )
+        self.drumFillin = Fillin(self.beat,
+                                 self.tempo,
+                                 self.rythmInstrument,
+                                 self.reverb,
+                                 self.drumVolume)
 
         self.muteInst = False
         self.csnd.setTempo(self.tempo)
@@ -718,7 +737,6 @@ class SimplePianoActivity(activity.Activity):
 
         self.enableKeyboard()
         self.setInstrument(self.instrument)
-
 
         self.connect('key-press-event', self.onKeyPress)
         self.connect('key-release-event', self.onKeyRelease)
@@ -758,20 +776,25 @@ class SimplePianoActivity(activity.Activity):
         notePitchs = []
 
         i = 0
-        self.noteList= []
+        self.noteList = []
         self.csnd.loopClear()
-        for x in flatten( generator(self.rythmInstrument, self.beat, 0.8, self.regularity, self.reverb) ):
+        for x in flatten(
+            generator(self.rythmInstrument, self.beat,
+                      0.8, self.regularity, self.reverb)):
             x.amplitude = x.amplitude * self.drumVolume
             noteOnsets.append(x.onset)
             notePitchs.append(x.pitch)
             n = Note(0, x.trackId, i, x)
-            self.noteList.append( (x.onset, n) )
+            self.noteList.append((x.onset, n))
             i = i + 1
-            self.csnd.loopPlay(n,1)                    #add as active
-        self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
-        self.drumFillin.unavailable( noteOnsets, notePitchs )
+            self.csnd.loopPlay(n, 1)                    # add as active
+
+        self.csnd.loopSetNumTicks(self.beat * Config.TICKS_PER_BEAT)
+        self.drumFillin.unavailable(noteOnsets, notePitchs)
+
         if self.playing:
             self.csnd.loopStart()
+
     def __allocate_cb(self, widget, rect):
         GLib.idle_add(self.resize, rect.width, rect.height)
         return False
@@ -820,32 +843,33 @@ class SimplePianoActivity(activity.Activity):
         self._what_widget.add(self._what_widget_contents)
         self._what_widget_contents.show()
 
-
         for drum_number in range(0, DRUMCOUNT):
             drum_name = 'drum%dkit' % (drum_number + 1)
             self._drums_store.append({
-                    "instrument_name": drum_name,
-                    "file_name": imagefile(drum_name + '.svg'),
-                    "instrument_desc": self.instrumentDB.instNamed[drum_name].nameTooltip,
-                    "callback": self.__drum_iconview_activated_cb
-                })
+                "instrument_name": drum_name,
+                "file_name": imagefile(drum_name + '.svg'),
+                "instrument_desc":
+                    self.instrumentDB.instNamed[drum_name].nameTooltip,
+                "callback": self.__drum_iconview_activated_cb
+            })
 
         self._what_drum_widget_contents = set_palette_list(self._drums_store)
         self._what_drum_widget.add(self._what_drum_widget_contents)
         self._what_drum_widget_contents.show()
 
-    def __drum_iconview_activated_cb(self , widget , event, item):
-        #data is drum1kit, drum2kit, or drum3kit
-        #print 'HANDLE: Generate Button'
+    def __drum_iconview_activated_cb(self, widget, event, item):
         data = item['instrument_name']
         self.rythmInstrument = data
         self.csnd.load_drumkit(data)
         instrumentId = self.instrumentDB.instNamed[data].instrumentId
-        for (o,n) in self.noteList :
-            self.csnd.loopUpdate(n, NoteDB.PARAMETER.INSTRUMENT, instrumentId, -1)
-        self.drumFillin.setInstrument( self.rythmInstrument )
-        self._what_drum_search_button.set_widget_label(label=item['instrument_desc'])
-        self._what_drum_search_button.set_widget_icon(file_name=item['file_name'])
+        for (o, n) in self.noteList:
+            self.csnd.loopUpdate(n, NoteDB.PARAMETER.INSTRUMENT,
+                                 instrumentId, -1)
+        self.drumFillin.setInstrument(self.rythmInstrument)
+        self._what_drum_search_button.set_widget_label(
+            label=item['instrument_desc'])
+        self._what_drum_search_button.set_widget_icon(
+            file_name=item['file_name'])
 
     def __instrument_iconview_activated_cb(self, widget, event, item):
         self.setInstrument(item['instrument_name'])
@@ -873,7 +897,7 @@ class SimplePianoActivity(activity.Activity):
         self.beat = int(self.beats_pm_button.get_value())
         self.sequencer.beat = self.beat
         self.loop.beat = self.beat
-        self.drumFillin.setBeats( self.beat )
+        self.drumFillin.setBeats(self.beat)
         img = int(self.scale(self.beat, 2, 12, 1, 11))
         print imagefile('beat' + str(img) + '.svg')
         self.beats_pm_button.set_image(imagefile('beat' + str(img) + '.svg'))
@@ -890,29 +914,32 @@ class SimplePianoActivity(activity.Activity):
         noteOnsets = []
         notePitchs = []
         i = 0
-        self.noteList= []
+        self.noteList = []
         self.csnd.loopClear()
-        for x in flatten( generator(self.rythmInstrument, self.beat, 0.8, self.regularity, self.reverb) ):
+        for x in flatten(
+            generator(self.rythmInstrument,
+                      self.beat, 0.8, self.regularity,
+                      self.reverb)):
             x.amplitude = x.amplitude * self.drumVolume
             noteOnsets.append(x.onset)
             notePitchs.append(x.pitch)
             n = Note(0, x.trackId, i, x)
-            self.noteList.append( (x.onset, n) )
+            self.noteList.append((x.onset, n))
             i = i + 1
-            self.csnd.loopPlay(n,1)                    #add as active
-        self.csnd.loopSetNumTicks( self.beat * Config.TICKS_PER_BEAT)
-        self.drumFillin.unavailable( noteOnsets, notePitchs )
-        self.recordOverSensitivity( False )
+            self.csnd.loopPlay(n, 1)                    # add as active
+        self.csnd.loopSetNumTicks(self.beat * Config.TICKS_PER_BEAT)
+        self.drumFillin.unavailable(noteOnsets, notePitchs)
+        self.recordOverSensitivity(False)
         if self.playing:
             self.csnd.loopStart()
 
     def tempoSliderChange(self, widget, event):
         self._updateTempo(self.tempo_button.get_value())
-        img = int(self.scale( self.tempo, PLAYER_TEMPO_LOWER, PLAYER_TEMPO_UPPER, 1, 9 ))
+        img = int(self.scale(self.tempo, PLAYER_TEMPO_LOWER,
+                             PLAYER_TEMPO_UPPER, 1, 9))
         self.tempo_button.set_image(imagefile('tempo' + str(img) + '.png'))
 
-
-    def _updateTempo( self, val ):
+    def _updateTempo(self, val):
         self.tempo = val
         self.beatDuration = 60.0/self.tempo
         self.ticksPerSecond = Config.TICKS_PER_BEAT*self.tempo/60.0
@@ -920,7 +947,7 @@ class SimplePianoActivity(activity.Activity):
         self.sequencer.tempo = self.tempo
         self.drumFillin.setTempo(self.tempo)
 
-    def handlePlayButton( self, val ):
+    def handlePlayButton(self, val):
         if not self.playing:
             if not self.firstTime:
                 self.regenerate()
@@ -935,12 +962,16 @@ class SimplePianoActivity(activity.Activity):
             self.csnd.loopPause()
             self.playing = False
 
-    def scale(self, input,input_min,input_max,output_min,output_max):
+    def scale(self, input, input_min, input_max,
+              output_min, output_max):
         range_input = input_max - input_min
         range_output = output_max - output_min
         result = (input - input_min) * range_output / range_input + output_min
 
-        if (input_min > input_max and output_min > output_max) or (output_min > output_max and input_min < input_max):
+        if (input_min > input_max and
+            output_min > output_max) or
+        (output_min > output_max and
+         input_min < input_max):
             if result > output_min:
                 return output_min
             elif result < output_max:
@@ -948,7 +979,10 @@ class SimplePianoActivity(activity.Activity):
             else:
                 return result
 
-        if (input_min < input_max and output_min < output_max) or (output_min < output_max and input_min > input_max):
+        if (input_min < input_max and
+            output_min < output_max) or
+        (output_min < output_max and
+         input_min > input_max):
             if result > output_max:
                 return output_max
             elif result < output_min:
@@ -959,7 +993,8 @@ class SimplePianoActivity(activity.Activity):
     def handleComplexityChange(self, widget, event):
         self.regularity = self.complexity_button.get_value()
         img = int(self.complexity_button.get_value() * 7)+1
-        self.complexity_button.set_image(imagefile('complex' + str(img) + '.svg'))
+        self.complexity_button.set_image(
+            imagefile('complex' + str(img) + '.svg'))
         self.beatPickup = False
         self.regenerate()
         self.beatPickup = True
