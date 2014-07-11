@@ -353,7 +353,7 @@ class IntensitySelector(Gtk.ToolItem):
         self._size_down.set_sensitive(i != 0)
         self._size_up.set_sensitive(i < len(self._value) - 1)
         self.emit('changed')
-    
+
     def set_tooltip(self, tooltip):
         """ Set a simple palette with just a single label.
         """
@@ -409,7 +409,7 @@ class IntensitySelector(Gtk.ToolItem):
             invoker.draw_rectangle(cr, self.palette)
 
         return False
-    
+
     def do_clicked(self):
         if self._hide_tooltip_on_click and self.palette:
             self.palette.popdown(True)
@@ -636,9 +636,9 @@ class SimplePianoActivity(activity.Activity):
                                                  4,
                                                  imagefile('beat3.svg'))
         self.tempo_button = \
-        IntensitySelector(range(PLAYER_TEMPO_LOWER,
-                                PLAYER_TEMPO_UPPER + 1),
-                          PLAYER_TEMPO, imagefile('tempo5.png'))
+            IntensitySelector(range(PLAYER_TEMPO_LOWER,
+                                    PLAYER_TEMPO_UPPER + 1),
+                              PLAYER_TEMPO, imagefile('tempo5.png'))
 
         self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01),
                                                    self.regularity,
@@ -1045,10 +1045,8 @@ class SimplePianoActivity(activity.Activity):
         range_output = output_max - output_min
         result = (input - input_min) * range_output / range_input + output_min
 
-        if (input_min > input_max and \
-            output_min > output_max) or \
-        (output_min > output_max and \
-         input_min < input_max):
+        if (input_min > input_max and output_min > output_max) or \
+           (output_min > output_max and input_min < input_max):
             if result > output_min:
                 return output_min
             elif result < output_max:
@@ -1056,10 +1054,8 @@ class SimplePianoActivity(activity.Activity):
             else:
                 return result
 
-        if (input_min < input_max and \
-            output_min < output_max) or \
-        (output_min < output_max and \
-         input_min > input_max):
+        if (input_min < input_max and output_min < output_max) or \
+           (output_min < output_max and input_min > input_max):
             if result > output_max:
                 return output_max
             elif result < output_min:
