@@ -570,7 +570,7 @@ class SimplePianoActivity(activity.Activity):
         self._what_drum_widget = Gtk.ToolItem()
         self._what_drum_search_button = FilterToolItem(
             _('Select Drum'), 'view-type', _('Jazz / Rock Kit'), self._what_drum_widget)
-        self._what_drum_search_button.set_widget_icon(file_name=imagefile("drum1kit.png"))
+        self._what_drum_search_button.set_widget_icon(file_name=imagefile("drum1kit.svg"))
 
         self._what_drum_widget.show()
         separator = Gtk.SeparatorToolItem()
@@ -825,7 +825,7 @@ class SimplePianoActivity(activity.Activity):
             drum_name = 'drum%dkit' % (drum_number + 1)
             self._drums_store.append({
                     "instrument_name": drum_name,
-                    "file_name": imagefile(drum_name + '.png'),
+                    "file_name": imagefile(drum_name + '.svg'),
                     "instrument_desc": self.instrumentDB.instNamed[drum_name].nameTooltip,
                     "callback": self.__drum_iconview_activated_cb
                 })
