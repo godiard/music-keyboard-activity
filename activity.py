@@ -275,13 +275,13 @@ class IntensitySelector(Gtk.ToolItem):
         self._default_value = default_value
         self._value = self._default_value
 
-        self.image_wrapper = Gtk.ToolItem()
+        self.image_wrapper = Gtk.EventBox()
         self._intensityImage = Gtk.Image()
         self.image_wrapper.add(self._intensityImage)
         self.image_wrapper.show()
         self._intensityImage.set_from_file(default_image)
         self._intensityImage.show()
-        self._palette_invoker.attach_tool(self.image_wrapper)
+        self._palette_invoker.attach_widget(self.image_wrapper)
 
         hbox.pack_start(self.image_wrapper, False, False, 10)
 
