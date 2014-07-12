@@ -230,10 +230,10 @@ class ImageToggleButton(Gtk.ToggleButton):
                 self.curImage = "alt"
             self.queue_draw()
 
-PLAYER_TEMPO = 100
+PLAYER_TEMPO = 95
 PLAYER_TEMPO_LOWER = 30
-PLAYER_TEMPO_UPPER = 160
-
+PLAYER_TEMPO_UPPER = 150
+PLAYER_TEMPO_STEP = int((160 - 30) / 10)
 
 class IntensitySelector(Gtk.ToolItem):
 
@@ -618,7 +618,7 @@ class SimplePianoActivity(activity.Activity):
 
         self.firstTime = False
         self.playing = False
-        self.regularity = 0.75
+        self.regularity = 0.7
         self._drums_store = []
 
         # we do not have collaboration features
@@ -637,10 +637,10 @@ class SimplePianoActivity(activity.Activity):
                                                  imagefile('beat3.svg'))
         self.tempo_button = \
             IntensitySelector(range(PLAYER_TEMPO_LOWER,
-                                    PLAYER_TEMPO_UPPER + 1),
+                                    PLAYER_TEMPO_UPPER + 1, PLAYER_TEMPO_STEP),
                               PLAYER_TEMPO, imagefile('tempo5.png'))
 
-        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.01),
+        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.1),
                                                    self.regularity,
                                                    imagefile('complex6.svg'))
 
