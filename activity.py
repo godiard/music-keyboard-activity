@@ -79,7 +79,7 @@ from ttcommon.Config import imagefile
 import ttcommon.Config as Config
 from math import log
 
-DRUMCOUNT = 6
+DRUMCOUNT = 5
 PLAYER_TEMPO = 95
 PLAYER_TEMPO_LOWER = 30
 PLAYER_TEMPO_UPPER = 150
@@ -895,7 +895,6 @@ class SimplePianoActivity(activity.Activity):
             self.csnd.loopPause()
             self.playing = False
             self.play_button.set_icon_widget(self.play_image)
-
 
     def scale(self, input, input_min, input_max,
               output_min, output_max):
