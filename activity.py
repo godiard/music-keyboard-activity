@@ -80,156 +80,6 @@ import ttcommon.Config as Config
 from math import log
 
 DRUMCOUNT = 6
-
-
-class ImageToggleButton(Gtk.ToggleButton):
-
-    def __init__(self, mainImg_path, altImg_path, enterImg_path=None,
-                 backgroundFill=None):
-        mainImg_path = imagefile(mainImg_path)
-        altImg_path = imagefile(altImg_path)
-        enterImg_path = imagefile(enterImg_path)
-        Gtk.ToggleButton.__init__(self)
-        self.alloc = None
-        self.within = False
-        self.clicked = False
-        self.is_png = True
-
-        self.image = {}
-        self.iwidth = {}
-        self.iheight = {}
-
-        self.backgroundFill = backgroundFill
-
-        def prepareImage(name, path):
-            if path.endswith(".png"):
-                pix = cairo.ImageSurface.create_from_png(path)
-                self.is_png = True
-
-            elif path.endswith(".svg"):
-                pix = GdkPixbuf.Pixbuf.new_from_file(path)
-                self.is_png = False
-
-            self.image[name] = pix
-
-            self.iwidth[name] = pix.get_width()
-            self.iheight[name] = pix.get_height()
-
-        prepareImage("main", mainImg_path)
-        prepareImage("alt", altImg_path)
-
-        if enterImg_path is not None:
-            prepareImage("enter", enterImg_path)
-        else:
-            self.image["enter"] = self.image["main"]
-            self.iwidth["enter"] = self.iwidth["main"]
-            self.iheight["enter"] = self.iheight["main"]
-
-        self.connect('enter-notify-event', self.on_btn_enter)
-        self.connect('leave-notify-event', self.on_btn_leave)
-
-        self.connect('toggled', self.toggleImage)
-        self.connect('pressed', self.pressed)
-        self.connect('released', self.released)
-        self.connect('draw', self.draw)
-        self.set_size_request(self.iwidth["main"], self.iheight["main"])
-
-        self.toggleImage(self)
-
-    def draw(self, widget, cr):
-        alloc = self.get_allocation()
-
-        cr.save()
-        if self.is_png:
-            img_surface = self.image[self.curImage]
-            cr.translate((alloc.width - img_surface.get_width()) / 2,
-                         (alloc.height - img_surface.get_height()) / 2)
-            cr.set_source_surface(img_surface, 0, 0)
-            cr.paint()
-        else:
-            pxb = self.image[self.curImage]
-            cr.translate((alloc.width - pxb.get_width()) / 2,
-                         (alloc.height - pxb.get_height()) / 2)
-            Gdk.cairo_set_source_pixbuf(cr, pxb, 0, 0)
-            cr.paint()
-        cr.restore()
-        return True
-
-    def setImage(self, name, pix):
-        if name == "main" and self.image["main"] == self.image["enter"]:
-            updateEnter = True
-        else:
-            updateEnter = False
-
-        if True:
-            if self.backgroundFill is None:
-                self.image[name] = pix
-            else:
-                self.image[name] = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                                                      pix.get_width(),
-                                                      pix.get_height())
-                cxt = cairo.Context(self.image[name])
-                # colormap = self.get_colormap()
-                # self.gc.foreground = \
-                #    colormap.alloc_color( self.backgroundFill, True, True )
-                cxt.rectangle(0, 0, pix.get_width(), pix.get_height())
-                cxt.fill()
-                cxt.set_source_pixbuf(pix, 0, 0)
-        else:
-            self.image[name] = cairo.ImageSurface(cairo.FORMAT_RGB24,
-                                                  pix.get_width(),
-                                                  pix.get_height())
-            cxt = cairo.Context(self.image[name])
-            cxt.set_source_pixbuf(pix, 0, 0)
-        self.iwidth[name] = pix.get_width()
-        self.iheight[name] = pix.get_height()
-
-        if updateEnter:
-            self.image["enter"] = self.image["main"]
-            self.iwidth["enter"] = self.iwidth["main"]
-            self.iheight["enter"] = self.iheight["main"]
-            self.connect('enter-notify-event', self.on_btn_enter)
-            self.connect('leave-notify-event', self.on_btn_leave)
-
-        self.queue_draw()
-
-    def toggleImage(self, widget):
-        if not self.get_active():
-            if self.within and "enter" in self.image:
-                self.curImage = "enter"
-            else:
-                self.curImage = "main"
-        else:
-            self.curImage = "alt"
-        self.queue_draw()
-
-    def pressed(self, widget):
-        self.clicked = True
-        self.curImage = "alt"
-        self.queue_draw()
-
-    def released(self, widget):
-        self.clicked = False
-        self.toggleImage(self)
-
-    def on_btn_enter(self, widget, event):
-        if event.mode == Gdk.CrossingMode.NORMAL:
-            self.within = True
-            if not self.get_active() and not self.clicked:
-                self.curImage = "enter"
-            else:
-                self.curImage = "alt"
-            self.queue_draw()
-
-    def on_btn_leave(self, widget, event):
-        if event.mode == Gdk.CrossingMode.NORMAL:
-            self.within = False
-            if not self.get_active():
-                self.curImage = "main"
-            else:
-                self.curImage = "alt"
-            self.queue_draw()
-
 PLAYER_TEMPO = 95
 PLAYER_TEMPO_LOWER = 30
 PLAYER_TEMPO_UPPER = 150
@@ -644,15 +494,20 @@ class SimplePianoActivity(activity.Activity):
                                                    self.regularity,
                                                    imagefile('complex6.svg'))
 
-        self.playButtonWrapper = Gtk.ToolItem()
-        self.playButton = ImageToggleButton('miniplay.png', 'stop.png')
-        self.playButton.set_tooltip_text(_('Play / Stop'))
-        self.playButton.connect('clicked', self.handlePlayButton)
-        self.playButtonWrapper.add(self.playButton)
-        self.playButtonWrapper.show()
-        self.playButton.show()
+        self.play_image = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_PLAY,
+                                                   Gtk.IconSize.BUTTON)
+        self.stop_image = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_STOP,
+                                                   Gtk.IconSize.BUTTON)
+        self.play_image.show()
+        self.stop_image.show()
+        self.play_button = Gtk.ToolButton()
+        self.play_button.set_icon_widget(self.play_image)
+        self.play_button.set_property('can-default', True)
+        self.play_button.show()
+
+        self.play_button.connect('clicked', self.handlePlayButton)
         beats_toolbar = ToolbarBox()
-        beats_toolbar.toolbar.insert(self.playButtonWrapper, -1)
+        beats_toolbar.toolbar.insert(self.play_button, -1)
 
         self._what_drum_widget = Gtk.ToolItem()
         self._what_drum_search_button = FilterToolItem(
@@ -1033,11 +888,14 @@ class SimplePianoActivity(activity.Activity):
             self.csnd.loopSetTick(0)
             self.csnd.loopStart()
             self.playing = True
+            self.play_button.set_icon_widget(self.stop_image)
         else:
             self.drumFillin.stop()
             self.sequencer.stopPlayback()
             self.csnd.loopPause()
             self.playing = False
+            self.play_button.set_icon_widget(self.play_image)
+
 
     def scale(self, input, input_min, input_max,
               output_min, output_max):
