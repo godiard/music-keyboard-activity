@@ -85,6 +85,7 @@ PLAYER_TEMPO_LOWER = 30
 PLAYER_TEMPO_UPPER = 150
 PLAYER_TEMPO_STEP = int((160 - 30) / 10)
 
+
 class IntensitySelector(Gtk.ToolItem):
 
     __gsignals__ = {
