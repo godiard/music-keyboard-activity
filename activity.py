@@ -23,6 +23,7 @@ from gi.repository import GObject
 from gi.repository import Pango
 import logging
 import cairo
+import json
 
 from Fillin import Fillin
 from sugar3.graphics.toolbutton import ToolButton
@@ -1113,3 +1114,21 @@ class SimplePianoActivity(activity.Activity):
     def onKeyRelease(self, widget, event):
         self.keyboardStandAlone.onKeyRelease(widget, event)
         self.piano.physical_key_changed(event.hardware_keycode, False)
+
+    ##########################################
+    # Journal functions
+    ##########################################
+
+    def write_file(self, file_path):
+        f = open(file_path, 'w')
+        f.write(json.dumps(self.recorded_keys))
+        f.close()
+
+    def read_file(self, file_path):
+        f = open(file_path, 'r')
+        contents = f.read().strip()
+
+        self.recorded_keys = json.loads(contents)
+        if len(self.recorded_keys) != 0:
+            self.play_recording_button.set_sensitive(True)
+        f.close()
