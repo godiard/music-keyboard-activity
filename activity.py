@@ -203,7 +203,6 @@ class IntensitySelector(Gtk.ToolItem):
             self.palette.set_primary_text(tooltip)
 
         self._tooltip = tooltip
-        print "Set Tooltip: ", self.palette
 
     def get_hide_tooltip_on_click(self):
         return self._hide_tooltip_on_click
@@ -864,7 +863,6 @@ class SimplePianoActivity(activity.Activity):
         self.loop.beat = self.beat
         self.drumFillin.setBeats(self.beat)
         img = int(self.scale(self.beat, 2, 12, 1, 11))
-        print imagefile('beat' + str(img) + '.svg')
         self.beats_pm_button.set_image(imagefile('beat' + str(img) + '.svg'))
         self.beatPickup = False
         self.regenerate()
@@ -1066,7 +1064,6 @@ class SimplePianoActivity(activity.Activity):
                              LETTERS_TO_KEY_CODES[letter[3]], True)
 
         if self.play_index == len(self.recorded_keys) - 1:
-            print "Stopping playing recording now!"
             self.play_index = 0
             self.playing_recording_thread = False
             self.play_recording_button.set_icon_widget(
@@ -1087,7 +1084,6 @@ class SimplePianoActivity(activity.Activity):
             if self.recording:
                 self.recorded_keys.append(
                     (time.time(), octave_clicked, key_clicked, letter))
-            print self.recorded_keys
             self.keyboardStandAlone.do_key_press(
                 LETTERS_TO_KEY_CODES[letter], None,
                 math.sqrt(self.instVolume * 0.01))
