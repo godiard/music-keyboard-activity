@@ -284,6 +284,8 @@ class SimplePianoActivity(activity.Activity):
 
     def onKeyPress(self, widget, event):
 
+        if event.state & Gdk.ModifierType.CONTROL_MASK:
+            return
         if event.hardware_keycode == 37:
             if self.muteInst:
                 self.muteInst = False

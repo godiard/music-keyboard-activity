@@ -128,7 +128,7 @@ class KeyboardStandAlone:
                 self.loop.stop(key)
             return
 
-        if KEY_MAP_PIANO.has_key(key):
+        if key in KEY_MAP_PIANO and key in self.key_dict:
             csnote = self.key_dict[key]
             if self.instrumentDB.instId[ csnote.instrumentId ].csoundInstrumentId == Config.INST_TIED:
                 csnote.duration = .5
