@@ -1097,7 +1097,8 @@ class SimplePianoActivity(activity.Activity):
                 LETTERS_TO_KEY_CODES[letter])
 
     def onKeyPress(self, widget, event):
-
+        if event.state & Gdk.ModifierType.CONTROL_MASK:
+            return
         if event.hardware_keycode == 37:
             if self.muteInst:
                 self.muteInst = False
