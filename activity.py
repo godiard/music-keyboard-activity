@@ -489,40 +489,18 @@ class SimplePianoActivity(activity.Activity):
                                                    self.regularity,
                                                    imagefile('complex6.svg'))
 
-        self.play_image = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_PLAY,
-                                                   Gtk.IconSize.BUTTON)
-        self.stop_image = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_STOP,
-                                                   Gtk.IconSize.BUTTON)
-        self.play_image.show()
-        self.stop_image.show()
-        self.play_button = ToolButton()
-        self.play_button.set_icon_widget(self.play_image)
-        self.play_button.set_property('can-default', True)
-        self.play_button.show()
-
-        self.play_recording_image = \
-            Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_PLAY, Gtk.IconSize.BUTTON)
-        self.stop_pr_image = \
-            Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_STOP,
-                                     Gtk.IconSize.BUTTON)
+        self._play_percussion_btn = ToolButton(
+            icon_name='media-playback-start')
+        self._play_percussion_btn.set_property('can-default', True)
+        self._play_percussion_btn.show()
 
         self.play_index = 0
 
-        self.stop_pr_image.show()
-        self.record_image = \
-            Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_RECORD,
-                                     Gtk.IconSize.BUTTON)
-        self.stop_record_image = Gtk.Image.new_from_stock(Gtk.STOCK_MEDIA_STOP,
-                                                          Gtk.IconSize.BUTTON)
-
-        self.play_recording_button = ToolButton()
-        self.play_recording_button.set_icon_widget(self.play_recording_image)
+        self.play_recording_button = ToolButton(
+            icon_name='media-playback-start')
         self.play_recording_button.set_property('can-default', True)
         self.play_recording_button.show()
-        self.record_image.show()
-        self.stop_record_image.show()
-        self.record_button = ToggleToolButton()
-        self.record_button.set_icon_widget(self.record_image)
+        self.record_button = ToggleToolButton(icon_name='media-record')
         self.record_button.set_property('can-default', True)
         self.record_button.show()
         self.play_recording_button.set_sensitive(False)
@@ -533,7 +511,7 @@ class SimplePianoActivity(activity.Activity):
                                            self.handlePlayRecordingButton)
 
         beats_toolbar = ToolbarBox()
-        beats_toolbar.toolbar.insert(self.play_button, -1)
+        beats_toolbar.toolbar.insert(self._play_percussion_btn, -1)
 
         self._what_drum_widget = Gtk.ToolItem()
         self._what_drum_search_button = FilterToolItem(
@@ -899,25 +877,22 @@ class SimplePianoActivity(activity.Activity):
     def handlePlayRecordingButton(self, val):
         if not self.playing_recording:
             self.playing_recording = True
-            self.play_recording_button.set_icon_widget(self.stop_pr_image)
+            self.play_recording_button.props.icon_name = 'media-playback-stop'
             self.play_recording_thread = \
                 GObject.timeout_add(100, self._play_recorded_keys)
-            self.playing_recording_thread = True
         else:
-            self.playing_recording_thread = False
             self.playing_recording = False
-            self.play_recording_button.set_icon_widget(
-                self.play_recording_image)
+            self.play_recording_button.props.icon_name = 'media-playback-start'
 
     def handleRecordButton(self, val):
         if not self.recording:
             self.play_recording_button.set_sensitive(False)
             self.recorded_keys = []
             self.recording = True
-            self.record_button.set_icon_widget(self.stop_record_image)
+            self.record_button.props.icon_name = 'media-playback-stop'
         else:
             self.recording = False
-            self.record_button.set_icon_widget(self.record_image)
+            self.record_button.props.icon_name = 'media-record'
             if len(self.recorded_keys) != 0:
                 self.play_recording_button.set_sensitive(True)
 
@@ -944,13 +919,13 @@ class SimplePianoActivity(activity.Activity):
             self.csnd.loopSetTick(0)
             self.csnd.loopStart()
             self.playing = True
-            self.play_button.set_icon_widget(self.stop_image)
+            self._play_percussion_btn.props.icon_name = 'media-playback-stop'
         else:
             self.drumFillin.stop()
             self.sequencer.stopPlayback()
             self.csnd.loopPause()
             self.playing = False
-            self.play_button.set_icon_widget(self.play_image)
+            self._play_percussion_btn.props.icon_name = 'media-playback-start'
 
     def scale(self, input, input_min, input_max,
               output_min, output_max):
@@ -1065,7 +1040,6 @@ class SimplePianoActivity(activity.Activity):
 
         if self.play_index == len(self.recorded_keys) - 1:
             self.play_index = 0
-            self.playing_recording_thread = False
             self.play_recording_button.set_icon_widget(
                 self.play_recording_image)
             self.playing_recording = False
