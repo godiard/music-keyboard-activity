@@ -15,58 +15,51 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 from __future__ import division
 
+from gettext import gettext as _
+import logging
+import json
+import time
+import math
+import os
+
 from gi.repository import Gtk
 from gi.repository import GLib
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Pango
-import logging
-import cairo
-import json
 
-from Fillin import Fillin
+from sugar3.activity import activity
+from sugar3.activity.widgets import StopButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toolbarbox import ToolbarButton
+from sugar3.graphics.toggletoolbutton import ToggleToolButton
 from sugar3.graphics.icon import Icon
 from sugar3.graphics.xocolor import XoColor
 from sugar3.graphics.palette import Palette
-
-from ttcommon.Util.CSoundClient import new_csound_client
-
-from sugar3.graphics.palettemenu import PaletteMenuBox
 from sugar3.graphics.palettemenu import PaletteMenuItem
-
-from gettext import gettext as _
-
 from sugar3.graphics.palette import ToolInvoker
-
-from sugar3.activity import activity
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics import style
-from sugar3.activity.widgets import StopButton
 
-from draw_piano import PianoKeyboard, LETTERS_TO_KEY_CODES
-import math
-import os
 from ttcommon.Util.NoteDB import Note
-from RythmGenerator import *
 import ttcommon.Util.NoteDB as NoteDB
-
-import time
+# Instruments is needed to find the percussion sets
 import ttcommon.Util.Instruments
 from ttcommon.Util import InstrumentDB
 from ttcommon.Util.CSoundClient import new_csound_client
-from KeyboardStandAlone import KeyboardStandAlone
-from MiniSequencer import MiniSequencer
-from Loop import Loop
 from ttcommon.Config import imagefile
 import ttcommon.Config as Config
-from math import log
 
-from sugar3.graphics.toggletoolbutton import ToggleToolButton
+from Loop import Loop
+from Fillin import Fillin
+from KeyboardStandAlone import KeyboardStandAlone
+from MiniSequencer import MiniSequencer
+from RythmGenerator import generator
+
+from draw_piano import PianoKeyboard, LETTERS_TO_KEY_CODES
 
 DRUMCOUNT = 6
 PLAYER_TEMPO = 95
@@ -264,7 +257,7 @@ def xfrange(start, stop, step):
 
     old_start = start  # backup this value
 
-    digits = int(round(log(10000, 10)))+1  # get number of digits
+    digits = int(round(math.log(10000, 10)))+1  # get number of digits
     magnitude = 10**digits
     stop = int(magnitude * stop)  # convert from
     step = int(magnitude * step)  # 0.1 to 10 (e.g.)
@@ -417,7 +410,6 @@ def set_palette_list(instrument_list):
 
     x = 0
     y = 0
-    xo_color = XoColor('white')
 
     for item in sorted(instrument_list,
                        cmp=lambda x, y: cmp(x['instrument_desc'],
@@ -493,6 +485,7 @@ class SimplePianoActivity(activity.Activity):
             icon_name='media-playback-start')
         self._play_percussion_btn.set_property('can-default', True)
         self._play_percussion_btn.show()
+        self._play_percussion_btn.connect('clicked', self.handlePlayButton)
 
         self.play_index = 0
 
@@ -744,9 +737,8 @@ class SimplePianoActivity(activity.Activity):
     def resize(self, width, height):
         logging.error('activity.py resize......')
         piano_height = width / 2
-#        self._event_box.set_size_request(
-#            -1, height - piano_height - style.GRID_CELL_SIZE)
-
+        self._event_box.set_size_request(
+            -1, height - piano_height - style.GRID_CELL_SIZE)
         return False
 
     def load_instruments(self):
