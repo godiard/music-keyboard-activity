@@ -744,7 +744,7 @@ class SimplePianoActivity(activity.Activity):
         logging.error('activity.py resize......')
         piano_height = width / 2
         self._event_box.set_size_request(
-            -1, height - piano_height - style.GRID_CELL_SIZE)
+            -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
         return False
 
     def load_instruments(self):
