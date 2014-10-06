@@ -21,6 +21,7 @@ import json
 import time
 import math
 import os
+import tempfile
 
 from gi.repository import Gtk
 from gi.repository import GLib
@@ -30,6 +31,7 @@ from gi.repository import GObject
 from gi.repository import Pango
 
 from sugar3.activity import activity
+from sugar3.datastore import datastore
 from sugar3.activity.widgets import StopButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.graphics.toolbarbox import ToolbarButton
@@ -604,7 +606,11 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(stop_button, -1)
         stop_button.show()
 
-        # toolbar_box.insert()
+        self._save_as_audio_bt = ToolButton(icon_name='save-as-audio')
+        self._save_as_audio_bt.props.tooltip = _('Save as audio')
+        self._save_as_audio_bt.connect('clicked', self._save_ogg_cb)
+        self._save_as_audio_bt.show()
+        activity_button.page.insert(self._save_as_audio_bt, -1)
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show_all()
@@ -750,7 +756,6 @@ class SimplePianoActivity(activity.Activity):
         logging.error('Loading instrument images from %s', images_path)
         for file_name in os.listdir(images_path):
             image_file_name = os.path.join(images_path, file_name)
-            logging.error('Adding %s', image_file_name)
             pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(
                 image_file_name, 75, 75)
             # instrument_name = image_file_name[image_file_name.rfind('/'):]
@@ -875,6 +880,41 @@ class SimplePianoActivity(activity.Activity):
         else:
             self.playing_recording = False
             self.play_recording_button.props.icon_name = 'media-playback-start'
+
+    def _save_ogg_cb(self, widget):
+        self._wav_tempfile = tempfile.NamedTemporaryFile(
+            mode='w+b', suffix='.wav', dir='/tmp/')
+        self.csnd.inputMessage(Config.CSOUND_RECORD_PERF %
+                               self._wav_tempfile.name)
+
+        self.playing_recording = True
+        self.play_recording_thread = \
+            GObject.timeout_add(100, self._play_recorded_keys,
+                                self._finish_save_ogg)
+
+    def _finish_save_ogg(self):
+        self.csnd.inputMessage(Config.CSOUND_STOP_RECORD_PERF %
+                               self._wav_tempfile.name)
+
+        self._ogg_tempfile = tempfile.NamedTemporaryFile(
+            mode='w+b', suffix='.ogg', dir='/tmp/')
+        command = "gst-launch-0.10 filesrc location=%s" \
+                  " ! wavparse ! audioconvert ! vorbisenc ! oggmux ! " \
+                  "filesink location=%s" % (self._wav_tempfile.name,
+                                            self._ogg_tempfile.name)
+        os.system(command)
+
+        title = '%s saved as audio' % self.metadata['title']
+
+        jobject = datastore.create()
+        jobject.metadata['title'] = title
+        jobject.metadata['keep'] = '0'
+        jobject.metadata['mime_type'] = 'audio/ogg'
+        jobject.file_path = self._ogg_tempfile.name
+        datastore.write(jobject)
+
+        self._wav_tempfile.close()
+        self._ogg_tempfile.close()
 
     def handleRecordButton(self, val):
         if not self.recording:
@@ -1003,7 +1043,7 @@ class SimplePianoActivity(activity.Activity):
         pass
         # self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
-    def _play_recorded_keys(self):
+    def _play_recorded_keys(self, end_cb=None):
         GObject.source_remove(self.play_recording_thread)
         letter = self.recorded_keys[self.play_index]
         time_difference = 0
@@ -1016,8 +1056,7 @@ class SimplePianoActivity(activity.Activity):
             time_difference = next_time - letter[0]
 
         if not self.playing_recording:
-            self.play_recording_button.set_icon_widget(
-                self.play_recording_image)
+            self.play_recording_button.props.icon_name = 'media-playback-start'
             return
 
         if letter[-1] == 1:
@@ -1032,15 +1071,16 @@ class SimplePianoActivity(activity.Activity):
 
         if self.play_index == len(self.recorded_keys) - 1:
             self.play_index = 0
-            self.play_recording_button.set_icon_widget(
-                self.play_recording_image)
+            self.play_recording_button.props.icon_name = 'media-playback-start'
             self.playing_recording = False
             GObject.source_remove(self.play_recording_thread)
+            if end_cb is not None:
+                end_cb()
         else:
             self.play_index += 1
             self.play_recording_thread = \
                 GObject.timeout_add(int((time_difference) * 1000),
-                                    self._play_recorded_keys)
+                                    self._play_recorded_keys, end_cb)
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
         logging.debug(
