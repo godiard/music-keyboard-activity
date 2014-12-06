@@ -6,3 +6,4 @@ exec = sugar-activity activity.SimplePianoActivity
 icon = activity-simplepiano
 license = GPLv2+
 summary = Play music with this piano keyboard.
+categories = music
