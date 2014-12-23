@@ -7,3 +7,4 @@ icon = activity-simplepiano
 license = GPLv2+
 summary = Play music with this piano keyboard.
 categories = music
+repository = git@github.com:godiard/music-keyboard-activity.git
