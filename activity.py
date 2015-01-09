@@ -62,6 +62,7 @@ from MiniSequencer import MiniSequencer
 from RythmGenerator import generator
 
 from draw_piano import PianoKeyboard, LETTERS_TO_KEY_CODES
+from notesview import NotesView
 
 DRUMCOUNT = 6
 PLAYER_TEMPO = 95
@@ -636,6 +637,8 @@ class SimplePianoActivity(activity.Activity):
 
         self.piano = PianoKeyboard(octaves=2, add_c=True,
                                    labels=self.keyboard_letters)
+        self._notes_view = NotesView()
+        self._notes_view.show()
 
         # init csound
         self.instrumentDB = InstrumentDB.getRef()
@@ -688,16 +691,14 @@ class SimplePianoActivity(activity.Activity):
         vbox = Gtk.VBox()
         vbox.set_homogeneous(False)
         self.load_instruments()
-        self._event_box = Gtk.EventBox()
-        self._event_box.modify_bg(
-            Gtk.StateType.NORMAL, style.COLOR_WHITE.get_gdk_color())
-        vbox.pack_start(self._event_box, False, False, 0)
+        vbox.pack_start(self._notes_view, False, False, 0)
         vbox.pack_end(self.piano, True, True, 0)
         vbox.show_all()
         self.set_canvas(vbox)
         piano_height = Gdk.Screen.width() / 2
-        self._event_box.set_size_request(
+        self._notes_view.set_size_request(
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
+
         self.connect('size-allocate', self.__allocate_cb)
 
         self.csnd.load_drumkit(self.rythmInstrument)
@@ -743,7 +744,7 @@ class SimplePianoActivity(activity.Activity):
     def resize(self, width, height):
         logging.error('activity.py resize......')
         piano_height = width / 2
-        self._event_box.set_size_request(
+        self._notes_view.set_size_request(
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
         return False
 
