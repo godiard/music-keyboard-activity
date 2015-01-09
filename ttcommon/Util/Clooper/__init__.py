@@ -14,8 +14,8 @@ for i in os.listdir(_root_path):
             logging.debug('use %s blobs' % path)
             _sys_path = None
             break
-        except Exception, e:
+        except Exception as e:
             logging.debug('skip %s blobs: %s' % (path, e))
 
 if _sys_path:
-    raise('cannot find proper binary blobs')
+    raise BaseException('cannot find proper binary blobs')
