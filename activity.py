@@ -1132,6 +1132,12 @@ class SimplePianoActivity(activity.Activity):
 
     def write_file(self, file_path):
         f = open(file_path, 'w')
+        # substract the initial time to all the saved values
+        if len(self.recorded_keys) > 0:
+            initial_time = self.recorded_keys[0][0]
+            for key in self.recorded_keys:
+                key[0] = key[0] - initial_time
+
         f.write(json.dumps(self.recorded_keys))
         f.close()
 
