@@ -877,6 +877,7 @@ class SimplePianoActivity(activity.Activity):
         if not self.playing_recording:
             self.playing_recording = True
             self.play_recording_button.props.icon_name = 'media-playback-stop'
+            self._notes_view.reset_counter()
             self.play_recording_thread = \
                 GObject.timeout_add(100, self._play_recorded_keys)
         else:
