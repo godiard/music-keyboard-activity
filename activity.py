@@ -1082,7 +1082,8 @@ class SimplePianoActivity(activity.Activity):
                 GObject.timeout_add(int((time_difference) * 1000),
                                     self._play_recorded_keys, end_cb)
 
-    def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter):
+    def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter,
+                         physicallKey):
         logging.debug(
             'Pressed Octave: %d Key: %d Letter: %s' %
             (octave_clicked, key_clicked, letter))
@@ -1090,17 +1091,20 @@ class SimplePianoActivity(activity.Activity):
             if self.recording:
                 self.recorded_keys.append(
                     (time.time(), octave_clicked, key_clicked, letter))
-            self.keyboardStandAlone.do_key_press(
-                LETTERS_TO_KEY_CODES[letter], None,
-                math.sqrt(self.instVolume * 0.01))
+            if not physicallKey:
+                self.keyboardStandAlone.do_key_press(
+                    LETTERS_TO_KEY_CODES[letter], None,
+                    math.sqrt(self.instVolume * 0.01))
 
-    def __key_released_cb(self, widget, octave_clicked, key_clicked, letter):
+    def __key_released_cb(self, widget, octave_clicked, key_clicked, letter,
+                          physicallKey):
         if self.recording:
-                self.recorded_keys.append(
-                    (time.time(), octave_clicked, key_clicked, letter, 1))
-        if letter in LETTERS_TO_KEY_CODES.keys():
-            self.keyboardStandAlone.do_key_release(
-                LETTERS_TO_KEY_CODES[letter])
+            self.recorded_keys.append(
+                (time.time(), octave_clicked, key_clicked, letter, 1))
+            if not physicallKey:
+                if letter in LETTERS_TO_KEY_CODES.keys():
+                    self.keyboardStandAlone.do_key_release(
+                        LETTERS_TO_KEY_CODES[letter])
 
     def onKeyPress(self, widget, event):
         if event.state & Gdk.ModifierType.CONTROL_MASK:

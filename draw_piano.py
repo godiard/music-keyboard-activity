@@ -40,10 +40,11 @@ class PianoKeyboard(Gtk.DrawingArea):
 
     __gsignals__ = {'key_pressed': (GObject.SignalFlags.RUN_FIRST, None,
                     ([GObject.TYPE_INT, GObject.TYPE_INT,
-                      GObject.TYPE_STRING])),
+                      GObject.TYPE_STRING, GObject.TYPE_BOOLEAN])),
                     'key_released': (GObject.SignalFlags.RUN_FIRST, None,
                                      ([GObject.TYPE_INT, GObject.TYPE_INT,
-                                       GObject.TYPE_STRING]))}
+                                       GObject.TYPE_STRING,
+                                       GObject.TYPE_BOOLEAN]))}
 
     def __init__(self, octaves=1, add_c=False, labels=None, values=None):
         self._octaves = octaves
@@ -159,7 +160,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 octave_pressed = int(pressed_key[:pressed_key.find('_')])
                 key_pressed = int(pressed_key[pressed_key.find('_') + 1:])
                 self.emit('key_pressed', octave_pressed, key_pressed,
-                          self._get_value(octave_pressed, key_pressed))
+                          self._get_value(octave_pressed, key_pressed), False)
             else:
                 del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
@@ -168,7 +169,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             octave_released = int(key[:key.find('_')])
             key_released = int(key[key.find('_') + 1:])
             self.emit('key_released', octave_released, key_released,
-                      self._get_value(octave_released, key_released))
+                      self._get_value(octave_released, key_released), False)
 
         self._pressed_keys = new_pressed_keys
         logging.debug(self._pressed_keys)
@@ -216,11 +217,16 @@ class PianoKeyboard(Gtk.DrawingArea):
                 return
             else:
                 self._pressed_keys.append(changed_key)
+
+                self.emit('key_pressed', octave_number, key_number,
+                          self._get_value(octave_number, key_number), True)
         else:
             if changed_key not in self._pressed_keys:
                 return
             else:
                 del self._pressed_keys[self._pressed_keys.index(changed_key)]
+                self.emit('key_released', octave_number, key_number,
+                          self._get_value(octave_number, key_number), True)
 
         # calculate area to redraw
         x = self._key_width * (octave_number * 7) + self._x_start[key_number]
