@@ -3,7 +3,6 @@
 # Author, Gonzalo Odiard
 # License: LGPLv2
 
-import logging
 from gi.repository import Gtk
 from gi.repository import GObject
 
@@ -70,7 +69,6 @@ class NotesView(Gtk.DrawingArea):
         self._calculate_sizes(rect.width, rect.height)
 
     def __draw_cb(self, widget, ctx):
-        logging.error('NOTESVIEW draw')
         ctx.set_source_rgb(1, 1, 1)
         ctx.rectangle(0, 0, self._width, self._height)
         ctx.fill()
@@ -85,12 +83,10 @@ class NotesView(Gtk.DrawingArea):
         # draw cursor
         ctx.set_source_rgb(0.8, 0.8, 0.8)
         x = (self._counter + 1) * self._cell_size
-        logging.error('x %s', x)
         ctx.move_to(x, 0)
         ctx.line_to(x, self._height)
         ctx.stroke()
 
-        logging.error("DRAW KEYS %s", self._keys_pressed)
         ctx.set_source_rgb(*self._select_color)
         for key in self._keys_pressed:
             octave_pressed = int(key[:key.find('_')])
