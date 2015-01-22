@@ -55,6 +55,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             self._values = values
         self._pressed_keys = []
         self.font_size = 25
+        self._select_color = (1, 1, 0)
         self._touches = {}
         self._mouse_button_pressed = False
         super(PianoKeyboard, self).__init__()
@@ -79,6 +80,13 @@ class PianoKeyboard(Gtk.DrawingArea):
     def set_labels(self, labels):
         self._labels = labels
         self.queue_draw()
+
+    def set_select_color(self, r, g, b):
+        """
+        r, g, b : components of the color used to show pressed keys
+                  (float) in the range 0.0 to 1.0
+        """
+        self._select_color = (r, g, b)
 
     def _calculate_sizes(self, width):
         self._width = width
@@ -454,7 +462,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
         if highlighted:
-            fill = (1, 1, 0)
+            fill = self._select_color
 
         ctx.line_to(x + self._key_width * K2 / D, 0)
         ctx.line_to(x + self._key_width * K2 / D, self._black_keys_height)
@@ -471,7 +479,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
         if highlighted:
-            fill = (1, 1, 0)
+            fill = self._select_color
         ctx.move_to(x + self._key_width * K1 / D, 0)
         ctx.line_to(x + self._key_width * K2 / D, 0)
         ctx.line_to(x + self._key_width * K2 / D, self._black_keys_height)
@@ -489,7 +497,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
         if highlighted:
-            fill = (1, 1, 0)
+            fill = self._select_color
         ctx.move_to(x + self._key_width * K1 / D, 0)
         ctx.line_to(x + self._key_width, 0)
         ctx.line_to(x + self._key_width, self._height)
@@ -505,7 +513,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         stroke = (0, 0, 0)
         fill = (1, 1, 1)
         if highlighted:
-            fill = (1, 1, 0)
+            fill = self._select_color
         ctx.move_to(x, 0)
         ctx.line_to(x + self._key_width, 0)
         ctx.line_to(x + self._key_width, self._height)
@@ -520,7 +528,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         stroke = (0, 0, 0)
         fill = (0, 0, 0)
         if highlighted:
-            fill = (1, 1, 0)
+            fill = self._select_color
 
         ctx.line_to(x + self._key_width * K1 * 2 / D, 0)
         ctx.line_to(x + self._key_width * K1 * 2 / D, self._black_keys_height)

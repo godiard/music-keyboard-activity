@@ -45,6 +45,7 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics import style
+from sugar3 import profile
 
 from ttcommon.Util.NoteDB import Note
 import ttcommon.Util.NoteDB as NoteDB
@@ -69,6 +70,35 @@ PLAYER_TEMPO = 95
 PLAYER_TEMPO_LOWER = 30
 PLAYER_TEMPO_UPPER = 150
 PLAYER_TEMPO_STEP = int((160 - 30) / 10)
+
+
+def _luminance(color):
+    ''' Calculate luminance value '''
+    return int(color[1:3], 16) * 0.3 + int(color[3:5], 16) * 0.6 + \
+        int(color[5:7], 16) * 0.1
+
+
+def lighter_color(colors):
+    ''' Which color is lighter?
+            colors: array of str with two colors in #rrggbb format
+            returns index of the color in the array
+    '''
+    if _luminance(colors[0]) > _luminance(colors[1]):
+        return 0
+    return 1
+
+
+def darker_color(colors):
+    ''' Which color is darker?
+            colors: array of str with two colors in #rrggbb format
+            returns index of the color in the array
+    '''
+    return 1 - lighter_color(colors)
+
+
+def rgb2cairo(rgb_string):
+    r, g, b, alpha = style.Color(rgb_string, 1.0).get_rgba()
+    return r, g, b
 
 
 class IntensitySelector(Gtk.ToolItem):
@@ -635,9 +665,18 @@ class SimplePianoActivity(activity.Activity):
 
         self.german_labels = [german_notes, german_notes, ['C']]
 
+        # set the lighter user color to show the pressed keys and the notes
+        xo_color = profile.get_color()
+        user_colors = [xo_color.get_fill_color(),
+                       xo_color.get_stroke_color()]
+        color = user_colors[lighter_color(user_colors)]
+        logging.error('lighter color %s', color)
+
         self.piano = PianoKeyboard(octaves=2, add_c=True,
                                    labels=self.keyboard_letters)
+        self.piano.set_select_color(*rgb2cairo(color))
         self._notes_view = NotesView()
+        self._notes_view.set_select_color(*rgb2cairo(color))
         self._notes_view.show()
 
         # init csound
