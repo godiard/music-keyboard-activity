@@ -916,7 +916,6 @@ class SimplePianoActivity(activity.Activity):
         if not self.playing_recording:
             self.playing_recording = True
             self.play_recording_button.props.icon_name = 'media-playback-stop'
-            self._notes_view.reset_counter()
             self.play_recording_thread = \
                 GObject.timeout_add(100, self._play_recorded_keys)
         else:
@@ -1088,6 +1087,8 @@ class SimplePianoActivity(activity.Activity):
 
     def _play_recorded_keys(self, end_cb=None):
         GObject.source_remove(self.play_recording_thread)
+        if self.play_index == 0:
+            self._notes_view.reset_counter()
         letter = self.recorded_keys[self.play_index]
         time_difference = 0
         if self.play_index == len(self.recorded_keys) - 1:
@@ -1188,4 +1189,5 @@ class SimplePianoActivity(activity.Activity):
         self.recorded_keys = json.loads(contents)
         if len(self.recorded_keys) != 0:
             self.play_recording_button.set_sensitive(True)
+            self._notes_view.set_recorded_keys(self.recorded_keys)
         f.close()
