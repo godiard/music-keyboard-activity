@@ -9,3 +9,4 @@ summary = Play music with this piano keyboard.
 categories = music
 repository = git@github.com:godiard/music-keyboard-activity.git
 mime_types = application/x-musickeyboard-activity;
+max_participants = 1
