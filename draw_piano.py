@@ -218,6 +218,8 @@ class PianoKeyboard(Gtk.DrawingArea):
             return
         octave_number = 0
         changed_key = None
+        if key_letter == ',':
+            key_letter = 'Q'
         for values in self._values:
             if values.find(key_letter) > -1:
                 key_number = values.find(key_letter)
