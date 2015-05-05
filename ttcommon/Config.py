@@ -5,8 +5,13 @@ from os.path import join
 
 from gi.repository import Gdk
 
-from sugar3.activity.activity import get_bundle_path, get_activity_root
-
+try:
+    from sugar3.activity.activity import get_bundle_path, get_activity_root
+    TAM_TAM_ROOT = get_bundle_path()
+    ACTIVITY_ROOT = get_activity_root()
+except:
+    TAM_TAM_ROOT = os.getcwd()
+    ACTIVITY_ROOT = os.getcwd()
 
 #QUICKLOAD = os.path.isfile("QUICKLOAD") # skip loading inessential comenents to speed things up
 
@@ -30,15 +35,13 @@ else:
 logging.debug("Debug Level %d" % (DEBUG))
 
 #PATHS
-
-TAM_TAM_ROOT = get_bundle_path()
-INSTANCE_DIR = join(get_activity_root(), 'instance')
-TMP_DIR = join(get_activity_root(), 'tmp')
+INSTANCE_DIR = join(ACTIVITY_ROOT, 'instance')
+TMP_DIR = join(ACTIVITY_ROOT, 'tmp')
 
 logging.debug('INFO: loaded TAMTAM_ROOT=%s' % TAM_TAM_ROOT)
 
-DATA_DIR = join(get_activity_root(), 'data')
-SNDS_INFO_DIR = join(get_activity_root(), 'data', 'snds_info')
+DATA_DIR = join(ACTIVITY_ROOT, 'data')
+SNDS_INFO_DIR = join(ACTIVITY_ROOT, 'data', 'snds_info')
 FILES_DIR = join(TAM_TAM_ROOT, "ttcommon", "Resources")
 SOUNDS_DIR = join(FILES_DIR, "Sounds", "")
 IMAGE_ROOT = join(FILES_DIR, "Images", "")
