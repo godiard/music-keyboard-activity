@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
-import time
-import gettext
 import logging
 from os.path import join
 
 from gi.repository import Gdk
 
 from sugar3.activity.activity import get_bundle_path, get_activity_root
-from sugar3 import env
 
 
 #QUICKLOAD = os.path.isfile("QUICKLOAD") # skip loading inessential comenents to speed things up
@@ -57,11 +53,8 @@ PLUGIN_VERBOSE = DEBUG
 PLUGIN_UNIVORC = join(FILES_DIR, "tamtamorc.csd")
 PLUGIN_RATE = 16000
 
-try:
-    from sugar3.graphics.toolbarbox import ToolbarBox, ToolbarButton
-    HAVE_TOOLBOX = True
-except ImportError:
-    HAVE_TOOLBOX = False
+# TODO: redundant after port to Gtk3
+HAVE_TOOLBOX = True
 
 ##############
 ## SOUNDS
