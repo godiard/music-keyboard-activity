@@ -10,3 +10,29 @@ categories = music
 repository = git@github.com:godiard/music-keyboard-activity.git
 mime_types = application/x-musickeyboard-activity;
 max_participants = 1
+
+# Added fields
+activity_type = gtk3
+homepage = http://wiki.sugarlabs.org/go/Activities/Music_Keyboard
+long_description: Sugar Learning Platform - music keyboard activity
+ Sugar Learning Platform promotes collaborative learning through Sugar
+ Activities that encourage critical thinking, the heart of a quality
+ education.  Designed from the ground up especially for children, Sugar
+ offers an alternative to traditional “office-desktop” software.
+ .
+ Learner applications in Sugar are called Activities.  They are software
+ packages that automatically save your work - producing specific
+ instances of the Activity that can be resumed at a later time.  Many
+ Activities support learner collaboration, where multiple learners may
+ be invited to join a collective Activity session.
+ .
+ Music Keyboard is a simple piano keyboard, but have many different
+ instruments to play and you can save and reproduce melodies.
+
+sources_url = http://download.sugarlabs.org/sources/honey/MusicKeyboard/
+sources_format = tar.bz2
+
+
+[Maintainer]
+name = Gonzalo Odiard
+email = godiard@gmail.com
