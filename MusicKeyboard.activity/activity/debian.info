@@ -4,8 +4,9 @@ version = 0~godiard1
 vcs-git = https://github.com/godiard/music-keyboard-activity.git
 vcs-browser = https://github.com/godiard/music-keyboard-activity.git
 primary_branch = debian_packaging
-dependencies = gstreamer, csound_6.05, csound-data_6.05, csound-utils_6.05,
- libcsnd6-6.0_6.05, libcsound64-6.0_6.05, python-csound_6.05
+dependencies = gstreamer, csound (>=6.05), csound-data (>=6.05),
+ csound-utils (>=6.05), libcsnd6-6.0 (>=6.05), libcsound64-6.0 (>=6.05),
+ python-csound (>=6.05)
 
 [Maintainer]
 name = Debian Sugar Team
