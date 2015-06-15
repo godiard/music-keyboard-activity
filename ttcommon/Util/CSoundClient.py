@@ -1,13 +1,10 @@
 import os
-import socket
-import select
-import sys
-import threading
 import time
 import array
 from math import sqrt
+import logging
 
-from ttcommon.Util.Clooper import *
+import csnd6
 import ttcommon.Config as Config
 
 from ttcommon.Generation.GenerationConstants import GenerationConstants
@@ -46,52 +43,65 @@ class _CSoundClientPlugin:
     INSTRUMENT2 ) = range(13)
 
     def __init__(self):
-        sc_initialize( Config.PLUGIN_UNIVORC, Config.PLUGIN_DEBUG,
-                Config.PLUGIN_VERBOSE, Config.PLUGIN_RATE)
+        self._csnd = csnd6.Csound()
+        self._csnd.SetOption("-odac")
+        self._csnd.CompileOrc(Config.PLUGIN_UNIVORC)
+        self._csnd.SetDebug(True)  # Config.PLUGIN_DEBUG > 0)
+        self._csnd.Start()
+        self._perfThread = csnd6.CsoundPerformanceThread(self._csnd)
+        self._perfThread.Play()
+
+        # TODO
+        #sc_initialize( Config.PLUGIN_UNIVORC, Config.PLUGIN_DEBUG,
+        #        Config.PLUGIN_VERBOSE, Config.PLUGIN_RATE)
         self.on = False
-        #self.masterVolume = 100.0
+        self.setMasterVolume(100.0)
         self.periods_per_buffer = 2
         global _loop_default
-        _loop_default = self.loopCreate()
+        # TODO
+        #_loop_default = self.loopCreate()
         self.instrumentDB = InstrumentDB.getRef()
 
         self.jamesSux = {} # temporyary dictionary of loopId: loopNumTicks, while I wait for james to implement it properly
 
     def __del__(self):
         self.connect(False)
-        sc_destroy()
+        # TODO
+        # sc_destroy()
 
     def setChannel(self, name, val):
-        sc_setChannel(name, val)
+        self._csnd.SetChannel(name, val)
 
     def setMasterVolume(self, volume):
-        sc_setChannel('masterVolume', volume)
+        self._csnd.SetChannel('masterVolume', volume)
 
     def setTrackVolume(self, volume, trackId):
-        sc_setChannel('trackVolume' + str(trackId + 1), volume)
+        self._csnd.SetChannel('trackVolume' + str(trackId + 1), volume)
 
     def setTrackpadX(self, value):
-        sc_setChannel('trackpadX', value)
+        self._csnd.SetChannel('trackpadX', value)
 
     def setTrackpadY(self, value):
-        sc_setChannel('trackpadY', value)
+        self._csnd.SetChannel('trackpadY', value)
 
     def micRecording(self, table):
-        sc_inputMessage(Config.CSOUND_MIC_RECORD % table)
+        self._csnd.InputMessage(Config.CSOUND_MIC_RECORD % table)
 
     def load_mic_instrument(self, inst):
         fileName = Config.DATA_DIR + '/' + inst
         instrumentId = Config.INSTRUMENT_TABLE_OFFSET + self.instrumentDB.instNamed[inst].instrumentId
-        sc_inputMessage(Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName))
+        self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+            instrumentId, fileName))
 
     def load_synth_instrument(self, inst):
         fileName = Config.DATA_DIR + '/' + inst
         instrumentId = Config.INSTRUMENT_TABLE_OFFSET + self.instrumentDB.instNamed[inst].instrumentId
-        sc_inputMessage(Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName))
+        self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+            instrumentId, fileName))
 
     def load_ls_instrument(self, inst):
         fileName = Config.DATA_DIR + '/' + inst
-        sc_inputMessage(Config.CSOUND_LOAD_LS_INSTRUMENT % fileName)
+        self._csnd.InputMessage(Config.CSOUND_LOAD_LS_INSTRUMENT % fileName)
 
     def load_instruments(self):
         for instrumentSoundFile in self.instrumentDB.instNamed.keys():
@@ -100,7 +110,8 @@ class _CSoundClientPlugin:
             else:
                 fileName = Config.SOUNDS_DIR + "/" + instrumentSoundFile
             instrumentId = Config.INSTRUMENT_TABLE_OFFSET + self.instrumentDB.instNamed[ instrumentSoundFile ].instrumentId
-            sc_inputMessage( Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName) )
+            self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+                instrumentId, fileName))
 
     def load_instrument(self, inst):
         if not inst in loadedInstruments:
@@ -111,8 +122,11 @@ class _CSoundClientPlugin:
                     fileName = os.path.join(Config.SOUNDS_DIR, 'armbone')
             else:
                 fileName = os.path.join(Config.SOUNDS_DIR, inst)
-            instrumentId = Config.INSTRUMENT_TABLE_OFFSET + self.instrumentDB.instNamed[ inst ].instrumentId
-            sc_inputMessage( Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName) )
+            instrumentId = Config.INSTRUMENT_TABLE_OFFSET + \
+                self.instrumentDB.instNamed[inst].instrumentId
+            message = Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName)
+            logging.error('CSoundClient load_instrument msg %s', message)
+            self._csnd.InputMessage(message)
             loadedInstruments.append(inst)
 
     def load_drumkit(self, kit):
@@ -120,18 +134,24 @@ class _CSoundClientPlugin:
             for i in self.instrumentDB.instNamed[kit].kit.values():
                 fileName = Config.SOUNDS_DIR + "/" + i
                 instrumentId = Config.INSTRUMENT_TABLE_OFFSET + self.instrumentDB.instNamed[ i ].instrumentId
-                sc_inputMessage( Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName) )
+                self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+                    instrumentId, fileName))
                 loadedInstruments.append(i)
             loadedInstruments.append(kit)
 
     def connect(self, init=True):
+        pass
+        # NOTE: Maybe we can avid all this (already started
+        # at object initialization
+        """
         def reconnect():
-            if sc_start(self.periods_per_buffer) :
+            # TODO before was Start(self.periods_per_buffer)
+            if self._csnd.Start():
                 if (Config.DEBUG > 0) : print 'ERROR connecting'
             else:
                 self.on = True
         def disconnect():
-            if sc_stop() :
+            if self._csnd.Stop() :
                 if (Config.DEBUG > 0) : print 'ERROR connecting'
             else:
                 self.on = False
@@ -140,13 +160,15 @@ class _CSoundClientPlugin:
             reconnect()
         if not init and self.on :
             disconnect()
+        """
 
     def destroy(self):
         self.connect(False)
-        sc_destroy()
+        # TODO
+        #sc_destroy()
 
     def inputMessage(self,msg):
-        sc_inputMessage(msg)
+        self._csnd.InputMessage(msg)
 
     def getTick(self):
         return sc_getTickf()
@@ -154,10 +176,12 @@ class _CSoundClientPlugin:
     def adjustTick(self, amt):
         sc_adjustTick(amt)
 
-    def setTempo(self,t):
-        if (Config.DEBUG > 3) : print 'INFO: loop tempo: %f -> %f' % (t, 60.0 / (Config.TICKS_PER_BEAT * t))
-        sc_setTickDuration(60.0 / (Config.TICKS_PER_BEAT * t))
-
+    def setTempo(self, t):
+        tempo = 60.0 / (Config.TICKS_PER_BEAT * t)
+        if (Config.DEBUG > 3):
+            print 'INFO: loop tempo: %f -> %f' % (t, tempo)
+        # TODO
+        # sc_setTickDuration(tempo)
 
     def loopCreate(self):
         return sc_loop_new()
@@ -171,13 +195,15 @@ class _CSoundClientPlugin:
 
     def loopClear(self):
         global _loop_default
+        # TODO
+        """
         sc_loop_delete(_loop_default)
         _loop_default = sc_loop_new()
         try:
             del self.jamesSux[ loopId ]
         except:
             pass
-
+        """
 
     # this is function deletes an Event from a loop
     # TODO: rename this function
@@ -200,15 +226,23 @@ class _CSoundClientPlugin:
         return sc_loop_getTickf(loopId)
 
     def loopSetNumTicks(self,n, loopId=_loop_default):
+        # TODO
+        """
         sc_loop_setNumTicks(loopId, n)
         self.jamesSux[loopId] = n
+        """
+        pass
 
     def loopGetNumTicks( self, loopId = _loop_default ):
         return self.jamesSux[loopId]
 
     def loopSetTickDuration(self,d, loopId=_loop_default):
+        # TODO
+        """
         sc_loop_setTickDuration(loopId, d)
         james
+        """
+        pass
 
     def loopDeactivate(self, note = 'all', loopId=_loop_default):
         if note == 'all':
@@ -285,17 +319,37 @@ class _CSoundClientPlugin:
             if (Config.DEBUG > 0): print 'ERROR: loopUpdate(): unsupported parameter change'
 
     def loopPlay(self, dbnote, active, storage=_new_note_array(),
-            loopId=_loop_default ):
+            loopId=_loop_default):
+        # TODO
+        """
         qid = (dbnote.page << 16) + dbnote.id
         sc_loop_addScoreEvent( loopId, qid, 1, active, 'i',
                 self.csnote_to_array(dbnote.cs, storage))
+        """
 
     def play(self, csnote, secs_per_tick, storage=_new_note_array()):
         a = self.csnote_to_array(csnote, storage)
         a[self.DURATION] = a[self.DURATION] * secs_per_tick
         a[self.ATTACK] = max(a[self.ATTACK]*a[self.DURATION], 0.002)
         a[self.DECAY] = max(a[self.DECAY]*a[self.DURATION], 0.002)
-        sc_scoreEvent('i', a)
+        """
+        message = 'i '
+        inst = True
+        for value in a:
+            if inst:
+                message += "5023 " # str(int(value)) + " "
+                inst = False
+            else:
+                message += str(value) + " "
+        """
+        # TODO In [4]: c.ScoreEvent.__doc__
+        # 'ScoreEvent(Csound self, char type, double const * pFields,
+        #             long numFields) -> int'
+        logging.error('ScoreEvent %s', a)
+        #logging.error('InputMessage %s', message)
+        # self._csnd.ScoreEvent('i', a, len(a))
+        #self._perfThread.InputMessage(message)
+        self._perfThread.ScoreEvent('i', a, len(a))
 
     def csnote_to_array(self, csnote, storage):
         return self._csnote_to_array1(storage,
@@ -320,6 +374,7 @@ class _CSoundClientPlugin:
             tied, instrumentId, mode, instrumentId2 = -1):
 
         rval=storage
+        logging.error('_csnote_to_array1 instrumentId %s', instrumentId)
         instrument = self.instrumentDB.instId[instrumentId]
 
         if instrument.volatile != None:
