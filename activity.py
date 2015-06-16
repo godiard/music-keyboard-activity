@@ -1101,10 +1101,10 @@ class SimplePianoActivity(activity.Activity):
         if self.recording:
             self.recorded_keys.append(
                 (time.time(), octave_clicked, key_clicked, letter, 1))
-            if not physicallKey:
-                if letter in LETTERS_TO_KEY_CODES.keys():
-                    self.keyboardStandAlone.do_key_release(
-                        LETTERS_TO_KEY_CODES[letter])
+        if not physicallKey:
+            if letter in LETTERS_TO_KEY_CODES.keys():
+                self.keyboardStandAlone.do_key_release(
+                    LETTERS_TO_KEY_CODES[letter])
 
     def onKeyPress(self, widget, event):
         if event.state & Gdk.ModifierType.CONTROL_MASK:
