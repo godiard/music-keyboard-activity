@@ -1,6 +1,5 @@
 import os
 import time
-import array
 from math import sqrt
 import logging
 
@@ -13,11 +12,10 @@ import ttcommon.Util.InstrumentDB as InstrumentDB
 
 loadedInstruments = []
 
-_note_template = array.array('f', [0] * 19)
-
 
 def _new_note_array():
-    return _note_template.__copy__()
+    return csnd6.doubleArray(19)
+
 
 def _noteid(dbnote):
     return (dbnote.page << 16) + dbnote.id
@@ -44,9 +42,8 @@ class _CSoundClientPlugin:
 
     def __init__(self):
         self._csnd = csnd6.Csound()
-        self._csnd.SetOption("-odac")
-        self._csnd.CompileOrc(Config.PLUGIN_UNIVORC)
-        self._csnd.SetDebug(True)  # Config.PLUGIN_DEBUG > 0)
+        self._csnd.CompileCsd(Config.PLUGIN_UNIVORC)
+        self._csnd.SetDebug(False)
         self._csnd.Start()
         self._perfThread = csnd6.CsoundPerformanceThread(self._csnd)
         self._perfThread.Play()
@@ -332,24 +329,8 @@ class _CSoundClientPlugin:
         a[self.DURATION] = a[self.DURATION] * secs_per_tick
         a[self.ATTACK] = max(a[self.ATTACK]*a[self.DURATION], 0.002)
         a[self.DECAY] = max(a[self.DECAY]*a[self.DURATION], 0.002)
-        """
-        message = 'i '
-        inst = True
-        for value in a:
-            if inst:
-                message += "5023 " # str(int(value)) + " "
-                inst = False
-            else:
-                message += str(value) + " "
-        """
-        # TODO In [4]: c.ScoreEvent.__doc__
-        # 'ScoreEvent(Csound self, char type, double const * pFields,
-        #             long numFields) -> int'
-        logging.error('ScoreEvent %s', a)
-        #logging.error('InputMessage %s', message)
-        # self._csnd.ScoreEvent('i', a, len(a))
-        #self._perfThread.InputMessage(message)
-        self._perfThread.ScoreEvent('i', a, len(a))
+
+        self._csnd.ScoreEvent('i', a, 19)
 
     def csnote_to_array(self, csnote, storage):
         return self._csnote_to_array1(storage,
@@ -374,7 +355,6 @@ class _CSoundClientPlugin:
             tied, instrumentId, mode, instrumentId2 = -1):
 
         rval=storage
-        logging.error('_csnote_to_array1 instrumentId %s', instrumentId)
         instrument = self.instrumentDB.instId[instrumentId]
 
         if instrument.volatile != None:
