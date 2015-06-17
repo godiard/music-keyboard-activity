@@ -192,13 +192,6 @@ class PianoKeyboard(Gtk.DrawingArea):
 
         self.queue_draw_area(min_x, 0, max_x - min_x, self._height)
 
-    def get_pressed_keys(self):
-        """
-        This method provide a copy of the pressed keys array
-        is not intented to modify the list from a external entity
-        """
-        return self._pressed_keys[:]
-
     def physical_key_changed(self, hardware_keycode, pressed):
         """
         This method is used to display in the screen a key pressed/released
