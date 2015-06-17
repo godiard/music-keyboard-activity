@@ -1065,7 +1065,9 @@ class SimplePianoActivity(activity.Activity):
             GObject.idle_add(self.piano.physical_key_changed,
                              LETTERS_TO_KEY_CODES[letter[3]], False)
         else:
-            self.__key_pressed_cb(None, letter[1], letter[2], letter[3])
+            self.keyboardStandAlone.do_key_press(
+                LETTERS_TO_KEY_CODES[letter[3]], None,
+                math.sqrt(self.instVolume * 0.01))
             GObject.idle_add(self.piano.physical_key_changed,
                              LETTERS_TO_KEY_CODES[letter[3]], True)
 
