@@ -698,7 +698,6 @@ class SimplePianoActivity(activity.Activity):
         piano_height = Gdk.Screen.width() / 2
         self._notes_view.set_size_request(
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
-        self._notes_view.attach_keyboard(self.piano)
 
         self.connect('size-allocate', self.__allocate_cb)
 
