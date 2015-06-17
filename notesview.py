@@ -40,10 +40,7 @@ class NotesView(Gtk.DrawingArea):
 
         x = self._counter * self._cell_size
         # we add 1 pixel at the left to hide the old cursor line
-        if x < self._width:
-            self.queue_draw_area(x - 1, 0, self._cell_size + 1, self._height)
-        else:
-            self.queue_draw()
+        self.queue_draw_area(x - 1, 0, self._cell_size + 1, self._height)
         return True
 
     def _get_damaged_range(self, x, y):
