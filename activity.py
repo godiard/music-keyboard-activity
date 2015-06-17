@@ -924,7 +924,6 @@ class SimplePianoActivity(activity.Activity):
             self.recorded_keys = []
             self.recording = True
             self.record_button.props.icon_name = 'media-playback-stop'
-            self._notes_view.reset_counter()
         else:
             self.recording = False
             self.record_button.props.icon_name = 'media-record'

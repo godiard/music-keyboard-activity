@@ -32,10 +32,6 @@ class NotesView(Gtk.DrawingArea):
         if self._keyboard_widget is not None:
             GObject.timeout_add(200, self._update_pressed_keys)
 
-    def reset_counter(self):
-        self._counter = 0
-        self.queue_draw()
-
     def _update_pressed_keys(self):
         if self._keyboard_widget is None:
             return False
