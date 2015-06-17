@@ -15,7 +15,6 @@ class NotesView(Gtk.DrawingArea):
     def __init__(self, notes=None):
         self._notes = notes
         super(NotesView, self).__init__()
-        self._select_color = (1, 1, 0)
         self._counter = 0
         self._keys_pressed = []
         self.connect('size-allocate', self.__allocate_cb)
@@ -32,13 +31,6 @@ class NotesView(Gtk.DrawingArea):
         self._keyboard_widget = keyboard
         if self._keyboard_widget is not None:
             GObject.timeout_add(200, self._update_pressed_keys)
-
-    def set_select_color(self, r, g, b):
-        """
-        r, g, b : components of the color used to show pressed keys
-                  (float) in the range 0.0 to 1.0
-        """
-        self._select_color = (r, g, b)
 
     def reset_counter(self):
         self._counter = 0
@@ -91,7 +83,7 @@ class NotesView(Gtk.DrawingArea):
         ctx.stroke()
 
         logging.error("DRAW KEYS %s", self._keys_pressed)
-        ctx.set_source_rgb(*self._select_color)
+        ctx.set_source_rgb(1, 1, 0)
         for key in self._keys_pressed:
             octave_pressed = int(key[:key.find('_')])
             key_pressed = int(key[key.find('_') + 1:])
