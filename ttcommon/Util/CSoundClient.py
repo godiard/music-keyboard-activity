@@ -14,7 +14,7 @@ loadedInstruments = []
 
 
 def _new_note_array():
-    return csnd6.doubleArray(19)
+    return [0] * 19
 
 
 def _noteid(dbnote):
@@ -366,7 +366,8 @@ class _CSoundClientPlugin:
         a[self.ATTACK] = max(a[self.ATTACK]*a[self.DURATION], 0.002)
         a[self.DECAY] = max(a[self.DECAY]*a[self.DURATION], 0.002)
 
-        self._csnd.ScoreEvent('i', a, 19)
+        message = 'i ' + " ".join(map(str, a))
+        self._perfThread.InputMessage(message)
 
     def csnote_to_array(self, csnote, storage):
         return self._csnote_to_array1(
@@ -430,7 +431,7 @@ class _CSoundClientPlugin:
                 elif mode == 'edit':
                     instrument_id_offset = 100
 
-        if instrument.csoundInstrumentId == Config.INST_SIMP:
+        elif instrument.csoundInstrumentId == Config.INST_SIMP:
             if mode == 'mini':
                 instrument_id_offset = 0
             elif mode == 'edit':
