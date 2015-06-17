@@ -363,7 +363,7 @@ elseif iSourceType == 7 then
     kvibfdev	randomi	-.032, .032, .5
     kvibfreqrand	randomi	kpara3-.75, kpara3+.75, .2
     kvibfatt    linseg  0, .3, 1, p3-.3, 1
-    kvib		oscili	(1+kvibadev)*kvibfatt, (kvibfreqrand+kvibfdev), 1
+    kvib		oscil	(1+kvibadev)*kvibfatt, (kvibfreqrand+kvibfdev), 1
     kharm		randomi	40, 50, 1.34
     kmul		randomi	.80, .84, 1.45
     kbam		randomi	480., 510., 2.07
@@ -514,6 +514,7 @@ aRight  eqfil       aRight, 4000, 1000, 0.125
 
 aOutLeft dcblock (arev + aLeft) * koutGain * gkduck
 aOutRight dcblock (arev + aRight) * koutGain * gkduck
+
 gaRecL  =   aOutLeft
 gaRecR  =   aOutRight
 		outs		aOutLeft, aOutRight
