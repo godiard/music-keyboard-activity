@@ -512,8 +512,8 @@ aRight  eqfil       aRight, 4000, 1000, 0.125
 ;aLeft   butterhp    aLeft, 150
 ;aRight  butterhp    aRight, 150
 
-aOutLeft dcblock (arev + aLeft) * koutGain * gkduck
-aOutRight dcblock (arev + aRight) * koutGain * gkduck
+aOutLeft dcblock2 (arev + aLeft) * koutGain * gkduck
+aOutRight dcblock2 (arev + aRight) * koutGain * gkduck
 
 gaRecL  =   aOutLeft
 gaRecR  =   aOutRight
