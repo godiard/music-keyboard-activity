@@ -700,11 +700,12 @@ class SimplePianoActivity(activity.Activity):
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
         self.connect('size-allocate', self.__allocate_cb)
 
+        GObject.idle_add(self.initializePercussion)
+
+    def initializePercussion(self):
         self.csnd.load_drumkit(self.rythmInstrument)
         self.csnd.setTempo(self.tempo)
         self.drumVolume = 0.5
-        self.volume = 100
-        self.csnd.setMasterVolume(self.volume)
         self.beatPickup = False
 
         def flatten(ll):
