@@ -45,6 +45,7 @@ from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.radiotoolbutton import RadioToolButton
 from sugar3.graphics import style
+from sugar3.graphics.alert import NotifyAlert
 
 from ttcommon.Util.NoteDB import Note
 import ttcommon.Util.NoteDB as NoteDB
@@ -918,6 +919,15 @@ class SimplePianoActivity(activity.Activity):
 
         self._wav_tempfile.close()
         self._ogg_tempfile.close()
+
+        alert = NotifyAlert(10)
+        alert.props.title = _('Audio recorded')
+        alert.props.msg = _('The audio file was saved in the Journal')
+        alert.connect('response', self.__alert_response_cb)
+        self.add_alert(alert)
+
+    def __alert_response_cb(self, alert, result):
+        self.remove_alert(alert)
 
     def __record_button_click_cb(self, button):
         if not self.recording:
