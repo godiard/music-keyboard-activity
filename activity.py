@@ -489,7 +489,8 @@ class SimplePianoActivity(activity.Activity):
 
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
 
-        self.createPercussionToolbar(toolbar_box)
+        # TODO: disabe until is implemented with csnd6
+        # self.createPercussionToolbar(toolbar_box)
 
         toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
@@ -622,7 +623,6 @@ class SimplePianoActivity(activity.Activity):
 
         self.connect('key-press-event', self.onKeyPress)
         self.connect('key-release-event', self.onKeyRelease)
-        # finish csount init
 
         self.piano.connect('key_pressed', self.__key_pressed_cb)
         self.piano.connect('key_released', self.__key_released_cb)
@@ -641,7 +641,8 @@ class SimplePianoActivity(activity.Activity):
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
         self.connect('size-allocate', self.__allocate_cb)
 
-        GObject.idle_add(self.initializePercussion)
+        # TODO: disabe until is implemented with csnd6
+        # GObject.idle_add(self.initializePercussion)
 
     def createPercussionToolbar(self, toolbar_box):
 
@@ -783,6 +784,8 @@ class SimplePianoActivity(activity.Activity):
         self._what_widget.add(self._what_widget_contents)
         self._what_widget_contents.show()
 
+        # TODO: disabe until is implemented with csnd6
+        """
         for drum_number in range(0, DRUMCOUNT):
             drum_name = 'drum%dkit' % (drum_number + 1)
             self._drums_store.append({
@@ -796,6 +799,7 @@ class SimplePianoActivity(activity.Activity):
         self._what_drum_widget_contents = set_palette_list(self._drums_store)
         self._what_drum_widget.add(self._what_drum_widget_contents)
         self._what_drum_widget_contents.show()
+        """
 
     def __drum_iconview_activated_cb(self, widget, event, item):
         data = item['instrument_name']
