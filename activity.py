@@ -606,13 +606,8 @@ class SimplePianoActivity(activity.Activity):
         self.muteInst = False
         self.csnd.setTempo(self.tempo)
         self.noteList = []
-        time.sleep(0.001)  # why?
         for i in range(21):
             self.csnd.setTrackVolume(100, i)
-
-        for i in range(10):
-            r = str(i + 1)
-            self.csnd.load_instrument('guidice' + r)
 
         self.volume = 100
         self.csnd.setMasterVolume(self.volume)
@@ -705,7 +700,6 @@ class SimplePianoActivity(activity.Activity):
         self.rythmInstrument = 'drum1kit'
         self.csnd.load_drumkit(self.rythmInstrument)
         self.csnd.setTempo(self.tempo)
-        self.drumVolume = 0.5
         self.beatPickup = False
 
         def flatten(ll):
