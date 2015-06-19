@@ -471,24 +471,6 @@ class SimplePianoActivity(activity.Activity):
         toolbar_box.toolbar.insert(activity_button, 0)
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
 
-        self.beats_pm_button = IntensitySelector(range(2, 13),
-                                                 4,
-                                                 imagefile('beat3.svg'))
-        self.tempo_button = \
-            IntensitySelector(range(PLAYER_TEMPO_LOWER,
-                                    PLAYER_TEMPO_UPPER + 1, PLAYER_TEMPO_STEP),
-                              PLAYER_TEMPO, imagefile('tempo5.png'))
-
-        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.1),
-                                                   self.regularity,
-                                                   imagefile('complex6.svg'))
-
-        self._play_percussion_btn = ToolButton(
-            icon_name='media-playback-start')
-        self._play_percussion_btn.set_property('can-default', True)
-        self._play_percussion_btn.show()
-        self._play_percussion_btn.connect('clicked', self.handlePlayButton)
-
         self.play_index = 0
 
         self.play_recording_button = ToolButton(
@@ -505,46 +487,9 @@ class SimplePianoActivity(activity.Activity):
         self.play_recording_button.connect('clicked',
                                            self.handlePlayRecordingButton)
 
-        beats_toolbar = ToolbarBox()
-        beats_toolbar.toolbar.insert(self._play_percussion_btn, -1)
-
-        self._what_drum_widget = Gtk.ToolItem()
-        self._what_drum_search_button = FilterToolItem(
-            _('Select Drum'), 'view-type', _('Jazz / Rock Kit'),
-            self._what_drum_widget)
-        self._what_drum_search_button.set_widget_icon(
-            file_name=imagefile("drum1kit.svg"))
-
-        self._what_drum_widget.show()
-        separator = Gtk.SeparatorToolItem()
-        beats_toolbar.toolbar.insert(self._what_drum_search_button, -1)
-        self._what_drum_search_button.show()
-        self._what_drum_search_button.set_is_important(True)
-
-        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1)
-        beats_toolbar.toolbar.insert(self.complexity_button, -1)
-        beats_toolbar.toolbar.insert(self.beats_pm_button, -1)
-        beats_toolbar.toolbar.insert(self.tempo_button, -1)
-
-        beats_toolbar_button = ToolbarButton(icon_name='toolbar-drums',
-                                             page=beats_toolbar)
-        beats_toolbar_button.show()
-
-        toolbar_box.toolbar.insert(beats_toolbar_button, 1)
-
-        self.beats_pm_button.set_tooltip(_("Beats per bar"))
-        self.beats_pm_button.show()
-        self.beats_pm_button.connect('changed', self.beatSliderChange, True)
-        self.tempo_button.connect('changed', self.tempoSliderChange, True)
-        self.complexity_button.connect('changed',
-                                       self.handleComplexityChange,
-                                       True)
-        self.complexity_button.set_tooltip(_("Beat complexity"))
-        self.tempo_button.show()
-        self.tempo_button.set_tooltip(_('Tempo'))
-        self.complexity_button.show()
-
         toolbar_box.toolbar.set_style(Gtk.ToolbarStyle.BOTH_HORIZ)
+
+        self.createPercussionToolbar(toolbar_box)
 
         toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
 
@@ -583,8 +528,7 @@ class SimplePianoActivity(activity.Activity):
                                                   _('Piano'),
                                                   self._what_widget)
         self._what_widget.show()
-        separator = Gtk.SeparatorToolItem()
-        toolbar_box.toolbar.insert(separator, -1)
+        toolbar_box.toolbar.insert(Gtk.SeparatorToolItem(), -1)
         toolbar_box.toolbar.insert(self._what_search_button, -1)
         self._what_search_button.show()
         self._what_search_button.set_is_important(True)
@@ -649,9 +593,6 @@ class SimplePianoActivity(activity.Activity):
         self.beatDuration = 60.0 / self.tempo
         self.ticksPerSecond = Config.TICKS_PER_BEAT * self.tempo / 60.0
 
-        self.rythmInstrument = 'drum1kit'
-        self.csnd.load_drumkit(self.rythmInstrument)
-
         self.sequencer = MiniSequencer(self.recordStateButton,
                                        self.recordOverSensitivity)
         self.loop = Loop(self.beat, math.sqrt(self.instVolume * 0.01))
@@ -702,7 +643,66 @@ class SimplePianoActivity(activity.Activity):
 
         GObject.idle_add(self.initializePercussion)
 
+    def createPercussionToolbar(self, toolbar_box):
+
+        self.beats_pm_button = IntensitySelector(range(2, 13),
+                                                 4,
+                                                 imagefile('beat3.svg'))
+        self.tempo_button = \
+            IntensitySelector(range(PLAYER_TEMPO_LOWER,
+                                    PLAYER_TEMPO_UPPER + 1, PLAYER_TEMPO_STEP),
+                              PLAYER_TEMPO, imagefile('tempo5.png'))
+
+        self.complexity_button = IntensitySelector(xfrange(0, 1, 0.1),
+                                                   self.regularity,
+                                                   imagefile('complex6.svg'))
+
+        self._play_percussion_btn = ToolButton(
+            icon_name='media-playback-start')
+        self._play_percussion_btn.set_property('can-default', True)
+        self._play_percussion_btn.show()
+        self._play_percussion_btn.connect('clicked', self.handlePlayButton)
+
+        beats_toolbar = ToolbarBox()
+        beats_toolbar.toolbar.insert(self._play_percussion_btn, -1)
+
+        self._what_drum_widget = Gtk.ToolItem()
+        self._what_drum_search_button = FilterToolItem(
+            _('Select Drum'), 'view-type', _('Jazz / Rock Kit'),
+            self._what_drum_widget)
+        self._what_drum_search_button.set_widget_icon(
+            file_name=imagefile("drum1kit.svg"))
+
+        self._what_drum_widget.show()
+        beats_toolbar.toolbar.insert(self._what_drum_search_button, -1)
+        self._what_drum_search_button.show()
+        self._what_drum_search_button.set_is_important(True)
+
+        beats_toolbar.toolbar.insert(Gtk.SeparatorToolItem(), -1)
+        beats_toolbar.toolbar.insert(self.complexity_button, -1)
+        beats_toolbar.toolbar.insert(self.beats_pm_button, -1)
+        beats_toolbar.toolbar.insert(self.tempo_button, -1)
+
+        beats_toolbar_button = ToolbarButton(icon_name='toolbar-drums',
+                                             page=beats_toolbar)
+        beats_toolbar_button.show()
+
+        toolbar_box.toolbar.insert(beats_toolbar_button, 1)
+
+        self.beats_pm_button.set_tooltip(_("Beats per bar"))
+        self.beats_pm_button.show()
+        self.beats_pm_button.connect('changed', self.beatSliderChange, True)
+        self.tempo_button.connect('changed', self.tempoSliderChange, True)
+        self.complexity_button.connect('changed',
+                                       self.handleComplexityChange,
+                                       True)
+        self.complexity_button.set_tooltip(_("Beat complexity"))
+        self.tempo_button.show()
+        self.tempo_button.set_tooltip(_('Tempo'))
+        self.complexity_button.show()
+
     def initializePercussion(self):
+        self.rythmInstrument = 'drum1kit'
         self.csnd.load_drumkit(self.rythmInstrument)
         self.csnd.setTempo(self.tempo)
         self.drumVolume = 0.5
