@@ -482,7 +482,7 @@ class SimplePianoActivity(activity.Activity):
         self.record_button.show()
         self.play_recording_button.set_sensitive(False)
 
-        self.record_button.connect('clicked', self.handleRecordButton)
+        self.record_button.connect('clicked', self.__record_button_click_cb)
 
         self.play_recording_button.connect('clicked',
                                            self.handlePlayRecordingButton)
@@ -911,15 +911,19 @@ class SimplePianoActivity(activity.Activity):
         self._wav_tempfile.close()
         self._ogg_tempfile.close()
 
-    def handleRecordButton(self, val):
+    def __record_button_click_cb(self, button):
         if not self.recording:
             self.play_recording_button.set_sensitive(False)
             self.recorded_keys = []
             self.recording = True
-            self.record_button.props.icon_name = 'media-playback-stop'
+            icon = Icon(icon_name='media-record', fill_color='#ff0000')
+            icon.show()
+            self.record_button.set_icon_widget(icon)
         else:
             self.recording = False
-            self.record_button.props.icon_name = 'media-record'
+            icon = Icon(icon_name='media-record', fill_color='#ffffff')
+            icon.show()
+            self.record_button.set_icon_widget(icon)
             if len(self.recorded_keys) != 0:
                 self.play_recording_button.set_sensitive(True)
 
