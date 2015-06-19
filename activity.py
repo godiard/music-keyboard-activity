@@ -1109,7 +1109,7 @@ class SimplePianoActivity(activity.Activity):
         if letter in LETTERS_TO_KEY_CODES.keys():
             if self.recording:
                 self.recorded_keys.append(
-                    (time.time(), octave_clicked, key_clicked, letter))
+                    [time.time(), octave_clicked, key_clicked, letter])
             if not physicallKey:
                 self.keyboardStandAlone.do_key_press(
                     LETTERS_TO_KEY_CODES[letter], None,
@@ -1119,7 +1119,7 @@ class SimplePianoActivity(activity.Activity):
                           physicallKey):
         if self.recording:
             self.recorded_keys.append(
-                (time.time(), octave_clicked, key_clicked, letter, 1))
+                [time.time(), octave_clicked, key_clicked, letter, 1])
         if not physicallKey:
             if letter in LETTERS_TO_KEY_CODES.keys():
                 self.keyboardStandAlone.do_key_release(
