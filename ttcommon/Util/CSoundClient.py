@@ -1,5 +1,4 @@
 import os
-import time
 from math import sqrt
 import logging
 
@@ -404,7 +403,6 @@ class _CSoundClientPlugin:
                     instrument.volatile = st_mtime
                     loadedInstruments.remove(instrument.name)
                     self.load_instrument(instrument.name)
-                    time.sleep(0.2)
 
         if instrument.kit is not None:
             instrument = self.instrumentDB.instNamed[instrument.kit[pitch]]
@@ -485,5 +483,4 @@ def new_csound_client():
         _Client.connect(True)
         _Client.setMasterVolume(100.0)
         # _Client.load_instruments()
-        time.sleep(0.2)
     return _Client
