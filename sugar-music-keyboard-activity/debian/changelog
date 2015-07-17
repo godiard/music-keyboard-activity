@@ -1,5 +1,5 @@
-sugar-music-keyboard-activity (9-0~godiard1) UNRELEASED; urgency=low
+sugar-music-keyboard-activity (9-1~godiard1) UNRELEASED; urgency=low
 
   * Initial version for Debian.
 
- -- Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>  Fri, 12 Jun 2015 14:25:10 -0300
+ -- Debian Sugar Team <pkg-sugar-devel@lists.alioth.debian.org>  Fri, 17 Jul 2015 08:38:42 -0300

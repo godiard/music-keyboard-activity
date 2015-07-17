@@ -1,6 +1,6 @@
 [Package]
 name = sugar-music-keyboard-activity
-version = 0~godiard1
+version = 1~godiard1
 vcs-git = https://github.com/godiard/music-keyboard-activity.git
 vcs-browser = https://github.com/godiard/music-keyboard-activity.git
 primary_branch = debian_packaging

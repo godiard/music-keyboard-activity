@@ -50,4 +50,3 @@ CDBS_DEPENDS_$(pkg) +=, csound-utils (>=6.05)
 CDBS_DEPENDS_$(pkg) +=, libcsnd6-6.0 (>=6.05)
 CDBS_DEPENDS_$(pkg) +=, libcsound64-6.0 (>=6.05)
 CDBS_DEPENDS_$(pkg) +=, python-csound (>=6.05)
-CDBS_RECOMMENDS_$(pkg) +=, sugar-0.104-icon-theme | sugar-icon-theme
