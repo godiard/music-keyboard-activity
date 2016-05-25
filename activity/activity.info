@@ -7,6 +7,6 @@ icon = activity-simplepiano
 license = GPLv2+
 summary = Play music with this piano keyboard.
 categories = music
-repository = git@github.com:godiard/music-keyboard-activity.git
+repository = https://github.com/godiard/music-keyboard-activity
 mime_types = application/x-musickeyboard-activity;
 max_participants = 1
