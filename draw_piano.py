@@ -138,7 +138,8 @@ class PianoKeyboard(Gtk.DrawingArea):
                 updated_positions = True
             elif event.type in (
                     Gdk.EventType.TOUCH_END, Gdk.EventType.BUTTON_RELEASE):
-                del self._touches[seq]
+                if seq in self._touches:
+                    del self._touches[seq]
                 # execute the update pressed keys with a delay,
                 # because motion events can came after the button release
                 # and all the state is confused
