@@ -23,6 +23,8 @@ import math
 import os
 import tempfile
 
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GLib
 from gi.repository import Gdk
@@ -322,11 +324,11 @@ class FilterToolItem(Gtk.ToolButton):
     def set_widget_icon(self, icon_name=None, file_name=None):
         if file_name is not None:
             icon = Icon(file=file_name,
-                        icon_size=style.SMALL_ICON_SIZE,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor('white'))
         else:
             icon = Icon(icon_name=icon_name,
-                        icon_size=style.SMALL_ICON_SIZE,
+                        pixel_size=style.SMALL_ICON_SIZE,
                         xo_color=XoColor('white'))
         self.set_icon_widget(icon)
         icon.show()
@@ -742,7 +744,7 @@ class SimplePianoActivity(activity.Activity):
         return False
 
     def resize(self, width, height):
-        logging.error('activity.py resize......')
+        logging.debug('activity.py resize......')
         piano_height = width / 2
         self._event_box.set_size_request(
             -1, Gdk.Screen.height() - piano_height - style.GRID_CELL_SIZE)
