@@ -2,7 +2,6 @@ from gi.repository import Gdk
 
 import ttcommon.Config as Config
 from ttcommon.Generation.GenerationConstants import GenerationConstants
-from ttcommon.Util.NoteDB import Note
 from ttcommon.Util.CSoundNote import CSoundNote
 from ttcommon.Util.CSoundClient import new_csound_client
 from ttcommon.Util import InstrumentDB

@@ -1,4 +1,5 @@
-# Gtk version of https://github.com/csound/csoundAPI_examples/blob/master/python/example11.py
+# Gtk version of
+# https://github.com/csound/csoundAPI_examples/blob/master/python/example11.py
 # but using a loaded istrument
 
 from gi.repository import Gtk
@@ -30,6 +31,7 @@ c.InputMessage('f 1 0 131072 1 "beats.wav" 0 4 0')
 
 perfThread = csnd6.CsoundPerformanceThread(c)
 perfThread.Play()
+
 
 def clicked_cb(button, perf):
     perf.InputMessage("i 1 0 2")

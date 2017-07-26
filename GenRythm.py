@@ -3,7 +3,6 @@ import ttcommon.Config as Config
 import ttcommon.Util.InstrumentDB as InstrumentDB
 
 from ttcommon.Generation.GenerationConstants import GenerationConstants
-from ttcommon.Generation.Utils import *
 
 
 class GenRythm:
@@ -15,7 +14,6 @@ class GenRythm:
         binSelection = []
         downBeats = []
         upBeats = []
-        beats = []
         countDown = 0
         onsetTime = None
 

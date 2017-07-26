@@ -1,7 +1,6 @@
 from gi.repository import GObject
-from gi.repository import Gtk
 
-from RythmGenerator import *
+from RythmGenerator import generator
 from ttcommon.Util.CSoundClient import new_csound_client
 from ttcommon.Util.NoteDB import Note
 import ttcommon.Config as Config
@@ -99,7 +98,7 @@ class Fillin:
         for x in flatten(generator(self.instrument, self.nbeats, 0.4, 0.1,
                                    self.reverb)):
             if x.onset not in self.onsets or x.pitch not in self.pitchs:
-                x.amplitude = x.amplitude*self.volume
+                x.amplitude = x.amplitude * self.volume
                 n = Note(0, x.trackId, i, x)
                 self.notesList.append(n)
                 i += 1

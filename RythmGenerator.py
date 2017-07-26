@@ -52,8 +52,6 @@ def generator(instrument, nbeats, density, regularity, reverbSend):
         return gainSequence
 
     def pageGenerate(regularity, drumPitch):
-        barLength = Config.TICKS_PER_BEAT * nbeats
-
         currentInstrument = instrumentDB.instNamed[instrument].kit[
             drumPitch[0]]
 

@@ -29,4 +29,3 @@ c.Start()
 c.InputMessage('f 1 0 131072 1 "beats.wav" 0 4 0')
 c.InputMessage('i 1 0 2')
 c.Perform()
-

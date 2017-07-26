@@ -30,6 +30,7 @@ c.InputMessage('f 10 0 131072 1 "beats.wav" 0 4 0')
 perfThread = csnd6.CsoundPerformanceThread(c)
 perfThread.Play()
 
+
 def clicked_cb(button, c):
     python_array = [1000,  # this need be the instrument number
                     0.0, 2.0]
@@ -41,6 +42,7 @@ def clicked_cb(button, c):
     # TODO: these are to try avoid seg fault at activity close (not enough)
     # del csnd_array
     # del python_array
+
 
 def quit(widget, c):
     # TODO: these are to try avoid seg fault at activity close (not enough)

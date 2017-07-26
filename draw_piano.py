@@ -3,7 +3,7 @@
 # Author, Gonzalo Odiard
 # License: LGPLv2
 #
-# The class PianoKeyboard draw a keybord and interact with the mouse
+# The class PianoKeyboard draws a keyboard and interacts with the mouse
 # References
 # http://www.josef-k.net/mim/MusicSystem.html
 # http://wiki.laptop.org/images/4/4e/Tamtamhelp2.png
@@ -267,7 +267,6 @@ class PianoKeyboard(Gtk.DrawingArea):
         that need be redraw. Y is ignored due to most of the keys
         need redraw all the height
         """
-        octave_found = int(x / self._octave_width)
         key_area = int((x % self._octave_width) / self._key_width)
         click_x = int(x % self._key_width)
         if y > self._black_keys_height or \

@@ -1,7 +1,7 @@
 import ttcommon.Config as Config
 import random
 import lps
-from ttcommon.Generation.Drunk import *
+from ttcommon.Generation.Drunk import Drunk, DroneAndJump, Repeter, Loopseg
 from ttcommon.Util.CSoundNote import CSoundNote
 from ttcommon.Util.CSoundClient import new_csound_client
 from ttcommon.Util.NoteDB import Note
@@ -96,7 +96,7 @@ class Loop:
             append = durationSequence.append
             if len(onsetList) > 1:
                 for i in range(len(onsetList) - 1):
-                    append((onsetList[i+1] - onsetList[i]))
+                    append((onsetList[i + 1] - onsetList[i]))
                 append((barLength - onsetList[-1]))
             elif len(onsetList) == 1:
                 append((barLength - onsetList[0]))
@@ -194,12 +194,12 @@ class Loop:
         numKeys = 5  # len(Config.LOOP_KEYS)
         for key in range(numKeys):
             # file.write(str(Config.LOOP_KEYS[key]) + ': [')
-            for beat in range(2, maxbeat+1):
-                density = table_density[key*3]
-                regularity = table_regularity[key*3]
-                pitchRegularity = table_pitchRegularity[key*3]
-                step = table_step[key*3]
-                pattern = table_pitchMethod[key*3]
+            for beat in range(2, maxbeat + 1):
+                density = table_density[key * 3]
+                regularity = table_regularity[key * 3]
+                pitchRegularity = table_pitchRegularity[key * 3]
+                step = table_step[key * 3]
+                pattern = table_pitchMethod[key * 3]
                 if pattern == 0:
                     pitchMethod = Drunk(5, 10)
                 elif pattern == 1:
