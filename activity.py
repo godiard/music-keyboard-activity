@@ -52,7 +52,7 @@ from sugar3.graphics.alert import NotifyAlert
 from ttcommon.Util.NoteDB import Note
 import ttcommon.Util.NoteDB as NoteDB
 # Instruments is needed to find the percussion sets
-import ttcommon.Util.Instruments
+import ttcommon.Util.Instruments  # noqa: F401
 from ttcommon.Util import InstrumentDB
 from ttcommon.Util.CSoundClient import new_csound_client
 from ttcommon.Config import imagefile
@@ -262,27 +262,27 @@ def xfrange(start, stop, step):
 
     old_start = start  # backup this value
 
-    digits = int(round(math.log(10000, 10)))+1  # get number of digits
-    magnitude = 10**digits
+    digits = int(round(math.log(10000, 10))) + 1  # get number of digits
+    magnitude = 10 ** digits
     stop = int(magnitude * stop)  # convert from
     step = int(magnitude * step)  # 0.1 to 10 (e.g.)
 
     if start == 0:
-        start = 10**(digits-1)
+        start = 10 ** (digits - 1)
     else:
-        start = 10**(digits)*start
+        start = 10 ** (digits) * start
 
     data = []  # create array
 
     # calc number of iterations
-    end_loop = int((stop-start)//step)
+    end_loop = int((stop - start) // step)
     if old_start == 0:
         end_loop += 1
 
     acc = start
 
     for i in xrange(0, end_loop):
-        data.append(acc/magnitude)
+        data.append(acc / magnitude)
         acc += step
 
     return data
@@ -947,8 +947,8 @@ class SimplePianoActivity(activity.Activity):
 
     def _updateTempo(self, val):
         self.tempo = val
-        self.beatDuration = 60.0/self.tempo
-        self.ticksPerSecond = Config.TICKS_PER_BEAT*self.tempo/60.0
+        self.beatDuration = 60.0 / self.tempo
+        self.ticksPerSecond = Config.TICKS_PER_BEAT * self.tempo / 60.0
         self.csnd.setTempo(self.tempo)
         self.sequencer.tempo = self.tempo
         self.drumFillin.setTempo(self.tempo)
@@ -996,7 +996,7 @@ class SimplePianoActivity(activity.Activity):
 
     def handleComplexityChange(self, widget, event):
         self.regularity = self.complexity_button.get_value()
-        img = int(self.complexity_button.get_value() * 7)+1
+        img = int(self.complexity_button.get_value() * 7) + 1
         self.complexity_button.set_image(
             imagefile('complex' + str(img) + '.svg'))
         self.beatPickup = False

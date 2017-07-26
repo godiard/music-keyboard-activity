@@ -1,7 +1,5 @@
 from gi.repository import GObject
-import time
 import ttcommon.Config as Config
-from ttcommon.Util.CSoundNote import CSoundNote
 from ttcommon.Util.CSoundClient import new_csound_client
 from ttcommon.Util.NoteDB import Note
 from ttcommon.Util.NoteDB import PARAMETER
@@ -37,9 +35,9 @@ class MiniSequencer:
             if widget.get_active() and not self.recordState:
                 self.button = 1
                 self.recordOverSensitivity(True)
-                self.beats = [i*4 for i in range(self.beat)]
-                self.upBeats = [i+2 for i in self.beats]
-                self.realTick = [i for i in range(self.beat*4)]
+                self.beats = [i * 4 for i in range(self.beat)]
+                self.upBeats = [i + 2 for i in self.beats]
+                self.realTick = [i for i in range(self.beat * 4)]
                 self.clearSequencer()
                 self.startLooking = 1
                 self.startPlayback()
@@ -103,8 +101,8 @@ class MiniSequencer:
                         note.duration = (offset - note.onset) + 4
                     else:
                         note.duration = ((offset + (
-                            self.beat * Config.TICKS_PER_BEAT))
-                            - note.onset) + 4
+                            self.beat * Config.TICKS_PER_BEAT)) -
+                            note.onset) + 4
                     note.onset = self.quantize(note.onset)
                     n = Note(0, note.trackId, self.id, note)
                     self.notesList.append(n)
