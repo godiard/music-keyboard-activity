@@ -1,0 +1,7 @@
+10
+
+* Fix stuck piano notes,
+* Fix log warnings,
+* Update repository URL,
+* Enable translations,
+* Enforce source code style.
