@@ -561,6 +561,7 @@ class SimplePianoActivity(activity.Activity):
         self._save_as_audio_bt.props.tooltip = _('Save as audio')
         self._save_as_audio_bt.connect('clicked', self._save_ogg_cb)
         self._save_as_audio_bt.show()
+        self._save_as_audio_bt.set_sensitive(False)
         activity_button.page.insert(self._save_as_audio_bt, -1)
 
         self.set_toolbar_box(toolbar_box)
@@ -947,6 +948,7 @@ class SimplePianoActivity(activity.Activity):
     def __record_button_click_cb(self, button):
         if not self.recording:
             self.play_recording_button.set_sensitive(False)
+            self._save_as_audio_bt.set_sensitive(False)
             self.recorded_keys = []
             self.recording = True
             icon = Icon(icon_name='media-record', fill_color='#ff0000')
@@ -959,6 +961,7 @@ class SimplePianoActivity(activity.Activity):
             self.record_button.set_icon_widget(icon)
             if len(self.recorded_keys) != 0:
                 self.play_recording_button.set_sensitive(True)
+                self._save_as_audio_bt.set_sensitive(True)
 
     def tempoSliderChange(self, widget, event):
         self._updateTempo(self.tempo_button.get_value())
@@ -1177,4 +1180,5 @@ class SimplePianoActivity(activity.Activity):
         self.recorded_keys = json.loads(contents)
         if len(self.recorded_keys) != 0:
             self.play_recording_button.set_sensitive(True)
+            self._save_as_audio_bt.set_sensitive(True)
         f.close()
