@@ -1,0 +1,20 @@
+8.9
+
+* Move selection of instrument to the toolbar (Aneesh Dogra),
+* Add rhythms toolbar (Aneesh Dogra),
+* Add the ability to record and playback compositions (Aneesh Dogra),
+* Silence activity stop keyboard shortcut (James Cameron),
+* Add a button to save as audio (Aneesh Dogra, Gonzalo Odiard),
+* Display keys pressed when using physical keyboard (Gonzalo Odiard),
+* Add mimetype for the activity files (Gonzalo Odiard),
+* Delay percussion loading to speed up startup (Gonzalo Odiard),
+* Change record button color when recording (Gonzalo Odiard),
+* Show a alert after save an audio file (Gonzalo Odiard),
+* Fix stuck piano notes (James Cameron),
+* Fix log warnings (James Cameron),
+* Update repository URL (James Cameron),
+* Enable translations (James Cameron),
+* Enforce source code style (James Cameron).
+
+v8.9 is a backport of all Fedora 18 compatible changes between v8 and v10.
+
