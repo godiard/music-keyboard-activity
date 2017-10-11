@@ -25,7 +25,9 @@ import tempfile
 
 import gi
 gi.require_version('Gtk', '3.0')
+gi.require_version('Gst', '1.0')
 from gi.repository import Gtk
+from gi.repository import Gst
 from gi.repository import GLib
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
@@ -450,6 +452,7 @@ class SimplePianoActivity(activity.Activity):
 
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
+        Gst.init(None)
         self._what_list = []
 
         self.play_recording_thread = None
@@ -896,19 +899,27 @@ class SimplePianoActivity(activity.Activity):
         self.playing_recording = True
         self.play_recording_thread = \
             GObject.timeout_add(100, self._play_recorded_keys,
-                                self._finish_save_ogg)
+                                self._save_ogg_end_cb)
 
-    def _finish_save_ogg(self):
+    def _save_ogg_end_cb(self):
         self.csnd.inputMessage(Config.CSOUND_STOP_RECORD_PERF %
                                self._wav_tempfile.name)
 
         self._ogg_tempfile = tempfile.NamedTemporaryFile(
             mode='w+b', suffix='.ogg', dir='/tmp/')
-        command = "gst-launch-0.10 filesrc location=%s" \
-                  " ! wavparse ! audioconvert ! vorbisenc ! oggmux ! " \
-                  "filesink location=%s" % (self._wav_tempfile.name,
-                                            self._ogg_tempfile.name)
-        os.system(command)
+
+        line = 'filesrc location=%s ! ' \
+            'wavparse ! audioconvert ! vorbisenc ! oggmux ! ' \
+            'filesink location=%s' % (self._wav_tempfile.name,
+                                      self._ogg_tempfile.name)
+        pipe = Gst.parse_launch(line)
+        pipe.get_bus().add_signal_watch()
+        pipe.get_bus().connect('message::eos', self._save_ogg_eos_cb, pipe)
+        pipe.set_state(Gst.State.PLAYING)
+
+    def _save_ogg_eos_cb(self, bus, message, pipe):
+        bus.remove_signal_watch()
+        pipe.set_state(Gst.State.NULL)
 
         title = '%s saved as audio' % self.metadata['title']
 
@@ -927,6 +938,8 @@ class SimplePianoActivity(activity.Activity):
         alert.props.msg = _('The audio file was saved in the Journal')
         alert.connect('response', self.__alert_response_cb)
         self.add_alert(alert)
+
+        return False
 
     def __alert_response_cb(self, alert, result):
         self.remove_alert(alert)
