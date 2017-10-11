@@ -3,7 +3,7 @@
 # Author, Gonzalo Odiard
 # License: LGPLv2
 #
-# The class PianoKeyboard draw a keybord and interact with the mouse
+# The class PianoKeyboard draws a keyboard and interacts with the mouse
 # References
 # http://www.josef-k.net/mim/MusicSystem.html
 # http://wiki.laptop.org/images/4/4e/Tamtamhelp2.png
@@ -16,8 +16,8 @@ from gi.repository import Gdk
 import cairo
 
 # constants used to calculate the draw of black keys
-# right now is 4/5 of the white key
-# then is 2/5 and 3/5 (before was 1/3 and 2/3)
+# right now is 6/7 of the white key
+# then is 3/7 and 4/7
 K1 = 3.
 K2 = 4.
 D = 7.
@@ -40,10 +40,11 @@ class PianoKeyboard(Gtk.DrawingArea):
 
     __gsignals__ = {'key_pressed': (GObject.SignalFlags.RUN_FIRST, None,
                     ([GObject.TYPE_INT, GObject.TYPE_INT,
-                    GObject.TYPE_STRING])),
+                      GObject.TYPE_STRING, GObject.TYPE_BOOLEAN])),
                     'key_released': (GObject.SignalFlags.RUN_FIRST, None,
-                    ([GObject.TYPE_INT, GObject.TYPE_INT,
-                    GObject.TYPE_STRING]))}
+                                     ([GObject.TYPE_INT, GObject.TYPE_INT,
+                                       GObject.TYPE_STRING,
+                                       GObject.TYPE_BOOLEAN]))}
 
     def __init__(self, octaves=1, add_c=False, labels=None, values=None):
         self._octaves = octaves
@@ -137,7 +138,8 @@ class PianoKeyboard(Gtk.DrawingArea):
                 updated_positions = True
             elif event.type in (
                     Gdk.EventType.TOUCH_END, Gdk.EventType.BUTTON_RELEASE):
-                del self._touches[seq]
+                if seq in self._touches:
+                    del self._touches[seq]
                 # execute the update pressed keys with a delay,
                 # because motion events can came after the button release
                 # and all the state is confused
@@ -159,7 +161,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 octave_pressed = int(pressed_key[:pressed_key.find('_')])
                 key_pressed = int(pressed_key[pressed_key.find('_') + 1:])
                 self.emit('key_pressed', octave_pressed, key_pressed,
-                          self._get_value(octave_pressed, key_pressed))
+                          self._get_value(octave_pressed, key_pressed), False)
             else:
                 del self._pressed_keys[self._pressed_keys.index(pressed_key)]
 
@@ -168,7 +170,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             octave_released = int(key[:key.find('_')])
             key_released = int(key[key.find('_') + 1:])
             self.emit('key_released', octave_released, key_released,
-                      self._get_value(octave_released, key_released))
+                      self._get_value(octave_released, key_released), False)
 
         self._pressed_keys = new_pressed_keys
         logging.debug(self._pressed_keys)
@@ -202,6 +204,8 @@ class PianoKeyboard(Gtk.DrawingArea):
             return
         octave_number = 0
         changed_key = None
+        if key_letter == ',':
+            key_letter = 'Q'
         for values in self._values:
             if values.find(key_letter) > -1:
                 key_number = values.find(key_letter)
@@ -216,11 +220,16 @@ class PianoKeyboard(Gtk.DrawingArea):
                 return
             else:
                 self._pressed_keys.append(changed_key)
+
+                self.emit('key_pressed', octave_number, key_number,
+                          self._get_value(octave_number, key_number), True)
         else:
             if changed_key not in self._pressed_keys:
                 return
             else:
                 del self._pressed_keys[self._pressed_keys.index(changed_key)]
+                self.emit('key_released', octave_number, key_number,
+                          self._get_value(octave_number, key_number), True)
 
         # calculate area to redraw
         x = self._key_width * (octave_number * 7) + self._x_start[key_number]
@@ -258,7 +267,6 @@ class PianoKeyboard(Gtk.DrawingArea):
         that need be redraw. Y is ignored due to most of the keys
         need redraw all the height
         """
-        octave_found = int(x / self._octave_width)
         key_area = int((x % self._octave_width) / self._key_width)
         click_x = int(x % self._key_width)
         if y > self._black_keys_height or \
@@ -525,7 +533,6 @@ class PianoKeyboard(Gtk.DrawingArea):
 
     def _draw_label(self, ctx, x, octave_number, position, black_key,
                     highlighted):
-        #print "Dibujando ",text
         if self._labels is not None:
             text = self._labels[octave_number][position]
             # to enable use more than one label in the key, for the black keys
