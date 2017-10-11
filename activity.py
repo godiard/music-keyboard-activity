@@ -1094,7 +1094,6 @@ class SimplePianoActivity(activity.Activity):
             self.play_index = 0
             self.play_recording_button.props.icon_name = 'media-playback-start'
             self.playing_recording = False
-            GObject.source_remove(self.play_recording_thread)
             if end_cb is not None:
                 end_cb()
         else:
