@@ -1,0 +1,499 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-25 15:41+1000\n"
+"PO-Revision-Date: 2017-10-11 05:07+0000\n"
+"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: hus\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1507698445.000000\n"
+
+#: activity/activity.info:2
+msgid "Music Keyboard"
+msgstr ""
+
+#: activity/activity.info:3
+msgid "Play music with this piano keyboard."
+msgstr ""
+
+#: activity.py:530
+msgid "Select Instrument"
+msgstr ""
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Piano
+#: activity.py:532 ttcommon/Util/Instruments.py:127
+msgid "Piano"
+msgstr "Ni'ím t'enemtaláb"
+
+#: activity.py:558
+msgid "Save as audio"
+msgstr ""
+
+#: activity.py:674
+msgid "Select Drum"
+msgstr ""
+
+#. TRANS: http://en.wikipedia.org/wiki/Drum_set
+#: activity.py:674 ttcommon/Util/Instruments.py:668
+msgid "Jazz / Rock Kit"
+msgstr "Tsakam kwenél k'al an Jass/Rock"
+
+# Compás = lejbax k'ij
+#: activity.py:695
+msgid "Beats per bar"
+msgstr "Ajixtal an lejbax k'ij"
+
+#: activity.py:702
+msgid "Beat complexity"
+msgstr ""
+
+#: activity.py:704
+msgid "Tempo"
+msgstr "k'ij"
+
+#: activity.py:926
+msgid "Audio recorded"
+msgstr ""
+
+#: activity.py:927
+msgid "The audio file was saved in the Journal"
+msgstr ""
+
+# Conejillo de Indias= ko'nél takaxtaláb
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Guinea_pig
+#: ttcommon/Util/Instruments.py:48
+msgid "Guinea Pig"
+msgstr "Ko'nél takaxtaláb"
+
+# Conjunto de intrumentos musicales
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Gamelan
+#: ttcommon/Util/Instruments.py:53
+msgid "Gamelan"
+msgstr "Gamelan"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Electric_guitar
+#: ttcommon/Util/Instruments.py:58 ttcommon/Util/Instruments.py:63
+#: ttcommon/Util/Instruments.py:68 ttcommon/Util/Instruments.py:520
+msgid "Electric Guitar"
+msgstr "Pulik ájab xi t'enedh k'al i ka'amal"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Koto_%28musical_instrument%29
+#: ttcommon/Util/Instruments.py:73
+msgid "Koto"
+msgstr "Koto"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Banjo
+#: ttcommon/Util/Instruments.py:78
+msgid "Banjo"
+msgstr "Banyo"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Ukulele
+#: ttcommon/Util/Instruments.py:83
+msgid "Ukulele"
+msgstr "T'enemtaláb xi eynal k'al i ts'aj"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Harpsichord
+#: ttcommon/Util/Instruments.py:88
+msgid "Harpsichord"
+msgstr "Clavicémbalo"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Clarinet
+#: ttcommon/Util/Instruments.py:93
+msgid "Clarinet"
+msgstr "Pulik nakat juchub"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Flute
+#: ttcommon/Util/Instruments.py:98
+msgid "Flute"
+msgstr "Tsúl"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Dog
+#: ttcommon/Util/Instruments.py:132
+msgid "Dog"
+msgstr "Pik'o'"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Chicken
+#: ttcommon/Util/Instruments.py:137
+msgid "Chicken"
+msgstr "Tsakam koxol (pita')"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Duck
+#: ttcommon/Util/Instruments.py:142 ttcommon/Util/Instruments.py:235
+msgid "Duck"
+msgstr "Pak'wak'w"
+
+#. TRANS: The sound made by a person doing this
+#. TRANS: http://en.wikipedia.org/wiki/Blowing_a_raspberry
+#: ttcommon/Util/Instruments.py:147
+msgid "Raspberry"
+msgstr "Tsakwaliláb"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Harmonica
+#: ttcommon/Util/Instruments.py:202
+msgid "Harmonica"
+msgstr "Ik' t'enemtaláb"
+
+#. TRANS: The sound of an alarm bell
+#: ttcommon/Util/Instruments.py:206
+msgid "Alarm"
+msgstr "Olchix k'ij"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Bird
+#: ttcommon/Util/Instruments.py:211
+msgid "Bird"
+msgstr "Ts'itsin"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Frog
+#: ttcommon/Util/Instruments.py:216
+msgid "Frog"
+msgstr "T'ím"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Cat
+#: ttcommon/Util/Instruments.py:221
+msgid "Cat"
+msgstr "Mitsu'"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Cow
+#: ttcommon/Util/Instruments.py:225
+msgid "Cow"
+msgstr "Pakax"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Cricket_%28insect%29
+#: ttcommon/Util/Instruments.py:230
+msgid "Cricket"
+msgstr "Ts'ili'"
+
+#. TRANS: The sound of a bottle being hit
+#. TRANS: http://en.wikipedia.org/wiki/Bottle
+#: ttcommon/Util/Instruments.py:240
+msgid "Bottle"
+msgstr "Limete"
+
+#. TRANS: The sound of a garbage can
+#: ttcommon/Util/Instruments.py:244
+msgid "Dump"
+msgstr "Pet'na'"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Cymbal
+#: ttcommon/Util/Instruments.py:249
+msgid "Cymbal"
+msgstr "Odhtalab"
+
+#. TRANS: The sound of a person being hit
+#: ttcommon/Util/Instruments.py:253
+msgid "Ow"
+msgstr "Ow"
+
+#. TRANS: A surprised shout
+#: ttcommon/Util/Instruments.py:257
+msgid "Hey"
+msgstr "Hey"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Sheep
+#: ttcommon/Util/Instruments.py:262
+msgid "Sheep"
+msgstr "K'udhmadhko'nél"
+
+#. TRANS: The sound of water splashing
+#. TRANS: http://en.wikipedia.org/wiki/Water
+#: ttcommon/Util/Instruments.py:267
+msgid "Water"
+msgstr "Ja'"
+
+#. TRANS: A science-fiction ray gun sound
+#: ttcommon/Util/Instruments.py:271
+msgid "Ray Gun"
+msgstr "Ley Tsok"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Trumpet
+#: ttcommon/Util/Instruments.py:276
+msgid "Trumpet"
+msgstr "Trompeta"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Clavinet
+#: ttcommon/Util/Instruments.py:281
+msgid "Clavinet"
+msgstr "Junkubél i juchub"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Flugelhorn
+#: ttcommon/Util/Instruments.py:286
+msgid "Flugelhorn"
+msgstr "Dhet'eb-its'am"
+
+#. TRANS: The sound of a fog horn or ship horn
+#: ttcommon/Util/Instruments.py:290
+msgid "Foghorn"
+msgstr "Foghom"
+
+#. TRANS: The sound of air bubbling through water
+#: ttcommon/Util/Instruments.py:294
+msgid "Bubbles"
+msgstr "Dhopk'achik"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Marimba
+#: ttcommon/Util/Instruments.py:299
+msgid "Marimba"
+msgstr "Marimba"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Triangle_%28instrument%29
+#: ttcommon/Util/Instruments.py:304
+msgid "Triangle"
+msgstr "Ox ts'upi'"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Finger_cymbals
+#: ttcommon/Util/Instruments.py:309
+msgid "Fingercymbals"
+msgstr "Pek'adh t'enemtaláb"
+
+#. TRANS: The sound of a laugh
+#: ttcommon/Util/Instruments.py:313
+msgid "Laugh"
+msgstr "Te'ental"
+
+#. TRANS: The sound of a baby laughing
+#: ttcommon/Util/Instruments.py:317
+msgid "Baby Laugh"
+msgstr "Te'ental an t'ele'"
+
+#. TRANS: The sound of a child making a mistake
+#: ttcommon/Util/Instruments.py:321
+msgid "Baby Uh-oh"
+msgstr "T'ele' Uh-oh"
+
+#. TRANS: A synthesized voice sound
+#: ttcommon/Util/Instruments.py:325
+msgid "Voice"
+msgstr "Nuk' janidhtaláb"
+
+#. TRANS: A tinkling sound
+#: ttcommon/Util/Instruments.py:329
+msgid "Cling"
+msgstr "Ts'at'k'a'"
+
+# Bicicleta=tsabtoli'
+# Campana= t'int'il
+#. TRANS: The sound of a bicycle bell
+#. TRANS: http://en.wikipedia.org/wiki/Bicycle
+#: ttcommon/Util/Instruments.py:334
+msgid "Bicycle bell"
+msgstr "Tsabtoli' t'int'íl"
+
+#. TRANS: The sound of a door slamming shut
+#: ttcommon/Util/Instruments.py:338
+msgid "Door"
+msgstr "Wi'leb"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Electric_bass
+#: ttcommon/Util/Instruments.py:343
+msgid "Electric Bass"
+msgstr "Paye't'enemtaláb"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Acoustic_guitar
+#: ttcommon/Util/Instruments.py:348
+msgid "Acoustic Guitar"
+msgstr "Ik' Pulik-ájab"
+
+#. TRANS: The sound of tumbling
+#. TRANS: http://en.wikipedia.org/wiki/Dice
+#: ttcommon/Util/Instruments.py:353
+msgid "Dice"
+msgstr "Akakpek'midh"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Didjeridu
+#: ttcommon/Util/Instruments.py:358
+msgid "Didjeridu"
+msgstr "Didjeridu"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Harmonium
+#: ttcommon/Util/Instruments.py:363
+msgid "Harmonium"
+msgstr "Armonio"
+
+#. TRANS: The sound made by this animal
+#. TRANS: http://en.wikipedia.org/wiki/Horse
+#: ttcommon/Util/Instruments.py:368
+msgid "Horse"
+msgstr "Bichim"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Thumb_piano
+#: ttcommon/Util/Instruments.py:373
+msgid "Kalimba"
+msgstr "Kalimba"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Mandolin
+#: ttcommon/Util/Instruments.py:378
+msgid "Mandolin"
+msgstr "Mandolina"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Ocarina
+#: ttcommon/Util/Instruments.py:383
+msgid "Ocarina"
+msgstr "Ocarina"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Rhodes_piano
+#: ttcommon/Util/Instruments.py:388
+msgid "Rhodes"
+msgstr "Ni'ím k'ani'láb Rhoes"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Saxophone
+#: ttcommon/Util/Instruments.py:393
+msgid "Saxophone"
+msgstr "Saxófono"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Soprano_saxophone
+#: ttcommon/Util/Instruments.py:398
+msgid "Soprano Saxophone"
+msgstr "Saxofón Soprano"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Shehnai
+#: ttcommon/Util/Instruments.py:403
+msgid "Shehnai"
+msgstr "Shehnai"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Sitar
+#: ttcommon/Util/Instruments.py:408
+msgid "Sitar"
+msgstr "Sitar"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Tuba
+#: ttcommon/Util/Instruments.py:413
+msgid "Tuba"
+msgstr "Tuba"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Violin
+#: ttcommon/Util/Instruments.py:418
+msgid "Violin"
+msgstr "Widhach t'enemtaláb"
+
+#. TRANS: The sound of a camera shutter
+#. TRANS: http://en.wikipedia.org/wiki/Camera
+#: ttcommon/Util/Instruments.py:493
+msgid "Camera"
+msgstr "K'ot'bixwalek"
+
+#. TRANS: The sound of a car starting
+#: ttcommon/Util/Instruments.py:497
+msgid "Car"
+msgstr "Tolilíl pat'al"
+
+#. TRANS: The sound of a car horn honking
+#: ttcommon/Util/Instruments.py:501
+msgid "Car Horn"
+msgstr "Dhajantal an tolilíl pat'al"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Cello
+#: ttcommon/Util/Instruments.py:506
+msgid "Cello"
+msgstr "Chelo"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Chimes
+#: ttcommon/Util/Instruments.py:511
+msgid "Chimes"
+msgstr "Boli' t'int'il"
+
+#. TRANS: The sound of glass breaking
+#: ttcommon/Util/Instruments.py:515
+msgid "Crash"
+msgstr "Tómlóx"
+
+#. TRANS: The sound of this vehicle
+#. TRANS: http://en.wikipedia.org/wiki/Airplane
+#: ttcommon/Util/Instruments.py:525
+msgid "Plane"
+msgstr "Ts'itsin pat'ál"
+
+# Bofetada= ch'apladh
+#. TRANS: The sound of something being hit
+#: ttcommon/Util/Instruments.py:529
+msgid "Slap"
+msgstr "Ch'apladh (Ch'apadh)"
+
+#. TRANS: The sound made by a bell
+#: ttcommon/Util/Instruments.py:533
+msgid "Temple Bell"
+msgstr "T'int'ilal an tiopan"
+
+#. TRANS: The sound made by this instrument
+#. TRANS: http://en.wikipedia.org/wiki/Sarangi
+#: ttcommon/Util/Instruments.py:538
+msgid "Sarangi"
+msgstr "Sarangi"
+
+#. TRANS: The sound of a Solomon Islands pipe, named "'au tahana"
+#. TRANS: http://www.jstor.org/pss/851365
+#: ttcommon/Util/Instruments.py:569
+msgid "'au tahana"
+msgstr "'au tahana"
+
+#: ttcommon/Util/Instruments.py:670
+msgid "African Kit"
+msgstr "Tsakam kwenél Africano"
+
+#: ttcommon/Util/Instruments.py:672
+msgid "Arabic Kit"
+msgstr "Tsakam kwenél Árabe"
+
+#: ttcommon/Util/Instruments.py:674
+msgid "Electronic Kit"
+msgstr "Tsakam kwenél pat'ál k'amal"
+
+#: ttcommon/Util/Instruments.py:676
+msgid "South American Kit"
+msgstr "Tsakam kwenél Sudamericano"
+
+#: ttcommon/Util/Instruments.py:678
+msgid "Nepali"
+msgstr "Jun i k'wajíl xi ti Nepal"
