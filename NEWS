@@ -1,3 +1,10 @@
+11
+
+* Save as audio button insensitive when there is no recording (James Cameron),
+* Port to GStreamer 1.0, removing dependency on gst-launch-0.10 (James Cameron),
+* Contributed translations (Chris Leonard, Alan, Anatoly, Anders,
+  Edgar, kiolalis, lxlalexlxl, Martín, whe, Yuan, et al)
+
 10
 
 * Fix stuck piano notes,
