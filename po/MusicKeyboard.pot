@@ -267,7 +267,7 @@ msgid "Marimba"
 msgstr ""
 
 #. TRANS: The sound made by this instrument
-#. TRANS: http://en.wikipedia.org/wiki/Triangle_%28instrument%29
+#. TRANS: http://en.wikipedia.org/wiki/Triangle_%28musical_instrument%29
 #: ttcommon/Util/Instruments.py:304
 msgid "Triangle"
 msgstr ""
