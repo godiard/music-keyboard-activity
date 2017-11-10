@@ -300,7 +300,7 @@ _addInstrument('marimba', INST_TIED, MID, 'percussions',
 _addInstrument('triangle', INST_TIED, MID, 'percussions',
         2.27261836, 3.2965453, .2, 0.6,
         # TRANS: The sound made by this instrument
-        # TRANS: http://en.wikipedia.org/wiki/Triangle_%28instrument%29
+        # TRANS: http://en.wikipedia.org/wiki/Triangle_%28musical_instrument%29
         nameTooltip=_('Triangle'))
 _addInstrument('fingercymbals', INST_TIED, HIGH, 'percussions',
         1.29635195312, 1.92448125, .094, 0.6,
