@@ -2,7 +2,7 @@ import os
 from math import sqrt
 import logging
 
-import csnd6
+import ctcsound
 import ttcommon.Config as Config
 
 from ttcommon.Generation.GenerationConstants import GenerationConstants
@@ -40,12 +40,12 @@ class _CSoundClientPlugin:
      INSTRUMENT2) = range(13)
 
     def __init__(self):
-        self._csnd = csnd6.Csound()
-        self._csnd.CompileCsd(Config.PLUGIN_UNIVORC)
-        self._csnd.SetDebug(False)
-        self._csnd.Start()
-        self._perfThread = csnd6.CsoundPerformanceThread(self._csnd)
-        self._perfThread.Play()
+        self._csnd = ctcsound.Csound()
+        self._csnd.compileCsd(Config.PLUGIN_UNIVORC)
+        self._csnd.setDebug(False)
+        self._csnd.start()
+        self._perfThread = ctcsound.CsoundPerformanceThread(self._csnd.csound())
+        self._perfThread.play()
 
         # TODO
         # sc_initialize(Config.PLUGIN_UNIVORC, Config.PLUGIN_DEBUG,
@@ -68,40 +68,40 @@ class _CSoundClientPlugin:
         # sc_destroy()
 
     def setChannel(self, name, val):
-        self._csnd.SetChannel(name, val)
+        self._csnd.setControlChannel(name, val)
 
     def setMasterVolume(self, volume):
-        self._csnd.SetChannel('masterVolume', volume)
+        self._csnd.setControlChannel('masterVolume', volume)
 
     def setTrackVolume(self, volume, trackId):
-        self._csnd.SetChannel('trackVolume' + str(trackId + 1), volume)
+        self._csnd.setControlChannel('trackVolume' + str(trackId + 1), volume)
 
     def setTrackpadX(self, value):
-        self._csnd.SetChannel('trackpadX', value)
+        self._csnd.setControlChannel('trackpadX', value)
 
     def setTrackpadY(self, value):
-        self._csnd.SetChannel('trackpadY', value)
+        self._csnd.setControlChannel('trackpadY', value)
 
     def micRecording(self, table):
-        self._csnd.InputMessage(Config.CSOUND_MIC_RECORD % table)
+        self._csnd.inputMessage(Config.CSOUND_MIC_RECORD % table)
 
     def load_mic_instrument(self, inst):
         fileName = Config.DATA_DIR + '/' + inst
         instrumentId = Config.INSTRUMENT_TABLE_OFFSET + \
             self.instrumentDB.instNamed[inst].instrumentId
-        self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+        self._csnd.inputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
             instrumentId, fileName))
 
     def load_synth_instrument(self, inst):
         fileName = Config.DATA_DIR + '/' + inst
         instrumentId = Config.INSTRUMENT_TABLE_OFFSET + \
             self.instrumentDB.instNamed[inst].instrumentId
-        self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+        self._csnd.inputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
             instrumentId, fileName))
 
     def load_ls_instrument(self, inst):
         fileName = Config.DATA_DIR + '/' + inst
-        self._csnd.InputMessage(Config.CSOUND_LOAD_LS_INSTRUMENT % fileName)
+        self._csnd.inputMessage(Config.CSOUND_LOAD_LS_INSTRUMENT % fileName)
 
     def load_instruments(self):
         for instrumentSoundFile in self.instrumentDB.instNamed.keys():
@@ -114,7 +114,7 @@ class _CSoundClientPlugin:
                 fileName = Config.SOUNDS_DIR + "/" + instrumentSoundFile
             instrumentId = Config.INSTRUMENT_TABLE_OFFSET + \
                 self.instrumentDB.instNamed[instrumentSoundFile].instrumentId
-            self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+            self._csnd.inputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
                 instrumentId, fileName))
 
     def load_instrument(self, inst):
@@ -131,7 +131,7 @@ class _CSoundClientPlugin:
                 self.instrumentDB.instNamed[inst].instrumentId
             message = Config.CSOUND_LOAD_INSTRUMENT % (instrumentId, fileName)
             logging.error('CSoundClient load_instrument msg %s', message)
-            self._csnd.InputMessage(message)
+            self._csnd.inputMessage(message)
             loadedInstruments.append(inst)
 
     def load_drumkit(self, kit):
@@ -140,7 +140,7 @@ class _CSoundClientPlugin:
                 fileName = Config.SOUNDS_DIR + "/" + i
                 instrumentId = Config.INSTRUMENT_TABLE_OFFSET + \
                     self.instrumentDB.instNamed[i].instrumentId
-                self._csnd.InputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
+                self._csnd.inputMessage(Config.CSOUND_LOAD_INSTRUMENT % (
                     instrumentId, fileName))
                 loadedInstruments.append(i)
             loadedInstruments.append(kit)
@@ -152,12 +152,12 @@ class _CSoundClientPlugin:
         """
         def reconnect():
             # TODO before was Start(self.periods_per_buffer)
-            if self._csnd.Start():
+            if self._csnd.start():
                 if (Config.DEBUG > 0) : print 'ERROR connecting'
             else:
                 self.on = True
         def disconnect():
-            if self._csnd.Stop() :
+            if self._csnd.stop() :
                 if (Config.DEBUG > 0) : print 'ERROR connecting'
             else:
                 self.on = False
@@ -174,7 +174,7 @@ class _CSoundClientPlugin:
         # sc_destroy()
 
     def inputMessage(self, msg):
-        self._csnd.InputMessage(msg)
+        self._csnd.inputMessage(msg)
 
     def getTick(self):
         return sc_getTickf()
@@ -366,7 +366,7 @@ class _CSoundClientPlugin:
         a[self.DECAY] = max(a[self.DECAY]*a[self.DURATION], 0.002)
 
         message = 'i ' + " ".join(map(str, a))
-        self._perfThread.InputMessage(message)
+        self._perfThread.inputMessage(message)
 
     def csnote_to_array(self, csnote, storage):
         return self._csnote_to_array1(
