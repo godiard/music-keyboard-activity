@@ -40,6 +40,7 @@ class _CSoundClientPlugin:
      INSTRUMENT2) = range(13)
 
     def __init__(self):
+        ctcsound.csoundInitialize(ctcsound.CSOUNDINIT_NO_SIGNAL_HANDLER)
         self._csnd = ctcsound.Csound()
         self._csnd.compileCsd(Config.PLUGIN_UNIVORC)
         self._csnd.setDebug(False)
