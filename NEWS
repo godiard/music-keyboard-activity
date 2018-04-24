@@ -1,3 +1,8 @@
+* Port from csnd6 to to ctcsound (James Cameron),
+* Fix Csound thread segmentation fault during Stop (James Cameron),
+* Avoid the Csound signal handler (James Cameron),
+* Handle Ctrl+C (James Cameron),
+
 11
 
 * Save as audio button insensitive when there is no recording (James Cameron),
