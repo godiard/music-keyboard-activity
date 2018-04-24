@@ -62,10 +62,9 @@ class _CSoundClientPlugin:
         # while I wait for james to implement it properly
         self.jamesSux = {}
 
-    def __del__(self):
-        self.connect(False)
-        # TODO
-        # sc_destroy()
+    def stop(self):
+        self._perfThread.stop()
+        self._csnd.stop()
 
     def setChannel(self, name, val):
         self._csnd.setControlChannel(name, val)
@@ -144,34 +143,6 @@ class _CSoundClientPlugin:
                     instrumentId, fileName))
                 loadedInstruments.append(i)
             loadedInstruments.append(kit)
-
-    def connect(self, init=True):
-        pass
-        # NOTE: Maybe we can avid all this (already started
-        # at object initialization
-        """
-        def reconnect():
-            # TODO before was Start(self.periods_per_buffer)
-            if self._csnd.start():
-                if (Config.DEBUG > 0) : print 'ERROR connecting'
-            else:
-                self.on = True
-        def disconnect():
-            if self._csnd.stop() :
-                if (Config.DEBUG > 0) : print 'ERROR connecting'
-            else:
-                self.on = False
-
-        if init and not self.on :
-            reconnect()
-        if not init and self.on :
-            disconnect()
-        """
-
-    def destroy(self):
-        self.connect(False)
-        # TODO
-        # sc_destroy()
 
     def inputMessage(self, msg):
         self._csnd.inputMessage(msg)
@@ -480,7 +451,5 @@ def new_csound_client():
     global _Client
     if _Client is None:
         _Client = _CSoundClientPlugin()
-        _Client.connect(True)
-        _Client.setMasterVolume(100.0)
         # _Client.load_instruments()
     return _Client

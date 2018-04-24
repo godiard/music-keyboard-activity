@@ -1158,10 +1158,6 @@ class SimplePianoActivity(activity.Activity):
         self.keyboardStandAlone.onKeyRelease(widget, event)
         self.piano.physical_key_changed(event.hardware_keycode, False)
 
-    ##########################################
-    # Journal functions
-    ##########################################
-
     def write_file(self, file_path):
         f = open(file_path, 'w')
         # substract the initial time to all the saved values
@@ -1182,3 +1178,7 @@ class SimplePianoActivity(activity.Activity):
             self.play_recording_button.set_sensitive(True)
             self._save_as_audio_bt.set_sensitive(True)
         f.close()
+
+    def close(self, skip_save=False):
+        self.csnd.stop()  # without which Csound will segfault
+        activity.Activity.close(self, skip_save=skip_save)
