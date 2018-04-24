@@ -21,6 +21,7 @@ import json
 import time
 import math
 import os
+import signal
 import tempfile
 
 import gi
@@ -452,7 +453,9 @@ class SimplePianoActivity(activity.Activity):
 
     def __init__(self, handle):
         activity.Activity.__init__(self, handle)
+        GLib.unix_signal_add(GLib.PRIORITY_DEFAULT, signal.SIGINT, self.close)
         Gst.init(None)
+
         self._what_list = []
 
         self.play_recording_thread = None
