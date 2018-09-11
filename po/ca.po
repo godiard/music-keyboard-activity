@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 05:02+0000\n"
+"PO-Revision-Date: 2017-10-30 03:43+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ca\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507698165.000000\n"
+"X-POOTLE-MTIME: 1509334992.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
@@ -187,7 +187,7 @@ msgstr "Bou"
 #. TRANS: http://en.wikipedia.org/wiki/Cricket_%28insect%29
 #: ttcommon/Util/Instruments.py:230
 msgid "Cricket"
-msgstr ""
+msgstr "Gríl·lid"
 
 #. TRANS: The sound of a bottle being hit
 #. TRANS: http://en.wikipedia.org/wiki/Bottle
@@ -277,7 +277,7 @@ msgstr "Triangle"
 #. TRANS: http://en.wikipedia.org/wiki/Finger_cymbals
 #: ttcommon/Util/Instruments.py:309
 msgid "Fingercymbals"
-msgstr ""
+msgstr "Cròtals"
 
 #. TRANS: The sound of a laugh
 #: ttcommon/Util/Instruments.py:313
@@ -391,7 +391,7 @@ msgstr ""
 #. TRANS: http://en.wikipedia.org/wiki/Shehnai
 #: ttcommon/Util/Instruments.py:403
 msgid "Shehnai"
-msgstr ""
+msgstr "Shehnai"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Sitar

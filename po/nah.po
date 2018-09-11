@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 05:11+0000\n"
+"PO-Revision-Date: 2017-11-06 20:55+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nah\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507698709.000000\n"
+"X-POOTLE-MTIME: 1510001745.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
@@ -41,8 +41,9 @@ msgid "Save as audio"
 msgstr ""
 
 #: activity.py:674
+#, fuzzy
 msgid "Select Drum"
-msgstr ""
+msgstr "Huehuetl"
 
 #. TRANS: http://en.wikipedia.org/wiki/Drum_set
 #: activity.py:674 ttcommon/Util/Instruments.py:668

@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 05:12+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2017-11-27 11:18+0000\n"
+"Last-Translator: buddhi.raj <buddhi.tuladhar@olenepal.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ne\n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507698733.000000\n"
+"X-POOTLE-MTIME: 1511781493.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
-msgstr ""
+msgstr "संगीत कुञ्जीपाटी"
 
 #: activity/activity.info:3
 msgid "Play music with this piano keyboard."
-msgstr ""
+msgstr "यस पियानो कीबोर्ड संग संगीत बजाउनुहोस्।"
 
 #: activity.py:530
 msgid "Select Instrument"
-msgstr ""
+msgstr "साधन चयन गर्नुहोस्"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Piano
@@ -38,11 +38,11 @@ msgstr "पियानो"
 
 #: activity.py:558
 msgid "Save as audio"
-msgstr ""
+msgstr "अडियोको रूपमा सुरक्षित गर्नुहोस्"
 
 #: activity.py:674
 msgid "Select Drum"
-msgstr ""
+msgstr "ड्रम चयन गर्नुहोस्"
 
 #. TRANS: http://en.wikipedia.org/wiki/Drum_set
 #: activity.py:674 ttcommon/Util/Instruments.py:668
@@ -55,7 +55,7 @@ msgstr "बिट प्रति खण्ड"
 
 #: activity.py:702
 msgid "Beat complexity"
-msgstr ""
+msgstr "बिट  जटिलता"
 
 #: activity.py:704
 msgid "Tempo"
@@ -63,17 +63,17 @@ msgstr "गति"
 
 #: activity.py:926
 msgid "Audio recorded"
-msgstr ""
+msgstr "अडियो रेकर्ड गरियो"
 
 #: activity.py:927
 msgid "The audio file was saved in the Journal"
-msgstr ""
+msgstr "अडियो फाइल जर्नलमा सुरक्षित गरिएको थियो"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Guinea_pig
 #: ttcommon/Util/Instruments.py:48
 msgid "Guinea Pig"
-msgstr ""
+msgstr "गिनी पिग"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Gamelan
@@ -122,7 +122,7 @@ msgstr ""
 #. TRANS: http://en.wikipedia.org/wiki/Flute
 #: ttcommon/Util/Instruments.py:98
 msgid "Flute"
-msgstr ""
+msgstr "बाँसुरी "
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Dog
@@ -146,7 +146,7 @@ msgstr "हाँस"
 #. TRANS: http://en.wikipedia.org/wiki/Blowing_a_raspberry
 #: ttcommon/Util/Instruments.py:147
 msgid "Raspberry"
-msgstr ""
+msgstr "रास्पबेरि"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Harmonica
@@ -231,7 +231,7 @@ msgstr "पानी"
 #. TRANS: A science-fiction ray gun sound
 #: ttcommon/Util/Instruments.py:271
 msgid "Ray Gun"
-msgstr ""
+msgstr "रे गन"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Trumpet
@@ -308,7 +308,7 @@ msgstr "क्लिंग्"
 #. TRANS: http://en.wikipedia.org/wiki/Bicycle
 #: ttcommon/Util/Instruments.py:334
 msgid "Bicycle bell"
-msgstr ""
+msgstr "साइकल घंटी"
 
 #. TRANS: The sound of a door slamming shut
 #: ttcommon/Util/Instruments.py:338
@@ -319,7 +319,7 @@ msgstr "ढोका"
 #. TRANS: http://en.wikipedia.org/wiki/Electric_bass
 #: ttcommon/Util/Instruments.py:343
 msgid "Electric Bass"
-msgstr ""
+msgstr "इलेक्ट्रिक बाश"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Acoustic_guitar
@@ -361,7 +361,7 @@ msgstr "कालिमबा"
 #. TRANS: http://en.wikipedia.org/wiki/Mandolin
 #: ttcommon/Util/Instruments.py:378
 msgid "Mandolin"
-msgstr ""
+msgstr "मांडोलिन"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Ocarina
@@ -379,19 +379,19 @@ msgstr "रोड्स"
 #. TRANS: http://en.wikipedia.org/wiki/Saxophone
 #: ttcommon/Util/Instruments.py:393
 msgid "Saxophone"
-msgstr ""
+msgstr "सक्सोफोन"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Soprano_saxophone
 #: ttcommon/Util/Instruments.py:398
 msgid "Soprano Saxophone"
-msgstr ""
+msgstr "सोप्रानो सक्सोफोन"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Shehnai
 #: ttcommon/Util/Instruments.py:403
 msgid "Shehnai"
-msgstr ""
+msgstr "सहनाई"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Sitar
@@ -470,7 +470,7 @@ msgstr "सारंगी"
 #. TRANS: http://www.jstor.org/pss/851365
 #: ttcommon/Util/Instruments.py:569
 msgid "'au tahana"
-msgstr ""
+msgstr "अऊ ताहाना"
 
 #: ttcommon/Util/Instruments.py:670
 msgid "African Kit"

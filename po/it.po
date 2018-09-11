@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 05:08+0000\n"
+"PO-Revision-Date: 2017-10-30 03:52+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507698495.000000\n"
+"X-POOTLE-MTIME: 1509335536.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
@@ -127,20 +127,23 @@ msgstr "Flauto"
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Dog
 #: ttcommon/Util/Instruments.py:132
+#, fuzzy
 msgid "Dog"
-msgstr ""
+msgstr "Cane"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Chicken
 #: ttcommon/Util/Instruments.py:137
+#, fuzzy
 msgid "Chicken"
-msgstr ""
+msgstr "Pollo"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Duck
 #: ttcommon/Util/Instruments.py:142 ttcommon/Util/Instruments.py:235
+#, fuzzy
 msgid "Duck"
-msgstr ""
+msgstr "Anatra"
 
 #. TRANS: The sound made by a person doing this
 #. TRANS: http://en.wikipedia.org/wiki/Blowing_a_raspberry
@@ -162,8 +165,9 @@ msgstr ""
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Bird
 #: ttcommon/Util/Instruments.py:211
+#, fuzzy
 msgid "Bird"
-msgstr ""
+msgstr "Uccelli"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Frog
