@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 05:03+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2017-11-03 09:15+0000\n"
+"Last-Translator: dark159123 <r.j.hansen@protonmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507698189.000000\n"
+"X-POOTLE-MTIME: 1509700537.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
-msgstr ""
+msgstr "Musik Keyboard"
 
 #: activity/activity.info:3
 msgid "Play music with this piano keyboard."
-msgstr ""
+msgstr "Spil musik med dette klaver."
 
 #: activity.py:530
 msgid "Select Instrument"
-msgstr ""
+msgstr "Vælg Instrument"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Piano
@@ -38,24 +38,24 @@ msgstr "Klaver"
 
 #: activity.py:558
 msgid "Save as audio"
-msgstr ""
+msgstr "Gem som lydfil"
 
 #: activity.py:674
 msgid "Select Drum"
-msgstr ""
+msgstr "Vælg tromme"
 
 #. TRANS: http://en.wikipedia.org/wiki/Drum_set
 #: activity.py:674 ttcommon/Util/Instruments.py:668
 msgid "Jazz / Rock Kit"
-msgstr "Jazz / Rock kit"
+msgstr "Jazz / Rock sæt"
 
 #: activity.py:695
 msgid "Beats per bar"
-msgstr "Anslag per bjælke"
+msgstr "Anslag per takt"
 
 #: activity.py:702
 msgid "Beat complexity"
-msgstr ""
+msgstr "Rytme kompleksitet"
 
 #: activity.py:704
 msgid "Tempo"
@@ -63,11 +63,11 @@ msgstr "Tempo"
 
 #: activity.py:926
 msgid "Audio recorded"
-msgstr ""
+msgstr "Lyd optaget"
 
 #: activity.py:927
 msgid "The audio file was saved in the Journal"
-msgstr ""
+msgstr "Lydfilen blev gemt i Journalen"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Guinea_pig

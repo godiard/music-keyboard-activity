@@ -7,16 +7,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-30 03:43+0000\n"
+"PO-Revision-Date: 2017-10-30 02:57+0000\n"
 "Last-Translator: Chris <cjl@sugarlabs.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: ca\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"(n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1509334992.000000\n"
+"X-POOTLE-MTIME: 1509332271.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
@@ -33,8 +34,9 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Piano
 #: activity.py:532 ttcommon/Util/Instruments.py:127
+#, fuzzy
 msgid "Piano"
-msgstr "Piano"
+msgstr "Fortepijonas"
 
 #: activity.py:558
 msgid "Save as audio"
@@ -51,7 +53,7 @@ msgstr ""
 
 #: activity.py:695
 msgid "Beats per bar"
-msgstr "Temps per compàs"
+msgstr ""
 
 #: activity.py:702
 msgid "Beat complexity"
@@ -59,7 +61,7 @@ msgstr ""
 
 #: activity.py:704
 msgid "Tempo"
-msgstr "Tempo"
+msgstr ""
 
 #: activity.py:926
 msgid "Audio recorded"
@@ -72,75 +74,85 @@ msgstr ""
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Guinea_pig
 #: ttcommon/Util/Instruments.py:48
+#, fuzzy
 msgid "Guinea Pig"
-msgstr "Conill porquí"
+msgstr "Jūrų kiaulytė"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Gamelan
 #: ttcommon/Util/Instruments.py:53
+#, fuzzy
 msgid "Gamelan"
-msgstr "Gamelan"
+msgstr "Gamelanas"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Electric_guitar
 #: ttcommon/Util/Instruments.py:58 ttcommon/Util/Instruments.py:63
 #: ttcommon/Util/Instruments.py:68 ttcommon/Util/Instruments.py:520
+#, fuzzy
 msgid "Electric Guitar"
-msgstr "Guitarra elèctrica"
+msgstr "Elektrinė gitara"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Koto_%28musical_instrument%29
 #: ttcommon/Util/Instruments.py:73
 msgid "Koto"
-msgstr "Koto"
+msgstr ""
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Banjo
 #: ttcommon/Util/Instruments.py:78
+#, fuzzy
 msgid "Banjo"
-msgstr "Banjo"
+msgstr "Bandža"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Ukulele
 #: ttcommon/Util/Instruments.py:83
 msgid "Ukulele"
-msgstr "Ukulele"
+msgstr ""
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Harpsichord
 #: ttcommon/Util/Instruments.py:88
+#, fuzzy
 msgid "Harpsichord"
-msgstr "Clavicèmbal"
+msgstr "Klavesinas"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Clarinet
 #: ttcommon/Util/Instruments.py:93
+#, fuzzy
 msgid "Clarinet"
-msgstr "Clarinet"
+msgstr "Klarnetas"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Flute
 #: ttcommon/Util/Instruments.py:98
+#, fuzzy
 msgid "Flute"
-msgstr "Flauta"
+msgstr "Fleita"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Dog
 #: ttcommon/Util/Instruments.py:132
+#, fuzzy
 msgid "Dog"
-msgstr "Gos"
+msgstr "Šuo"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Chicken
 #: ttcommon/Util/Instruments.py:137
+#, fuzzy
 msgid "Chicken"
-msgstr "Gall"
+msgstr "Višta"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Duck
 #: ttcommon/Util/Instruments.py:142 ttcommon/Util/Instruments.py:235
+#, fuzzy
 msgid "Duck"
-msgstr "Ànec"
+msgstr "Antis"
 
 #. TRANS: The sound made by a person doing this
 #. TRANS: http://en.wikipedia.org/wiki/Blowing_a_raspberry
@@ -152,7 +164,7 @@ msgstr ""
 #. TRANS: http://en.wikipedia.org/wiki/Harmonica
 #: ttcommon/Util/Instruments.py:202
 msgid "Harmonica"
-msgstr "Harmònica"
+msgstr ""
 
 #. TRANS: The sound of an alarm bell
 #: ttcommon/Util/Instruments.py:206
@@ -162,38 +174,44 @@ msgstr ""
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Bird
 #: ttcommon/Util/Instruments.py:211
+#, fuzzy
 msgid "Bird"
-msgstr "Ocell"
+msgstr "Paukščiai"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Frog
 #: ttcommon/Util/Instruments.py:216
+#, fuzzy
 msgid "Frog"
-msgstr "Anur"
+msgstr "Beuodegiai varliagyviai"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Cat
 #: ttcommon/Util/Instruments.py:221
+#, fuzzy
 msgid "Cat"
-msgstr "Gat"
+msgstr "Katė"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Cow
 #: ttcommon/Util/Instruments.py:225
+#, fuzzy
 msgid "Cow"
-msgstr "Bou"
+msgstr "Naminis jautis"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Cricket_%28insect%29
 #: ttcommon/Util/Instruments.py:230
+#, fuzzy
 msgid "Cricket"
-msgstr "Gríl·lid"
+msgstr "Svirpliai"
 
 #. TRANS: The sound of a bottle being hit
 #. TRANS: http://en.wikipedia.org/wiki/Bottle
 #: ttcommon/Util/Instruments.py:240
+#, fuzzy
 msgid "Bottle"
-msgstr "Botella"
+msgstr "Butelis"
 
 #. TRANS: The sound of a garbage can
 #: ttcommon/Util/Instruments.py:244
@@ -204,7 +222,7 @@ msgstr ""
 #. TRANS: http://en.wikipedia.org/wiki/Cymbal
 #: ttcommon/Util/Instruments.py:249
 msgid "Cymbal"
-msgstr "Plat"
+msgstr ""
 
 #. TRANS: The sound of a person being hit
 #: ttcommon/Util/Instruments.py:253
@@ -219,14 +237,16 @@ msgstr ""
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Sheep
 #: ttcommon/Util/Instruments.py:262
+#, fuzzy
 msgid "Sheep"
-msgstr "Ovella"
+msgstr "Avis"
 
 #. TRANS: The sound of water splashing
 #. TRANS: http://en.wikipedia.org/wiki/Water
 #: ttcommon/Util/Instruments.py:267
+#, fuzzy
 msgid "Water"
-msgstr "Aigua"
+msgstr "Vanduo"
 
 #. TRANS: A science-fiction ray gun sound
 #: ttcommon/Util/Instruments.py:271
@@ -236,8 +256,9 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Trumpet
 #: ttcommon/Util/Instruments.py:276
+#, fuzzy
 msgid "Trumpet"
-msgstr "Trompeta"
+msgstr "Trimitas"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Clavinet
@@ -248,8 +269,9 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Flugelhorn
 #: ttcommon/Util/Instruments.py:286
+#, fuzzy
 msgid "Flugelhorn"
-msgstr "Fliscorn"
+msgstr "Fliugelhornas"
 
 #. TRANS: The sound of a fog horn or ship horn
 #: ttcommon/Util/Instruments.py:290
@@ -270,14 +292,15 @@ msgstr "Marimba"
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Triangle_%28instrument%29
 #: ttcommon/Util/Instruments.py:304
+#, fuzzy
 msgid "Triangle"
-msgstr "Triangle"
+msgstr "Trikampis"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Finger_cymbals
 #: ttcommon/Util/Instruments.py:309
 msgid "Fingercymbals"
-msgstr "Cròtals"
+msgstr ""
 
 #. TRANS: The sound of a laugh
 #: ttcommon/Util/Instruments.py:313
@@ -318,68 +341,76 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Electric_bass
 #: ttcommon/Util/Instruments.py:343
+#, fuzzy
 msgid "Electric Bass"
-msgstr "Baix elèctric"
+msgstr "Bosinė gitara"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Acoustic_guitar
 #: ttcommon/Util/Instruments.py:348
 msgid "Acoustic Guitar"
-msgstr "Guitarra acústica"
+msgstr ""
 
 #. TRANS: The sound of tumbling
 #. TRANS: http://en.wikipedia.org/wiki/Dice
 #: ttcommon/Util/Instruments.py:353
+#, fuzzy
 msgid "Dice"
-msgstr "Daus"
+msgstr "Lošimo kauliukas"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Didjeridu
 #: ttcommon/Util/Instruments.py:358
+#, fuzzy
 msgid "Didjeridu"
-msgstr "Didjeridú"
+msgstr "Didžeridū"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Harmonium
 #: ttcommon/Util/Instruments.py:363
+#, fuzzy
 msgid "Harmonium"
-msgstr "Harmònium"
+msgstr "Fisharmonija"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Horse
 #: ttcommon/Util/Instruments.py:368
+#, fuzzy
 msgid "Horse"
-msgstr "Cavall"
+msgstr "Naminis arklys"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Thumb_piano
 #: ttcommon/Util/Instruments.py:373
 msgid "Kalimba"
-msgstr "Kalimba"
+msgstr ""
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Mandolin
 #: ttcommon/Util/Instruments.py:378
+#, fuzzy
 msgid "Mandolin"
 msgstr "Mandolina"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Ocarina
 #: ttcommon/Util/Instruments.py:383
+#, fuzzy
 msgid "Ocarina"
-msgstr "Ocarina"
+msgstr "Okarina"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Rhodes_piano
 #: ttcommon/Util/Instruments.py:388
 msgid "Rhodes"
-msgstr "Fender Rhodes"
+msgstr ""
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Saxophone
 #: ttcommon/Util/Instruments.py:393
+#, fuzzy
 msgid "Saxophone"
-msgstr "Saxòfon"
+msgstr "Saksofonas"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Soprano_saxophone
@@ -390,32 +421,37 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Shehnai
 #: ttcommon/Util/Instruments.py:403
+#, fuzzy
 msgid "Shehnai"
-msgstr "Shehnai"
+msgstr "Šahnajus"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Sitar
 #: ttcommon/Util/Instruments.py:408
+#, fuzzy
 msgid "Sitar"
-msgstr "Sitar"
+msgstr "Sitaras"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Tuba
 #: ttcommon/Util/Instruments.py:413
+#, fuzzy
 msgid "Tuba"
-msgstr "Tuba"
+msgstr "Tūba"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Violin
 #: ttcommon/Util/Instruments.py:418
+#, fuzzy
 msgid "Violin"
-msgstr "Violí"
+msgstr "Smuikas"
 
 #. TRANS: The sound of a camera shutter
 #. TRANS: http://en.wikipedia.org/wiki/Camera
 #: ttcommon/Util/Instruments.py:493
+#, fuzzy
 msgid "Camera"
-msgstr "Càmera"
+msgstr "Fotoaparatas"
 
 #. TRANS: The sound of a car starting
 #: ttcommon/Util/Instruments.py:497
@@ -430,14 +466,15 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Cello
 #: ttcommon/Util/Instruments.py:506
+#, fuzzy
 msgid "Cello"
-msgstr "Violoncel"
+msgstr "Violončelė"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Chimes
 #: ttcommon/Util/Instruments.py:511
 msgid "Chimes"
-msgstr "Campana tubular"
+msgstr ""
 
 #. TRANS: The sound of glass breaking
 #: ttcommon/Util/Instruments.py:515
@@ -447,8 +484,9 @@ msgstr ""
 #. TRANS: The sound of this vehicle
 #. TRANS: http://en.wikipedia.org/wiki/Airplane
 #: ttcommon/Util/Instruments.py:525
+#, fuzzy
 msgid "Plane"
-msgstr "Avió"
+msgstr "Lėktuvas"
 
 #. TRANS: The sound of something being hit
 #: ttcommon/Util/Instruments.py:529
@@ -464,7 +502,7 @@ msgstr ""
 #. TRANS: http://en.wikipedia.org/wiki/Sarangi
 #: ttcommon/Util/Instruments.py:538
 msgid "Sarangi"
-msgstr "Sarangui"
+msgstr ""
 
 #. TRANS: The sound of a Solomon Islands pipe, named "'au tahana"
 #. TRANS: http://www.jstor.org/pss/851365

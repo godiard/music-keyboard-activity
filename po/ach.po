@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 06:04+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2017-12-22 09:24+0000\n"
+"Last-Translator: chanchumgpa <chanchumgpa@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ach\n"
 "MIME-Version: 1.0\n"
@@ -16,42 +16,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1507701870.000000\n"
+"X-POOTLE-MTIME: 1513934641.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
-msgstr ""
+msgstr "Keyboard me Mujiki"
 
 #: activity/activity.info:3
 msgid "Play music with this piano keyboard."
-msgstr ""
+msgstr "Tuk mujiki ki keyboard me alete man."
 
 #: activity.py:530
 msgid "Select Instrument"
-msgstr ""
+msgstr "Yer Jamitic"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Piano
 #: activity.py:532 ttcommon/Util/Instruments.py:127
 msgid "Piano"
-msgstr ""
+msgstr "Alete"
 
 #: activity.py:558
 msgid "Save as audio"
-msgstr ""
+msgstr "Gwok calo wer awinya"
 
 #: activity.py:674
 msgid "Select Drum"
-msgstr ""
+msgstr "Yer Bul"
 
 #. TRANS: http://en.wikipedia.org/wiki/Drum_set
 #: activity.py:674 ttcommon/Util/Instruments.py:668
 msgid "Jazz / Rock Kit"
-msgstr ""
+msgstr "Jazz/Rock Kit"
 
 #: activity.py:695
 msgid "Beats per bar"
-msgstr ""
+msgstr "Goc acel acel pa bar"
 
 #: activity.py:702
 msgid "Beat complexity"
