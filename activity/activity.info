@@ -1,12 +1,12 @@
 [Activity]
 name = Music Keyboard
-activity_version = 11
+activity_version = 12
 bundle_id = org.sugarlabs.MusicKeyboard
 exec = sugar-activity activity.SimplePianoActivity
 icon = activity-simplepiano
 license = GPLv2+
 summary = Play music with this piano keyboard.
-categories = music
+tags = Music
 repository = https://github.com/godiard/music-keyboard-activity
 mime_types = application/x-musickeyboard-activity;
 max_participants = 1

@@ -1,7 +1,13 @@
+12
+
 * Port from csnd6 to to ctcsound (James Cameron),
 * Fix Csound thread segmentation fault during Stop (James Cameron),
 * Avoid the Csound signal handler (James Cameron),
 * Handle Ctrl+C (James Cameron),
+* New translations (Chris Leonard, et al),
+* Port from GObject to GLib (James Cameron),
+* Demote common errors to debug (James Cameron),
+* Regenerate POT file (James Cameron),
 
 11
 
