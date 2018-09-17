@@ -212,7 +212,7 @@ class IntensitySelector(Gtk.ToolItem):
         if self._hide_tooltip_on_click != hide_tooltip_on_click:
             self._hide_tooltip_on_click = hide_tooltip_on_click
 
-    hide_tooltip_on_click = GObject.property(
+    hide_tooltip_on_click = GObject.Property(
         type=bool, default=True, getter=get_hide_tooltip_on_click,
         setter=set_hide_tooltip_on_click)
 
@@ -228,7 +228,7 @@ class IntensitySelector(Gtk.ToolItem):
     def set_palette(self, palette):
         self._palette_invoker.palette = palette
 
-    palette = GObject.property(
+    palette = GObject.Property(
         type=object, setter=set_palette, getter=get_palette)
 
     def get_palette_invoker(self):
@@ -238,7 +238,7 @@ class IntensitySelector(Gtk.ToolItem):
         self._palette_invoker.detach()
         self._palette_invoker = palette_invoker
 
-    palette_invoker = GObject.property(
+    palette_invoker = GObject.Property(
         type=object, setter=set_palette_invoker, getter=get_palette_invoker)
 
     def do_draw(self, cr):
@@ -360,7 +360,7 @@ class FilterToolItem(Gtk.ToolButton):
     def set_palette(self, palette):
         self._palette_invoker.palette = palette
 
-    palette = GObject.property(
+    palette = GObject.Property(
         type=object, setter=set_palette, getter=get_palette)
 
     def get_palette_invoker(self):
@@ -370,7 +370,7 @@ class FilterToolItem(Gtk.ToolButton):
         self._palette_invoker.detach()
         self._palette_invoker = palette_invoker
 
-    palette_invoker = GObject.property(
+    palette_invoker = GObject.Property(
         type=object, setter=set_palette_invoker, getter=get_palette_invoker)
 
     def do_draw(self, cr):
@@ -651,7 +651,7 @@ class SimplePianoActivity(activity.Activity):
         self.connect('size-allocate', self.__allocate_cb)
 
         # TODO: disabe until is implemented with csnd6
-        # GObject.idle_add(self.initializePercussion)
+        # GLib.idle_add(self.initializePercussion)
 
     def createPercussionToolbar(self, toolbar_box):
 
@@ -889,7 +889,7 @@ class SimplePianoActivity(activity.Activity):
             self.playing_recording = True
             self.play_recording_button.props.icon_name = 'media-playback-stop'
             self.play_recording_thread = \
-                GObject.timeout_add(100, self._play_recorded_keys)
+                GLib.timeout_add(100, self._play_recorded_keys)
         else:
             self.playing_recording = False
             self.play_recording_button.props.icon_name = 'media-playback-start'
@@ -902,8 +902,8 @@ class SimplePianoActivity(activity.Activity):
 
         self.playing_recording = True
         self.play_recording_thread = \
-            GObject.timeout_add(100, self._play_recorded_keys,
-                                self._save_ogg_end_cb)
+            GLib.timeout_add(100, self._play_recorded_keys,
+                             self._save_ogg_end_cb)
 
     def _save_ogg_end_cb(self):
         self.csnd.inputMessage(Config.CSOUND_STOP_RECORD_PERF %
@@ -1082,7 +1082,7 @@ class SimplePianoActivity(activity.Activity):
         # self._recordToolbar.keyboardRecOverButton.set_sensitive( state )
 
     def _play_recorded_keys(self, end_cb=None):
-        GObject.source_remove(self.play_recording_thread)
+        GLib.source_remove(self.play_recording_thread)
         letter = self.recorded_keys[self.play_index]
         time_difference = 0
         if self.play_index == len(self.recorded_keys) - 1:
@@ -1100,14 +1100,14 @@ class SimplePianoActivity(activity.Activity):
         if letter[-1] == 1:
             self.keyboardStandAlone.do_key_release(
                 LETTERS_TO_KEY_CODES[letter[3]])
-            GObject.idle_add(self.piano.physical_key_changed,
-                             LETTERS_TO_KEY_CODES[letter[3]], False)
+            GLib.idle_add(self.piano.physical_key_changed,
+                          LETTERS_TO_KEY_CODES[letter[3]], False)
         else:
             self.keyboardStandAlone.do_key_press(
                 LETTERS_TO_KEY_CODES[letter[3]], None,
                 math.sqrt(self.instVolume * 0.01))
-            GObject.idle_add(self.piano.physical_key_changed,
-                             LETTERS_TO_KEY_CODES[letter[3]], True)
+            GLib.idle_add(self.piano.physical_key_changed,
+                          LETTERS_TO_KEY_CODES[letter[3]], True)
 
         if self.play_index == len(self.recorded_keys) - 1:
             self.play_index = 0
@@ -1118,8 +1118,8 @@ class SimplePianoActivity(activity.Activity):
         else:
             self.play_index += 1
             self.play_recording_thread = \
-                GObject.timeout_add(int((time_difference) * 1000),
-                                    self._play_recorded_keys, end_cb)
+                GLib.timeout_add(int((time_difference) * 1000),
+                                 self._play_recorded_keys, end_cb)
 
     def __key_pressed_cb(self, widget, octave_clicked, key_clicked, letter,
                          physicallKey):
