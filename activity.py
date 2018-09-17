@@ -763,7 +763,7 @@ class SimplePianoActivity(activity.Activity):
         # load the images
         images_path = os.path.join(activity.get_bundle_path(),
                                    'instruments')
-        logging.error('Loading instrument images from %s', images_path)
+        logging.debug('Loading instrument images from %s', images_path)
         for file_name in os.listdir(images_path):
             image_file_name = os.path.join(images_path, file_name)
             pxb = GdkPixbuf.Pixbuf.new_from_file_at_size(
@@ -1065,7 +1065,7 @@ class SimplePianoActivity(activity.Activity):
         self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
 
     def setInstrument(self, instrument):
-        logging.error("Set Instrument: %s" % instrument)
+        logging.debug("Set Instrument: %s" % instrument)
         self.instrument = instrument
         self.keyboardStandAlone.setInstrument(instrument)
         self.csnd.load_instrument(instrument)
