@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-25 15:41+1000\n"
+"POT-Creation-Date: 2018-09-17 14:07+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,46 +25,46 @@ msgstr ""
 msgid "Play music with this piano keyboard."
 msgstr ""
 
-#: activity.py:530
+#: activity.py:536
 msgid "Select Instrument"
 msgstr ""
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Piano
-#: activity.py:532 ttcommon/Util/Instruments.py:127
+#: activity.py:538 ttcommon/Util/Instruments.py:127
 msgid "Piano"
 msgstr ""
 
-#: activity.py:558
+#: activity.py:564
 msgid "Save as audio"
 msgstr ""
 
-#: activity.py:674
+#: activity.py:681
 msgid "Select Drum"
 msgstr ""
 
 #. TRANS: http://en.wikipedia.org/wiki/Drum_set
-#: activity.py:674 ttcommon/Util/Instruments.py:668
+#: activity.py:681 ttcommon/Util/Instruments.py:668
 msgid "Jazz / Rock Kit"
 msgstr ""
 
-#: activity.py:695
+#: activity.py:702
 msgid "Beats per bar"
 msgstr ""
 
-#: activity.py:702
+#: activity.py:709
 msgid "Beat complexity"
 msgstr ""
 
-#: activity.py:704
+#: activity.py:711
 msgid "Tempo"
 msgstr ""
 
-#: activity.py:926
+#: activity.py:941
 msgid "Audio recorded"
 msgstr ""
 
-#: activity.py:927
+#: activity.py:942
 msgid "The audio file was saved in the Journal"
 msgstr ""
 
