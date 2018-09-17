@@ -10,6 +10,7 @@
 #
 
 import logging
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Gdk
@@ -143,7 +144,7 @@ class PianoKeyboard(Gtk.DrawingArea):
                 # execute the update pressed keys with a delay,
                 # because motion events can came after the button release
                 # and all the state is confused
-                GObject.timeout_add(10, self._update_pressed_keys, old_touches)
+                GLib.timeout_add(10, self._update_pressed_keys, old_touches)
             if updated_positions:
                 self._update_pressed_keys(old_touches)
 

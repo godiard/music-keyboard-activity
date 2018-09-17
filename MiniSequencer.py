@@ -1,4 +1,4 @@
-from gi.repository import GObject
+from gi.repository import GLib
 import ttcommon.Config as Config
 from ttcommon.Util.CSoundClient import new_csound_client
 from ttcommon.Util.NoteDB import Note
@@ -27,7 +27,7 @@ class MiniSequencer:
 
     def setTempo(self, tempo):
         self.tempo = tempo
-        GObject.source_remove(self.playBackTimeout)
+        GLib.source_remove(self.playBackTimeout)
         self.playState = 0
 
     def handleRecordButton(self, widget, data=None):
@@ -59,14 +59,14 @@ class MiniSequencer:
 
     def startPlayback(self):
         if not self.playState:
-            self.playbackTimeout = GObject.timeout_add(
+            self.playbackTimeout = GLib.timeout_add(
                 int(60000 / self.tempo / 12), self.handleClock)
             self.handleClock()
             self.playState = 1
 
     def stopPlayback(self):
         if self.playbackTimeout is not None:
-            GObject.source_remove(self.playbackTimeout)
+            GLib.source_remove(self.playbackTimeout)
             self.playbackTimeout = None
             self.playState = 0
 

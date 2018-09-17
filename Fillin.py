@@ -1,4 +1,4 @@
-from gi.repository import GObject
+from gi.repository import GLib
 
 from RythmGenerator import generator
 from ttcommon.Util.CSoundClient import new_csound_client
@@ -30,7 +30,7 @@ class Fillin:
 
     def setBeats(self, nbeats):
         if self.playBackTimeout is not None:
-            GObject.source_remove(self.playBackTimeout)
+            GLib.source_remove(self.playBackTimeout)
 
         self.nbeats = nbeats
         self.clear()
@@ -39,7 +39,7 @@ class Fillin:
     def setTempo(self, tempo):
         self.tempo = tempo
         if self.playBackTimeout is not None:
-            GObject.source_remove(self.playBackTimeout)
+            GLib.source_remove(self.playBackTimeout)
             self.play()
 
     def setReverb(self, reverb):
@@ -50,13 +50,13 @@ class Fillin:
 
     def play(self):
         if self.playBackTimeout is None:
-            self.playbackTimeout = GObject.timeout_add(
+            self.playbackTimeout = GLib.timeout_add(
                 int(60000 / self.tempo / 8), self.handleClock)
             self.handleClock()
 
     def stop(self):
         if self.playBackTimeout is not None:
-            GObject.source_remove(self.playBackTimeout)
+            GLib.source_remove(self.playBackTimeout)
             self.clear()
 
     def clear(self):
