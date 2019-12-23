@@ -67,7 +67,7 @@ class InstrumentDB:
         self.instId[i.instrumentId] = i
 
         self.labelSet['All'].add(i)
-        if not self.labelSet.has_key(category):
+        if category not in self.labelSet:
             self.labelSet[category] = set([])
         self.labelSet[category].add( i )
 
@@ -82,7 +82,7 @@ class InstrumentDB:
         self.instId[i.instrumentId] = i
         #print 'labelSet... ', self.labelSet
         self.labelSet['All'].add(i)
-        if not self.labelSet.has_key(category):
+        if category not in self.labelSet:
             self.labelSet[category] = set([])
         self.labelSet[category].add( i )
         csnd.load_instrument(i.name)
@@ -94,10 +94,10 @@ class InstrumentDB:
             try :
                 self.addInstrument( path + fpath )
             except :
-                print 'ERROR: scanning instrument path %s: file %s invalid' % (path, fpath)
+                print('ERROR: scanning instrument path %s: file %s invalid' % (path, fpath))
 
     def getLabels( self ):
-        return self.labelSet.keys()
+        return list(self.labelSet.keys())
 
     def getSet( self, label ):
         return self.labelSet[label]
@@ -109,15 +109,15 @@ class InstrumentDB:
         try:
             return self.instNamed[ name ]
         except:
-            print "Instrument not found: ", name
+            print("Instrument not found: ", name)
             return self.inst[0] 
 
     def debug_summarize(self):
         for i in self.inst:
-            print i.id, i.name
+            print(i.id, i.name)
 
         for l in self.labelSet:
-            print l, [ i.name for i in self.labelSet[l]]
+            print(l, [ i.name for i in self.labelSet[l]])
 
 
 db_instance = None
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     i1 = getRef()
     i2 = getRef()
 
-    print i1, i2
+    print(i1, i2)
 
     import sys
     i1.scanInstrumentDir( sys.argv[1] )

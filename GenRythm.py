@@ -54,7 +54,7 @@ class GenRythm:
         if realDensity > 1.:
             realDensity = 1.
 
-        list = range(int(realDensity * len(downBeats)))
+        list = list(range(int(realDensity * len(downBeats))))
         for i in list:
             if random.random() < (regularity * downBeatRecurence) and \
                     binSelection.count(1) < len(downBeats):

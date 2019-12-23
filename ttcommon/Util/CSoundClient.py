@@ -37,7 +37,7 @@ class _CSoundClientPlugin:
      DECAY,
      FILTERTYPE,
      FILTERCUTOFF,
-     INSTRUMENT2) = range(13)
+     INSTRUMENT2) = list(range(13))
 
     def __init__(self):
         ctcsound.csoundInitialize(ctcsound.CSOUNDINIT_NO_SIGNAL_HANDLER)
@@ -104,7 +104,7 @@ class _CSoundClientPlugin:
         self._csnd.inputMessage(Config.CSOUND_LOAD_LS_INSTRUMENT % fileName)
 
     def load_instruments(self):
-        for instrumentSoundFile in self.instrumentDB.instNamed.keys():
+        for instrumentSoundFile in list(self.instrumentDB.instNamed.keys()):
             if instrumentSoundFile[0:3] == 'mic' or \
                     instrumentSoundFile[0:3] == 'lab' or \
                     self.instrumentDB.instNamed[instrumentSoundFile
@@ -136,7 +136,7 @@ class _CSoundClientPlugin:
 
     def load_drumkit(self, kit):
         if kit not in loadedInstruments:
-            for i in self.instrumentDB.instNamed[kit].kit.values():
+            for i in list(self.instrumentDB.instNamed[kit].kit.values()):
                 fileName = Config.SOUNDS_DIR + "/" + i
                 instrumentId = Config.INSTRUMENT_TABLE_OFFSET + \
                     self.instrumentDB.instNamed[i].instrumentId
@@ -157,7 +157,7 @@ class _CSoundClientPlugin:
     def setTempo(self, t):
         tempo = 60.0 / (Config.TICKS_PER_BEAT * t)
         if (Config.DEBUG > 3):
-            print 'INFO: loop tempo: %f -> %f' % (t, tempo)
+            print('INFO: loop tempo: %f -> %f' % (t, tempo))
         # TODO
         # sc_setTickDuration(tempo)
 
@@ -227,7 +227,7 @@ class _CSoundClientPlugin:
             sc_loop_deactivate_all(loopId)
         else:
             if (Config.DEBUG > 0):
-                print 'ERROR: deactivating a single note is not implemented'
+                print('ERROR: deactivating a single note is not implemented')
 
     def loopUpdate(self, note, parameter, value, cmd, loopId=_loop_default):
         page = note.page
@@ -242,11 +242,11 @@ class _CSoundClientPlugin:
                 instrument_id_offset = 100
         if (parameter == NoteDB.PARAMETER.ONSET):
             if (Config.DEBUG > 2):
-                print 'INFO: updating onset', (page << 16) + id, value
+                print('INFO: updating onset', (page << 16) + id, value)
             sc_loop_updateEvent(loopId, (page << 16) + id, 1, value, cmd)
         elif (parameter == NoteDB.PARAMETER.PITCH):
             if (Config.DEBUG > 2):
-                print 'INFO: updating pitch', (page << 16) + id, value
+                print('INFO: updating pitch', (page << 16) + id, value)
             pitch = value
             if self.instrumentDB.instId[note.cs.instrumentId].kit is not None:
                 instrument = self.instrumentDB.instNamed[
@@ -255,8 +255,8 @@ class _CSoundClientPlugin:
                 csoundTable = Config.INSTRUMENT_TABLE_OFFSET + \
                     instrument.instrumentId
                 if (Config.DEBUG > 2):
-                    print 'INFO: updating drum instrument (pitch)', \
-                        (page << 16)+id, instrument.name, csoundInstId
+                    print('INFO: updating drum instrument (pitch)', \
+                        (page << 16)+id, instrument.name, csoundInstId)
                 sc_loop_updateEvent(
                     loopId, (page << 16) + id, 0,
                     (csoundInstId + instrument_id_offset) + note.track * 0.01,
@@ -269,11 +269,11 @@ class _CSoundClientPlugin:
             sc_loop_updateEvent(loopId, (page << 16)+id, 3, pitch, cmd)
         elif (parameter == NoteDB.PARAMETER.AMPLITUDE):
             if (Config.DEBUG > 2):
-                print 'INFO: updating amp', (page << 16) + id, value
+                print('INFO: updating amp', (page << 16) + id, value)
             sc_loop_updateEvent(loopId, (page << 16) + id, 5, value, cmd)
         elif (parameter == NoteDB.PARAMETER.DURATION):
             if (Config.DEBUG > 2):
-                print 'INFO: updating duration', (page << 16) + id, value
+                print('INFO: updating duration', (page << 16) + id, value)
             sc_loop_updateEvent(loopId, (page << 16) + id, self.DURATION,
                                 value, cmd)
         elif (parameter == NoteDB.PARAMETER.INSTRUMENT):
@@ -288,8 +288,8 @@ class _CSoundClientPlugin:
             loopEnd = instrument.loopEnd
             crossDur = instrument.crossDur
             if (Config.DEBUG > 2):
-                print 'INFO: updating instrument', (page << 16) + id, \
-                    instrument.name, csoundInstId
+                print('INFO: updating instrument', (page << 16) + id, \
+                    instrument.name, csoundInstId)
             sc_loop_updateEvent(loopId, (page << 16) + id, 0, (csoundInstId +
                                 (track+1) + instrument_id_offset) +
                                 note.track * 0.01, cmd)
@@ -320,7 +320,7 @@ class _CSoundClientPlugin:
                                 value, cmd)
         else:
             if (Config.DEBUG > 0):
-                print 'ERROR: loopUpdate(): unsupported parameter change'
+                print('ERROR: loopUpdate(): unsupported parameter change')
 
     def loopPlay(self, dbnote, active, storage=_new_note_array(),
                  loopId=_loop_default):

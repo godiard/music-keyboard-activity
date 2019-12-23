@@ -16,7 +16,7 @@ class PARAMETER:
     FILTERTYPE, \
     FILTERCUTOFF, \
     INSTRUMENT2 \
-    = range(14)    #python-stye enum
+    = list(range(14))    #python-stye enum
 
 class Note:
     def __init__( self, page, track, id, cs ):
@@ -53,7 +53,7 @@ class Page:
     def genId( self ):
         self.nextNoteId += 1
         if self.nextNoteId == 65536: # short
-            print "note id overflow!"
+            print("note id overflow!")
             # TODO think of how to handle this!?
         return self.nextNoteId
 
@@ -124,7 +124,7 @@ class NoteDB:
     def _genId( self ):
         self.nextId += 1
         if self.nextId == 65536: # short
-            print "page id overflow!"
+            print("page id overflow!")
             # TODO think of how to handle this!?
         return self.nextId
 
@@ -152,7 +152,7 @@ class NoteDB:
             if ind < low: low = ind
 
             for t in range(Config.NUMBER_OF_TRACKS):
-                for n in self.noteD[id][t].keys():
+                for n in list(self.noteD[id][t].keys()):
                     self.deleteNote( id, t, n )
 
             #del self.beatsBefore[id]
@@ -203,7 +203,7 @@ class NoteDB:
 
         for cp in sorted:
             for t in range(Config.NUMBER_OF_TRACKS):
-                for n in self.noteD[cp][t].keys():
+                for n in list(self.noteD[cp][t].keys()):
                     self.duplicateNote( cp, t, n, new[cp], t, 0 )
 
         return new
@@ -298,7 +298,7 @@ class NoteDB:
         self.parasiteD[pid] = [ {} for i in range(Config.NUMBER_OF_TRACKS) ]
         self.parasiteS[pid] = [ {} for i in range(Config.NUMBER_OF_TRACKS) ]
         for i in range(Config.NUMBER_OF_TRACKS):
-            for par in self.parasiteList.keys():
+            for par in list(self.parasiteList.keys()):
                 self.parasiteD[pid][i][par] = {}
                 self.parasiteS[pid][i][par] = []
         return pid
@@ -375,7 +375,7 @@ class NoteDB:
 
         self.noteS[page][track].insert( at, n )
 
-        for par in self.parasiteList.keys():
+        for par in list(self.parasiteList.keys()):
             parasite = self.parasiteList[par]( self, par, n )
             self.parasiteD[page][track][par][nid] = parasite.attach() # give parasites the option of return something other than themselves
             self.parasiteS[page][track][par].insert( at, parasite.attach() )
@@ -413,7 +413,7 @@ class NoteDB:
     def deleteNote( self, page, track, id ):
         ind = self.noteS[page][track].index( self.noteD[page][track][id] )
 
-        for par in self.parasiteList.keys():
+        for par in list(self.parasiteList.keys()):
             self.parasiteD[page][track][par][id].destroy()
             self.parasiteS[page][track][par].pop(ind)
             del self.parasiteD[page][track][par][id]
@@ -512,7 +512,7 @@ class NoteDB:
         elif parameter == PARAMETER.INSTRUMENT2:
             self.noteD[page][track][id].cs.instrumentId2 = value
 
-        for par in self.parasiteList.keys():
+        for par in list(self.parasiteList.keys()):
             self.parasiteD[page][track][par][id].updateParameter( parameter, value )
 
         for l in self.noteListeners:
@@ -566,7 +566,7 @@ class NoteDB:
             if ins > out: ins -= 1
             n = self.noteS[page][track].pop( out )
             self.noteS[page][track].insert( ins, n )
-            for par in self.parasiteList.keys():
+            for par in list(self.parasiteList.keys()):
                 p = self.parasiteS[page][track][par].pop( out )
                 self.parasiteS[page][track][par].insert( ins, p )
 
@@ -645,9 +645,9 @@ class NoteDB:
             area = self.clipboardArea[pp]
             area["limit"][0] += offset
             area["limit"][1] += offset
-            for t in trackMap.keys():
+            for t in list(trackMap.keys()):
                 if not area["tracks"][trackMap[t]]: continue
-                if instrumentMap.has_key(t):
+                if t in instrumentMap:
                     updateInstrument = True
                     instrumentId = instrumentMap[t]
                 else:
@@ -732,7 +732,7 @@ class NoteDB:
             self.pageListeners.remove( listener )
         if listener in self.noteListeners:
             self.noteListeners.remove( listener )
-        if self.parasites.has_key( listener ):
+        if listener in self.parasites:
             self._deleteParasite( listener )
             del self.parasiteList[listener]
 
@@ -742,7 +742,7 @@ class NoteDB:
             for t in range(Config.NUMBER_OF_TRACKS):
                 self.parasiteD[p][t][listener] = {}
                 self.parasiteS[p][t][listener] = []
-                for n in self.noteD[p][t].keys():
+                for n in list(self.noteD[p][t].keys()):
                     parasite( self, listener, self.noteD[p][t][n] )
                     self.parasiteD[p][t][listener][n] = parasite.attach() # give parasites the option of returning something other than themselves
                     self.parasiteS[p][t][listener].insert( self.noteS[p][t].index( self.noteD[p][t][n]), parasite.attach() )
@@ -750,7 +750,7 @@ class NoteDB:
     def _deleteParasite( self, listener ):
         for p in self.tune:
             for t in range(Config.NUMBER_OF_TRACKS):
-                for n in self.notes[p][t].keys():
+                for n in list(self.notes[p][t].keys()):
                     self.parasiteD[p][t][listener][n].destroy()
                 del self.parasiteD[p][t][listener]
                 del self.parasiteS[p][t][listener]
@@ -807,7 +807,7 @@ class NoteDB:
 
 
     def getCSNotesByPage( self, page ):
-        return map( lambda n: n.cs, self.getNotesByPage( page ) )
+        return [n.cs for n in self.getNotesByPage( page )]
 
     def getCSNotesByTrack( self, page, track ):
-        return map( lambda n: n.cs, self.getNotesByTrack( page, track ) )
+        return [n.cs for n in self.getNotesByTrack( page, track )]

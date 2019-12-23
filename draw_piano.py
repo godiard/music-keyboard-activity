@@ -33,7 +33,7 @@ LETTERS_TO_KEY_CODES = {
 
 
 KEY_CODES_TO_LETTERS = {}
-for key in LETTERS_TO_KEY_CODES.keys():
+for key in list(LETTERS_TO_KEY_CODES.keys()):
     KEY_CODES_TO_LETTERS[LETTERS_TO_KEY_CODES[key]] = key
 
 
@@ -121,14 +121,14 @@ class PianoKeyboard(Gtk.DrawingArea):
             updated_positions = False
             # save a copy of the old touches
             old_touches = []
-            old_touches.extend(self._touches.values())
+            old_touches.extend(list(self._touches.values()))
             if event.type in (
                     Gdk.EventType.TOUCH_BEGIN,
                     Gdk.EventType.TOUCH_UPDATE, Gdk.EventType.BUTTON_PRESS):
                 if event.type == Gdk.EventType.TOUCH_BEGIN:
                     # verify if there are another touch pointed to the same key
                     # we receive a MOTION_NOTIFY event before TOUCH_BEGIN
-                    for touch in self._touches.keys():
+                    for touch in list(self._touches.keys()):
                         if self._touches[touch] == (x, y):
                             del self._touches[touch]
                 self._touches[seq] = (x, y)
@@ -150,7 +150,7 @@ class PianoKeyboard(Gtk.DrawingArea):
 
     def _update_pressed_keys(self, old_touches):
         new_pressed_keys = []
-        for touch in self._touches.values():
+        for touch in list(self._touches.values()):
             key_found = self._get_key_at_position(touch[0], touch[1])  # x, y
             if key_found is not None and key_found not in new_pressed_keys:
                 new_pressed_keys.append(key_found)
@@ -178,7 +178,7 @@ class PianoKeyboard(Gtk.DrawingArea):
         # calculate the damaged area
         # create a list with the old and new touches uniqified
         uniq_touches = []
-        uniq_touches.extend(self._touches.values())
+        uniq_touches.extend(list(self._touches.values()))
         for old_touch in old_touches:
             if old_touch not in uniq_touches:
                 uniq_touches.append(old_touch)
@@ -539,7 +539,7 @@ class PianoKeyboard(Gtk.DrawingArea):
             # to enable use more than one label in the key, for the black keys
             # and not need change all the whit key labels
             # we allow the use of str or arrays of str
-            if isinstance(text, basestring):
+            if isinstance(text, str):
                 # put the text in a array
                 labels = [text]
             else:
@@ -569,13 +569,13 @@ class PianoKeyboard(Gtk.DrawingArea):
 
 
 def print_key_pressed(widget, octave_clicked, key_clicked, letter):
-    print 'Pressed Octave: %d Key: %d Letter: %s' % (octave_clicked,
-                                                     key_clicked, letter)
+    print('Pressed Octave: %d Key: %d Letter: %s' % (octave_clicked,
+                                                     key_clicked, letter))
 
 
 def print_key_released(widget, octave_clicked, key_clicked, letter):
-    print 'Released Octave: %d Key: %d Letter: %s' % (octave_clicked,
-                                                      key_clicked, letter)
+    print('Released Octave: %d Key: %d Letter: %s' % (octave_clicked,
+                                                      key_clicked, letter))
 
 
 def main():

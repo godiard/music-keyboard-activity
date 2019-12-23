@@ -37,7 +37,7 @@ def clicked_cb(button, c):
     csnd_array = csnd6.doubleArray(len(python_array))
     for n in range(len(python_array)):
         csnd_array[n] = python_array[n]
-    print python_array
+    print(python_array)
     c.ScoreEvent('i', csnd_array, len(python_array))
     # TODO: these are to try avoid seg fault at activity close (not enough)
     # del csnd_array
