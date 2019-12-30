@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2018-08-20 18:48+0000\n"
+"PO-Revision-Date: 2018-11-05 14:28+0000\n"
 "Last-Translator: Paulo Francisco <slomp@ufrgs.br>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt_BR\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1534790935.000000\n"
+"X-POOTLE-MTIME: 1541428123.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
@@ -292,7 +292,7 @@ msgstr "Risada de bebê"
 #. TRANS: The sound of a child making a mistake
 #: ttcommon/Util/Instruments.py:321
 msgid "Baby Uh-oh"
-msgstr "Uh-oh de bebê "
+msgstr "Uh-oh de bebê"
 
 #. TRANS: A synthesized voice sound
 #: ttcommon/Util/Instruments.py:325
@@ -490,4 +490,4 @@ msgstr "Kit Sul-Americano"
 
 #: ttcommon/Util/Instruments.py:678
 msgid "Nepali"
-msgstr "Nepali"
+msgstr "Nepalês"

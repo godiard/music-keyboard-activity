@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-30 02:57+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
+"PO-Revision-Date: 2019-12-26 21:07+0000\n"
+"Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1.1\n"
-"X-POOTLE-MTIME: 1509332271.000000\n"
+"X-POOTLE-MTIME: 1577394428.000000\n"
 
 #: activity/activity.info:2
 msgid "Music Keyboard"
-msgstr ""
+msgstr "Muzikinė klaviatūra"
 
 #: activity/activity.info:3
 msgid "Play music with this piano keyboard."
@@ -34,9 +34,8 @@ msgstr ""
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Piano
 #: activity.py:532 ttcommon/Util/Instruments.py:127
-#, fuzzy
 msgid "Piano"
-msgstr "Fortepijonas"
+msgstr "Pianinas"
 
 #: activity.py:558
 msgid "Save as audio"
@@ -89,7 +88,6 @@ msgstr "Gamelanas"
 #. TRANS: http://en.wikipedia.org/wiki/Electric_guitar
 #: ttcommon/Util/Instruments.py:58 ttcommon/Util/Instruments.py:63
 #: ttcommon/Util/Instruments.py:68 ttcommon/Util/Instruments.py:520
-#, fuzzy
 msgid "Electric Guitar"
 msgstr "Elektrinė gitara"
 
@@ -174,16 +172,14 @@ msgstr ""
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Bird
 #: ttcommon/Util/Instruments.py:211
-#, fuzzy
 msgid "Bird"
-msgstr "Paukščiai"
+msgstr "Paukštis"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Frog
 #: ttcommon/Util/Instruments.py:216
-#, fuzzy
 msgid "Frog"
-msgstr "Beuodegiai varliagyviai"
+msgstr "Varlė"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Cat
@@ -195,9 +191,8 @@ msgstr "Katė"
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Cow
 #: ttcommon/Util/Instruments.py:225
-#, fuzzy
 msgid "Cow"
-msgstr "Naminis jautis"
+msgstr "Karvė"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Cricket_%28insect%29
@@ -237,14 +232,12 @@ msgstr ""
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Sheep
 #: ttcommon/Util/Instruments.py:262
-#, fuzzy
 msgid "Sheep"
 msgstr "Avis"
 
 #. TRANS: The sound of water splashing
 #. TRANS: http://en.wikipedia.org/wiki/Water
 #: ttcommon/Util/Instruments.py:267
-#, fuzzy
 msgid "Water"
 msgstr "Vanduo"
 
@@ -336,7 +329,7 @@ msgstr ""
 #. TRANS: The sound of a door slamming shut
 #: ttcommon/Util/Instruments.py:338
 msgid "Door"
-msgstr ""
+msgstr "Durys"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Electric_bass
@@ -442,7 +435,6 @@ msgstr "Tūba"
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Violin
 #: ttcommon/Util/Instruments.py:418
-#, fuzzy
 msgid "Violin"
 msgstr "Smuikas"
 
