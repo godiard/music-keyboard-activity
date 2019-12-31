@@ -1,3 +1,10 @@
+8.10
+
+* Fix several warnings,
+* Switch to GStreamer 1.0,
+* Save as audio now tracks play button sensitivity,
+* New translations.
+
 8.9
 
 * Move selection of instrument to the toolbar (Aneesh Dogra),
