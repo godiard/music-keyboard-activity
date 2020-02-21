@@ -1,6 +1,6 @@
 [Activity]
 name = Music Keyboard
-activity_version = 12
+activity_version = 13
 bundle_id = org.sugarlabs.MusicKeyboard
 exec = sugar-activity3 activity.SimplePianoActivity
 icon = activity-simplepiano
