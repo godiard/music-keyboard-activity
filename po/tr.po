@@ -1,21 +1,22 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) 2025 Erdem Uygun.
+# This file is distributed under the same license as the 1.0.0 package.
+# Author: Erdem Uygun uygun.erdem@proton.me, 2025.
+# Erdem Uygun <uygun.erdem@proton.me>, 2025.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-25 15:41+1000\n"
-"PO-Revision-Date: 2017-10-11 06:16+0000\n"
-"Last-Translator: Chris <cjl@sugarlabs.org>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2025-06-25 15:35+0300\n"
+"Last-Translator: Erdem Uygun <uygun.erdem@proton.me>\n"
+"Language-Team: Turkish\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.5.1.1\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Gtranslator 46.0\n"
 "X-POOTLE-MTIME: 1507702577.000000\n"
 
 #: activity/activity.info:2
@@ -46,9 +47,8 @@ msgstr "Davul Seç"
 
 #. TRANS: http://en.wikipedia.org/wiki/Drum_set
 #: activity.py:674 ttcommon/Util/Instruments.py:668
-#, fuzzy
 msgid "Jazz / Rock Kit"
-msgstr "Jazz / Rock Kit"
+msgstr "Caz / Rock Seti"
 
 #: activity.py:695
 msgid "Beats per bar"
@@ -92,7 +92,6 @@ msgstr "Elektro gitar"
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Koto_%28musical_instrument%29
 #: ttcommon/Util/Instruments.py:73
-#, fuzzy
 msgid "Koto"
 msgstr "Koto"
 
@@ -105,7 +104,6 @@ msgstr "Banjo"
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Ukulele
 #: ttcommon/Util/Instruments.py:83
-#, fuzzy
 msgid "Ukulele"
 msgstr "Ukulele"
 
@@ -190,7 +188,7 @@ msgstr "İnek"
 #. TRANS: http://en.wikipedia.org/wiki/Cricket_%28insect%29
 #: ttcommon/Util/Instruments.py:230
 msgid "Cricket"
-msgstr ""
+msgstr "Çekirge"
 
 #. TRANS: The sound of a bottle being hit
 #. TRANS: http://en.wikipedia.org/wiki/Bottle
@@ -201,23 +199,23 @@ msgstr "Şişe"
 #. TRANS: The sound of a garbage can
 #: ttcommon/Util/Instruments.py:244
 msgid "Dump"
-msgstr ""
+msgstr "Döküm"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Cymbal
 #: ttcommon/Util/Instruments.py:249
 msgid "Cymbal"
-msgstr ""
+msgstr "Zil"
 
 #. TRANS: The sound of a person being hit
 #: ttcommon/Util/Instruments.py:253
 msgid "Ow"
-msgstr ""
+msgstr "Ow"
 
 #. TRANS: A surprised shout
 #: ttcommon/Util/Instruments.py:257
 msgid "Hey"
-msgstr ""
+msgstr "Hey"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Sheep
@@ -246,18 +244,18 @@ msgstr "Trompet"
 #. TRANS: http://en.wikipedia.org/wiki/Clavinet
 #: ttcommon/Util/Instruments.py:281
 msgid "Clavinet"
-msgstr ""
+msgstr "Klavyet"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Flugelhorn
 #: ttcommon/Util/Instruments.py:286
 msgid "Flugelhorn"
-msgstr ""
+msgstr "Flügelhorn"
 
 #. TRANS: The sound of a fog horn or ship horn
 #: ttcommon/Util/Instruments.py:290
 msgid "Foghorn"
-msgstr ""
+msgstr "Sis Düdüğü"
 
 #. TRANS: The sound of air bubbling through water
 #: ttcommon/Util/Instruments.py:294
@@ -268,7 +266,7 @@ msgstr "Hava Kabarcığı"
 #. TRANS: http://en.wikipedia.org/wiki/Marimba
 #: ttcommon/Util/Instruments.py:299
 msgid "Marimba"
-msgstr ""
+msgstr "Marimba"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Triangle_%28instrument%29
@@ -295,7 +293,7 @@ msgstr "Bebek Gülüşü"
 #. TRANS: The sound of a child making a mistake
 #: ttcommon/Util/Instruments.py:321
 msgid "Baby Uh-oh"
-msgstr ""
+msgstr "Bebek Uh-oh"
 
 #. TRANS: A synthesized voice sound
 #: ttcommon/Util/Instruments.py:325
@@ -305,7 +303,7 @@ msgstr "Ses"
 #. TRANS: A tinkling sound
 #: ttcommon/Util/Instruments.py:329
 msgid "Cling"
-msgstr ""
+msgstr "Çınlama"
 
 #. TRANS: The sound of a bicycle bell
 #. TRANS: http://en.wikipedia.org/wiki/Bicycle
@@ -346,7 +344,7 @@ msgstr "Didgeridoo"
 #. TRANS: http://en.wikipedia.org/wiki/Harmonium
 #: ttcommon/Util/Instruments.py:363
 msgid "Harmonium"
-msgstr ""
+msgstr "Harmonyum"
 
 #. TRANS: The sound made by this animal
 #. TRANS: http://en.wikipedia.org/wiki/Horse
@@ -358,7 +356,7 @@ msgstr "At"
 #. TRANS: http://en.wikipedia.org/wiki/Thumb_piano
 #: ttcommon/Util/Instruments.py:373
 msgid "Kalimba"
-msgstr ""
+msgstr "Kalimba"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Mandolin
@@ -376,121 +374,121 @@ msgstr "Okarina"
 #. TRANS: http://en.wikipedia.org/wiki/Rhodes_piano
 #: ttcommon/Util/Instruments.py:388
 msgid "Rhodes"
-msgstr ""
+msgstr "Rhodes"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Saxophone
 #: ttcommon/Util/Instruments.py:393
 msgid "Saxophone"
-msgstr ""
+msgstr "Saksafon"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Soprano_saxophone
 #: ttcommon/Util/Instruments.py:398
 msgid "Soprano Saxophone"
-msgstr ""
+msgstr "Soprano Saksafon"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Shehnai
 #: ttcommon/Util/Instruments.py:403
 msgid "Shehnai"
-msgstr ""
+msgstr "Şehnai"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Sitar
 #: ttcommon/Util/Instruments.py:408
 msgid "Sitar"
-msgstr ""
+msgstr "Sitar"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Tuba
 #: ttcommon/Util/Instruments.py:413
 msgid "Tuba"
-msgstr ""
+msgstr "Tuba"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Violin
 #: ttcommon/Util/Instruments.py:418
 msgid "Violin"
-msgstr ""
+msgstr "Keman"
 
 #. TRANS: The sound of a camera shutter
 #. TRANS: http://en.wikipedia.org/wiki/Camera
 #: ttcommon/Util/Instruments.py:493
 msgid "Camera"
-msgstr ""
+msgstr "Kamera"
 
 #. TRANS: The sound of a car starting
 #: ttcommon/Util/Instruments.py:497
 msgid "Car"
-msgstr ""
+msgstr "Araba"
 
 #. TRANS: The sound of a car horn honking
 #: ttcommon/Util/Instruments.py:501
 msgid "Car Horn"
-msgstr ""
+msgstr "Araba Kornası"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Cello
 #: ttcommon/Util/Instruments.py:506
 msgid "Cello"
-msgstr ""
+msgstr "Viyola"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Chimes
 #: ttcommon/Util/Instruments.py:511
 msgid "Chimes"
-msgstr ""
+msgstr "Çanlar"
 
 #. TRANS: The sound of glass breaking
 #: ttcommon/Util/Instruments.py:515
 msgid "Crash"
-msgstr ""
+msgstr "Crash Zili"
 
 #. TRANS: The sound of this vehicle
 #. TRANS: http://en.wikipedia.org/wiki/Airplane
 #: ttcommon/Util/Instruments.py:525
 msgid "Plane"
-msgstr ""
+msgstr "Düzlem"
 
 #. TRANS: The sound of something being hit
 #: ttcommon/Util/Instruments.py:529
 msgid "Slap"
-msgstr ""
+msgstr "Slap Tekniği"
 
 #. TRANS: The sound made by a bell
 #: ttcommon/Util/Instruments.py:533
 msgid "Temple Bell"
-msgstr ""
+msgstr "Tapınak Zili"
 
 #. TRANS: The sound made by this instrument
 #. TRANS: http://en.wikipedia.org/wiki/Sarangi
 #: ttcommon/Util/Instruments.py:538
 msgid "Sarangi"
-msgstr ""
+msgstr "Sarangi"
 
 #. TRANS: The sound of a Solomon Islands pipe, named "'au tahana"
 #. TRANS: http://www.jstor.org/pss/851365
 #: ttcommon/Util/Instruments.py:569
 msgid "'au tahana"
-msgstr ""
+msgstr "'au tahana"
 
 #: ttcommon/Util/Instruments.py:670
 msgid "African Kit"
-msgstr ""
+msgstr "Afrika Seti"
 
 #: ttcommon/Util/Instruments.py:672
 msgid "Arabic Kit"
-msgstr ""
+msgstr "Arap Seti"
 
 #: ttcommon/Util/Instruments.py:674
 msgid "Electronic Kit"
-msgstr ""
+msgstr "Elektronik Set"
 
 #: ttcommon/Util/Instruments.py:676
 msgid "South American Kit"
-msgstr ""
+msgstr "Güney Amerika Seti"
 
 #: ttcommon/Util/Instruments.py:678
 msgid "Nepali"
-msgstr ""
+msgstr "Nepali"
